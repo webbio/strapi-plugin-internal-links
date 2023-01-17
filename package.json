@@ -1,1 +1,54 @@
-{}
+{
+	"name": "@webbio/strapi-plugin-internal-links",
+	"version": "0.0.1",
+	"description": "This is the description of the internal-links plugin.",
+	"scripts": {
+		"develop": "tsc -w",
+		"build": "tsc",
+		"format": "prettier --write .",
+		"prepublish": "tsc"
+	},
+	"main": "dist/server/index.js",
+	"types": "dist/types.js",
+	"strapi": {
+		"name": "internal-links",
+		"description": "Description of internal-links plugin",
+		"displayName": "internal-links",
+		"kind": "plugin"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/webbio/strapi-plugin-internal-links.git"
+	},
+	"dependencies": {
+		"@strapi/icons": "^1.4.1",
+		"cheerio": "1.0.0-rc.12"
+	},
+	"devDependencies": {
+		"typescript": "^4.9.4"
+	},
+	"peerDependencies": {
+		"@strapi/strapi": "^4.5.6"
+	},
+	"author": {
+		"name": "Webbio B.V.",
+		"email": "info@webbio.nl",
+		"url": "https://webbio.nl"
+	},
+	"maintainers": [
+		{
+			"name": "Webbio B.V.",
+			"email": "info@webbio.nl",
+			"url": "https://webbio.nl"
+		}
+	],
+	"engines": {
+		"node": ">=14.19.1 <=18.x.x",
+		"npm": ">=6.0.0"
+	},
+	"license": "MIT",
+	"publishConfig": {
+		"access": "restricted",
+		"registry": "https://registry.npmjs.org"
+	}
+}

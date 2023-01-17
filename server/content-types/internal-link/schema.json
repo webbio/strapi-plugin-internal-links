@@ -1,0 +1,49 @@
+{
+	"kind": "collectionType",
+	"collectionName": "internal_links",
+	"info": {
+		"singularName": "internal-link",
+		"pluralName": "internal-links",
+		"displayName": "internal-link"
+	},
+	"options": {
+		"draftAndPublish": false,
+		"populateCreatorFields": false,
+		"removeRestrictedRelations": true,
+		"comment": ""
+	},
+	"pluginOptions": {
+		"content-manager": {
+			"visible": false
+		},
+		"content-type-builder": {
+			"visible": false
+		}
+	},
+	"attributes": {
+		"sourceContentTypeUid": {
+			"type": "string"
+		},
+		"sourceContentTypeId": {
+			"type": "string"
+		},
+		"sourceFieldName": {
+			"type": "string"
+		},
+		"targetContentTypeUid": {
+			"type": "string"
+		},
+		"targetContentTypeId": {
+			"type": "string"
+		},
+		"url": {
+			"type": "string"
+		},
+		"text": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		}
+	}
+}
