@@ -1,4 +1,4 @@
-# Strapi plugin internal-links
+# Strapi plugin internal-link
 
 ## Features
 

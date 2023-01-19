@@ -1,7 +1,7 @@
-import * as internalLink from './internal-link';
-import * as singleType from './single-type';
-import * as collectionType from './collection-type';
-import * as contentType from './content-type';
+import internalLink from './internal-link';
+import singleType from './single-type';
+import collectionType from './collection-type';
+import contentType from './content-type';
 
 export default {
 	'internal-link': internalLink,

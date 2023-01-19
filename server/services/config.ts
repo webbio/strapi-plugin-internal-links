@@ -6,7 +6,7 @@ const getGlobalConfig = () => {
 };
 
 const getContentTypeConfig = (uid) => {
-	const config = strapi.contentType(uid).pluginOptions?.['internal-link'];
+	const config = strapi.contentType(uid).pluginOptions?.['internal-links'];
 	return isEmpty(config) ? null : config;
 };
 

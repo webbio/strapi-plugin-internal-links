@@ -2,13 +2,13 @@ const find = () =>
 	Object.values(strapi.contentTypes)
 		.filter(
 			(contentType: any) =>
-				contentType.uid?.startsWith('api::') && contentType?.pluginOptions?.['internal-link']?.enabled !== false
+				contentType.uid?.startsWith('api::') && contentType?.pluginOptions?.['internal-links']?.enabled !== false
 		)
 		.map((contentType: any) => {
-			const domain = strapi.service('plugin::internal-link.url').getDomain(contentType?.uid);
-			const titleField = contentType?.pluginOptions?.['internal-link']?.title || 'title';
-			const slugField = contentType?.pluginOptions?.['internal-link']?.slug || 'fullPath';
-			const basePathField = contentType?.pluginOptions?.['internal-link']?.basePath || 'basePath';
+			const domain = strapi.service('plugin::internal-links.url').getDomain(contentType?.uid);
+			const titleField = contentType?.pluginOptions?.['internal-links']?.title || 'title';
+			const slugField = contentType?.pluginOptions?.['internal-links']?.slug || 'fullPath';
+			const basePathField = contentType?.pluginOptions?.['internal-links']?.basePath || 'basePath';
 
 			return {
 				uid: contentType.uid,

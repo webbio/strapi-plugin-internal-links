@@ -11,7 +11,7 @@ const findInternalLinkSchema = object({
 const find = async (ctx) => {
 	await validateContext(ctx, findInternalLinkSchema);
 	const localesArray = await strapi.plugins.i18n.services.locales.find();
-	const entityConfig = strapi.service('plugin::internal-link.config').getContentTypeConfig(ctx.params.uid);
+	const entityConfig = strapi.service('plugin::internal-links.config').getContentTypeConfig(ctx.params.uid);
 	const titleField = entityConfig?.title ?? 'title';
 
 	const locales = localesArray.map((locale) => locale.code);

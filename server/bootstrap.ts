@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Strapi } from '@strapi/strapi';
 import { update, groupBy, get, merge } from 'lodash';
 import { sanitize } from '@strapi/utils';
@@ -195,8 +196,8 @@ const mapInternalLinks = (sourceContentTypeUid, sourceContentTypeId, internalLin
 
 const findManyInternalLinksByTarget = async (targetContentTypeUid, targetContentTypeId, wysiwyg) => {
 	const internalLinkContentType = wysiwyg
-		? 'plugin::internal-link.internal-link-wysiwyg'
-		: 'plugin::internal-link.internal-link';
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
 	return strapi.db.query(internalLinkContentType).findMany({
 		where: {
 			$and: [
@@ -217,8 +218,8 @@ const findManyInternalLinksByTarget = async (targetContentTypeUid, targetContent
 
 const findManyInternalLinksBySource = async (sourceContentTypeUid, sourceContentTypeId, wysiwyg) => {
 	const internalLinkContentType = wysiwyg
-		? 'plugin::internal-link.internal-link-wysiwyg'
-		: 'plugin::internal-link.internal-link';
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
 	return strapi.db.query(internalLinkContentType).findMany({
 		where: {
 			$and: [
@@ -239,8 +240,8 @@ const findManyInternalLinksBySource = async (sourceContentTypeUid, sourceContent
 
 const deleteManyInternalLinksBySource = async (sourceContentTypeUid, sourceContentTypeId, wysiwyg) => {
 	const internalLinkContentType = wysiwyg
-		? 'plugin::internal-link.internal-link-wysiwyg'
-		: 'plugin::internal-link.internal-link';
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
 
 	await strapi.db.query(internalLinkContentType).deleteMany({
 		where: {
@@ -266,8 +267,8 @@ const createManyInternalLinks = async (sourceContentTypeUid, sourceContentTypeId
 	}
 
 	const internalLinkContentType = wysiwyg
-		? 'plugin::internal-link.internal-link-wysiwyg'
-		: 'plugin::internal-link.internal-link';
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
 	await strapi.db.query(internalLinkContentType).createMany({
 		data: internalLinks
 	});
@@ -297,7 +298,7 @@ const mapInternalLinksToEntity = (sanitizedEntity, internalLinks) => {
 
 const getInternalLinksFromWysiwygFields = async (sanitizedEntity, uid, id) => {
 	// Get all wysiwyg fields
-	const wysiwygFields = getCustomFields(sanitizedEntity, uid, 'plugin::internal-link.CKEditor');
+	const wysiwygFields = getCustomFields(sanitizedEntity, uid, 'plugin::internal-links.CKEditor');
 
 	// Get all internal links from wysiwyg fields
 	const internalLinks = wysiwygFields.flatMap((field) => getInternalLinksFromHtml(field.value));
@@ -313,7 +314,7 @@ const getInternalLinksFromWysiwygFields = async (sanitizedEntity, uid, id) => {
 
 const getInternalLinksFromCustomFields = async (sanitizedEntity, uid, id) => {
 	// Get all internal lkink custom fields
-	const internalLinkFields = getCustomFields(sanitizedEntity, uid, 'plugin::internal-link.internal-link');
+	const internalLinkFields = getCustomFields(sanitizedEntity, uid, 'plugin::internal-links.internal-link');
 
 	const internalLinks = internalLinkFields
 		.filter((field) => field?.value?.type === 'internal')
@@ -332,9 +333,9 @@ const getInternalLinksFromCustomFields = async (sanitizedEntity, uid, id) => {
 
 const updateManyInternalLinksByTarget = async (targetContentTypeUid, targetContentTypeId, sanitizedEntity, wysiwyg) => {
 	const internalLinkContentType = wysiwyg
-		? 'plugin::internal-link.internal-link-wysiwyg'
-		: 'plugin::internal-link.internal-link';
-	const updatedUrl = strapi.service('plugin::internal-link.url').constructURL(targetContentTypeUid, sanitizedEntity);
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
+	const updatedUrl = strapi.service('plugin::internal-links.url').constructURL(targetContentTypeUid, sanitizedEntity);
 	await strapi.db.query(internalLinkContentType).updateMany({
 		where: {
 			$and: [

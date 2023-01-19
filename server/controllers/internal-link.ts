@@ -36,26 +36,26 @@ const deleteInternalLinkSchema = object({
 });
 
 const find = async (ctx) => {
-	return strapi.service('plugin::internal-link.internal-link').find({});
+	return strapi.service('plugin::internal-links.internal-link').find({});
 };
 
 const create = async (ctx) => {
 	try {
 		await validateContext(ctx, createInternalLinkSchema);
-		return strapi.service('plugin::internal-link.internal-link').create(ctx.request.body);
+		return strapi.service('plugin::internal-links.internal-link').create(ctx.request.body);
 	} catch (error) {
 		handleError(ctx, error);
 	}
 };
 
 const findOne = async (ctx) => {
-	return strapi.service('plugin::internal-link.internal-link').findOne(ctx.params.id, {});
+	return strapi.service('plugin::internal-links.internal-link').findOne(ctx.params.id, {});
 };
 
 const update = async (ctx) => {
 	try {
 		await validateContext(ctx, updateInternalLinkSchema);
-		return strapi.service('plugin::internal-link.internal-link').update(ctx.params.id, ctx.request.body);
+		return strapi.service('plugin::internal-links.internal-link').update(ctx.params.id, ctx.request.body);
 	} catch (error) {
 		handleError(ctx, error);
 	}
@@ -64,7 +64,7 @@ const update = async (ctx) => {
 const remove = async (ctx) => {
 	try {
 		await validateContext(ctx, deleteInternalLinkSchema);
-		return strapi.service('plugin::internal-link.internal-link').remove(ctx.params.id);
+		return strapi.service('plugin::internal-links.internal-link').remove(ctx.params.id);
 	} catch (error) {
 		handleError(ctx, error);
 	}

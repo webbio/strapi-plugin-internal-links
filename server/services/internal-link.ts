@@ -7,7 +7,7 @@ const find = async () => {
 };
 
 const findByTargetContentType = async (uid, id) => {
-	return strapi.entityService.findMany('plugin::internal-link.internal-link', {
+	return strapi.entityService.findMany('plugin::internal-links.internal-link', {
 		filters: {
 			$and: [
 				{
@@ -22,7 +22,7 @@ const findByTargetContentType = async (uid, id) => {
 };
 
 const findBySourceContentType = async (uid, id) => {
-	return strapi.entityService.findMany('plugin::internal-link.internal-link', {
+	return strapi.entityService.findMany('plugin::internal-links.internal-link', {
 		filters: {
 			$and: [
 				{
@@ -37,7 +37,7 @@ const findBySourceContentType = async (uid, id) => {
 };
 
 const updateManyByTargetContentType = async (uid, id, url) => {
-	return strapi.db.query('plugin::internal-link.internal-link').updateMany({
+	return strapi.db.query('plugin::internal-links.internal-link').updateMany({
 		where: {
 			$and: [
 				{
@@ -55,7 +55,7 @@ const updateManyByTargetContentType = async (uid, id, url) => {
 };
 
 const create = async (data) => {
-	return strapi.entityService.create('plugin::internal-link.internal-link', {
+	return strapi.entityService.create('plugin::internal-links.internal-link', {
 		data
 	});
 };
@@ -71,17 +71,17 @@ const update = async (id, data) => {
 		...data
 	};
 
-	return strapi.entityService.update('plugin::internal-link.internal-link', id, {
+	return strapi.entityService.update('plugin::internal-links.internal-link', id, {
 		data: internalLink
 	});
 };
 
 const remove = async (id) => {
-	return strapi.entityService.delete('plugin::internal-link.internal-link', id);
+	return strapi.entityService.delete('plugin::internal-links.internal-link', id);
 };
 
 const deleteManyBySourceContentType = async (uid, ids) => {
-	return strapi.db.query('plugin::internal-link.internal-link').deleteMany({
+	return strapi.db.query('plugin::internal-links.internal-link').deleteMany({
 		where: {
 			$and: [
 				{
