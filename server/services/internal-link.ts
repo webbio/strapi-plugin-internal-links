@@ -1,12 +1,4 @@
-const findOne = async () => {
-	return strapi.entityService.findOne();
-};
-
-const find = async () => {
-	return strapi.entityService.findMany();
-};
-
-const findByTargetContentType = async (uid, id) => {
+const findByTargetContentType = async (uid: string, id: string) => {
 	return strapi.entityService.findMany('plugin::internal-links.internal-link', {
 		filters: {
 			$and: [
@@ -21,7 +13,7 @@ const findByTargetContentType = async (uid, id) => {
 	});
 };
 
-const findBySourceContentType = async (uid, id) => {
+const findBySourceContentType = async (uid: string, id: string) => {
 	return strapi.entityService.findMany('plugin::internal-links.internal-link', {
 		filters: {
 			$and: [
@@ -36,7 +28,7 @@ const findBySourceContentType = async (uid, id) => {
 	});
 };
 
-const updateManyByTargetContentType = async (uid, id, url) => {
+const updateManyByTargetContentType = async (uid: string, id: string, url: string) => {
 	return strapi.db.query('plugin::internal-links.internal-link').updateMany({
 		where: {
 			$and: [
@@ -53,14 +45,12 @@ const updateManyByTargetContentType = async (uid, id, url) => {
 		}
 	});
 };
-
-const create = async (data) => {
+const create = async (data: any) => {
 	return strapi.entityService.create('plugin::internal-links.internal-link', {
 		data
 	});
 };
-
-const update = async (id, data) => {
+const update = async (id: string, data: any) => {
 	const targetContentType = await strapi.entityService.findOne(data.targetContentTypeUid, data.targetContentTypeId);
 
 	if (!targetContentType) {
@@ -100,13 +90,11 @@ const deleteManyBySourceContentType = async (uid, ids) => {
 };
 
 export default {
-	find,
-	findOne,
-	create,
-	update,
-	remove,
 	findByTargetContentType,
 	findBySourceContentType,
 	updateManyByTargetContentType,
+	create,
+	update,
+	remove,
 	deleteManyBySourceContentType
 };
