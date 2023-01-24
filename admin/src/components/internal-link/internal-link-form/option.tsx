@@ -1,9 +1,9 @@
 import React from 'react';
-import { components } from 'react-select';
+import { components, OptionProps } from 'react-select';
 import { Typography, Stack } from '@strapi/design-system';
 import PublishStateIcon from '../publish-state-icon';
 
-interface IProps {
+interface IProps extends OptionProps {
 	isFocused: boolean;
 	data: {
 		displayName: string;
@@ -19,12 +19,11 @@ interface IProps {
 	};
 }
 
-const Option = (props: IProps) => {
+const Option = (props: IProps): JSX.Element => {
 	const { label, slugLabel, publishedAt } = props.data;
 	const Component = components.Option;
 
 	return (
-		// @ts-ignore
 		<Component {...props}>
 			<Stack horizontal gap={4}>
 				{props.data.showIndicator && <PublishStateIcon isPublished={!!publishedAt} />}

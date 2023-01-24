@@ -1,21 +1,33 @@
 import React, { useLayoutEffect, useState, lazy, Suspense } from 'react';
-import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { useIntl, MessageDescriptor, IntlFormatters } from 'react-intl';
 
 import { useCMEditViewDataManager } from '@strapi/helper-plugin';
-import { Stack, IconButton, 	Field,
-	FieldHint,
-	FieldError,
-	FieldLabel,
-	FieldInput, } from '@strapi/design-system';
+import { Stack, IconButton, Field, FieldHint, FieldError, FieldLabel, FieldInput } from '@strapi/design-system';
 
-import { Pencil, Link, Trash} from '@strapi/icons';
-
+import { Pencil, Link, Trash } from '@strapi/icons';
 
 import getTrad from '../../../utils/get-trad';
 import createInternalLink from '../internal-link-factory';
 import { InputGroup, Actions } from './styles';
 import useInternalLinkInput from './use-internal-link-input';
+
+export interface IInternalLinkInputProps {
+	intlLabel?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
+	onChange?: any;
+	attribute?: {
+		pluginOptions?: { slug?: { targetField?: string; field?: string } };
+		required?: boolean;
+	};
+	name?: string;
+	description?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
+	disabled?: boolean;
+	error?: any;
+	labelAction?: any;
+	required?: boolean;
+	value?: string;
+	contentTypeUID?: string;
+	placeholder?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
+}
 
 const InternalLinkModal = lazy(() => import('../internal-link-modal'));
 
@@ -27,75 +39,80 @@ const InternalLinkInput = ({
 	name,
 	onChange,
 	required,
-	value,
-}) => {
+	value
+}: IInternalLinkInputProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 	const { layout, initialData } = useCMEditViewDataManager();
-	const { link, setLink, initialLink, isInitialData, errors, setErrors } =
-		useInternalLinkInput(value, error, layout.uid, initialData.id, name);
+	const { link, setLink, initialLink, isInitialData, errors, setErrors } = useInternalLinkInput(
+		value || '',
+		error,
+		layout.uid,
+		initialData.id,
+		name || ''
+	);
 
 	const [showModal, setShowModal] = useState(false);
 	const [copyButtonText, setCopyButtonText] = useState(
 		formatMessage({
-			id: getTrad('internal-link.form.copy'),
+			id: getTrad('internal-link.form.copy')
 		})
 	);
 
-	const saveModal = () => {
+	const saveModal = (): void => {
 		setShowModal(false);
 		initialLink.current = link;
 		handleChange();
 	};
 
-	const closeModal = () => {
+	const closeModal = (): void => {
 		setShowModal(false);
 		setErrors((previousValue) => ({
 			...previousValue,
 			text: undefined,
 			url: undefined,
-			link: undefined,
+			link: undefined
 		}));
 	};
 
-	const handleChange = () => {
+	const handleChange = (): void => {
 		onChange({
 			target: {
 				name,
 				value: link.url ? JSON.stringify(link) : 'null',
-				type: 'json',
-			},
+				type: 'json'
+			}
 		});
 	};
 
-	const onCopy = () => {
+	const onCopy = (): void => {
 		if (!navigator?.clipboard) return;
 
 		navigator.clipboard.writeText(link.url);
 
 		setCopyButtonText(
 			formatMessage({
-				id: getTrad('internal-link.form.copied'),
+				id: getTrad('internal-link.form.copied')
 			})
 		);
 
 		setTimeout(() => {
 			setCopyButtonText(
 				formatMessage({
-					id: getTrad('internal-link.form.copy'),
+					id: getTrad('internal-link.form.copy')
 				})
 			);
 		}, 3000);
 	};
 
-	const onDelete = () => {
+	const onDelete = (): void => {
 		setLink(createInternalLink(layout.uid, initialData.id, name));
 
 		onChange({
 			target: {
 				name,
 				value: 'null',
-				type: 'json',
-			},
+				type: 'json'
+			}
 		});
 	};
 
@@ -107,46 +124,42 @@ const InternalLinkInput = ({
 		if (!isInitialData && link.id) {
 			setLink((previousValue) => ({
 				...previousValue,
-				id: null,
+				id: null
 			}));
 		}
 	}, [isInitialData]);
 
 	useLayoutEffect(() => {
-		const validInitialData =
-			initialLink.current.url && typeof initialLink.current.url === 'string';
+		const validInitialData = initialLink.current.url && typeof initialLink.current.url === 'string';
 
 		if (!validInitialData) {
 			onChange({
 				target: {
 					name,
 					value: 'null',
-					type: 'json',
-				},
+					type: 'json'
+				}
 			});
 		}
 	}, [initialLink.current]);
 
 	return (
-		<Suspense fallback={<div>Loading</div>}>
-			<Field
-				name={name}
-				id={name}
-				error={errors?.url}
-				hint={description && formatMessage(description)}
-			>
+		<Suspense fallback={<></>}>
+			<Field name={name} id={name} error={errors?.url} hint={description && formatMessage(description)}>
 				<Stack spacing={1}>
-					<FieldLabel action={labelAction} required={required}>
-						{formatMessage(intlLabel)}
-					</FieldLabel>
+					{intlLabel && (
+						<FieldLabel action={labelAction} required={required}>
+							{formatMessage(intlLabel)}
+						</FieldLabel>
+					)}
 
 					<InputGroup horizontal>
 						<FieldInput
 							type="json"
 							id="internal-link-value"
-							label={formatMessage(intlLabel)}
+							label={intlLabel ? formatMessage(intlLabel) : ''}
 							aria-label={formatMessage({
-								id: getTrad('internal-link.input.aria-label'),
+								id: getTrad('internal-link.input.aria-label')
 							})}
 							value={link.url}
 							onClick={() => setShowModal(true)}
@@ -159,21 +172,17 @@ const InternalLinkInput = ({
 								icon={<Pencil />}
 								onClick={() => setShowModal(true)}
 								label={formatMessage({
-									id: getTrad('internal-link.form.edit'),
+									id: getTrad('internal-link.form.edit')
 								})}
 							/>
 
-							<IconButton
-								icon={<Link />}
-								onClick={onCopy}
-								label={copyButtonText}
-							/>
+							<IconButton icon={<Link />} onClick={onCopy} label={copyButtonText} />
 
 							<IconButton
 								icon={<Trash />}
 								onClick={onDelete}
 								label={formatMessage({
-									id: getTrad('internal-link.form.delete'),
+									id: getTrad('internal-link.form.delete')
 								})}
 							/>
 						</Actions>
@@ -196,28 +205,6 @@ const InternalLinkInput = ({
 			)}
 		</Suspense>
 	);
-};
-
-InternalLinkInput.defaultProps = {
-	description: null,
-	disabled: false,
-	error: null,
-	labelAction: null,
-	required: false,
-	value: '',
-};
-
-InternalLinkInput.propTypes = {
-	intlLabel: PropTypes.object.isRequired,
-	onChange: PropTypes.func.isRequired,
-	attribute: PropTypes.object.isRequired,
-	name: PropTypes.string.isRequired,
-	description: PropTypes.object,
-	disabled: PropTypes.bool,
-	error: PropTypes.string,
-	labelAction: PropTypes.object,
-	required: PropTypes.bool,
-	value: PropTypes.string,
 };
 
 export default InternalLinkInput;

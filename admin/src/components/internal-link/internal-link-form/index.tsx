@@ -1,31 +1,34 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { string } from 'yup';
-
-import { Alert, ToggleCheckbox, Stack, Button, FieldLabel, Field, FieldError, FieldInput } from '@strapi/design-system';
-
 import { ReactSelect } from '@strapi/helper-plugin';
+import { Alert, ToggleCheckbox, Stack, Button, FieldLabel, Field, FieldError, FieldInput } from '@strapi/design-system';
 
 import getTrad from '../../../utils/get-trad';
 import axios from '../../../utils/axiosInstance';
 import Option from './option';
-import { INTERNAL_LINK_TYPE } from '../internal-link-factory';
 import pluginId from '../../../plugin-id';
+import { INTERNAL_LINK_TYPE } from '../internal-link-factory';
+import { IUseInternalLinkInputReturn } from '../internal-link-input/use-internal-link-input';
 
-const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
+interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData'> {}
+
+const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
-	const [checked, setChecked] = useState(link.type === 'internal');
-	const [contentType, setContentType] = useState<any>();
-	const [contentTypeOptions, setContentTypeOptions] = useState([]);
-	const [contentTypeIsLoading, setContentTypeIsLoading] = useState(false);
-	const [page, setPage] = useState();
-	const [pageOptions, setPageOptions] = useState([]);
-	const [pageIsLoading, setPageIsLoading] = useState(false);
+	const [checked, setChecked] = useState<boolean>(link.type === 'internal');
+	const [contentTypeUid, setContentTypeUid] = useState<string | undefined>();
+	const [contentTypeOptions, setContentTypeOptions] = useState<any[]>([]); // TODO: Server typing
+	const [contentTypeIsLoading, setContentTypeIsLoading] = useState<boolean>(false);
+	const [pageId, setPageId] = useState<number | undefined>();
+	const [pageOptions, setPageOptions] = useState<any[]>([]); // TODO: Server typing
+	const [pageIsLoading, setPageIsLoading] = useState<boolean>(false);
+
+	const page = pageOptions.find((item) => item.id === pageId); // TODO: Server typing
+	const contentType = contentTypeOptions.find((item) => item.uid === contentTypeUid); // TODO: Server typing
 
 	const translationLinkKey = checked ? 'generated-link' : 'link';
 
-	const getAllContentTypes = async (uid) => {
+	const getAllContentTypes = async (uid: string | undefined): Promise<void> => {
 		setContentTypeIsLoading(true);
 
 		try {
@@ -39,7 +42,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
 			}));
 
 			if (uid) {
-				setContentType(options.find((type) => type.uid === uid));
+				setContentTypeUid(uid);
 			}
 
 			setContentTypeOptions(options);
@@ -50,7 +53,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
 		setContentTypeIsLoading(false);
 	};
 
-	const pageDataToOptionData = (data, id) => {
+	const pageDataToOptionData = (data, id): void => {
 		const options = data.map((item) => {
 			const titlePath = contentType?.titleField.split('.');
 			const locale = item.locale && item.locale !== 'nl' ? `${item.locale}/` : '';
@@ -71,13 +74,13 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
 		});
 
 		if (id) {
-			setPage(options.find((item) => item.id === id));
+			setPageId(id);
 		}
 
 		setPageOptions(options);
 	};
 
-	const getAllSingleTypeItems = async (contentTypeUid, contentTypeId) => {
+	const getAllSingleTypeItems = async (contentTypeUid: string, contentTypeId: number): Promise<void> => {
 		setPageIsLoading(true);
 
 		try {
@@ -90,7 +93,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
 		setPageIsLoading(false);
 	};
 
-	const getAllItems = async (contentTypeUid, contentTypeId) => {
+	const getAllItems = async (contentTypeUid: string, contentTypeId: number): Promise<void> => {
 		setPageIsLoading(true);
 
 		try {
@@ -103,7 +106,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
 		setPageIsLoading(false);
 	};
 
-	const onToggleCheckbox = () => {
+	const onToggleCheckbox = (): void => {
 		setChecked((prev) => !prev);
 		setErrors((previousValue) => ({
 			...previousValue,
@@ -117,13 +120,15 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
 		}));
 	};
 
-	const onContentTypeChange = (value) => {
-		setPage(undefined);
-		setContentType(value);
+	// TODO: Server typing content type
+	const onContentTypeChange = (value: any) => {
+		setPageId(undefined);
+		setContentTypeUid(value.uid);
 	};
 
-	const onPageChange = (value) => {
-		setPage(value);
+	// TODO: Server typing page type
+	const onPageChange = (value: any) => {
+		setPageId(value.id);
 		setLink((previousValue) => ({
 			...previousValue,
 			targetContentTypeUid: contentType.uid,
@@ -183,8 +188,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
 	};
 
 	const onReset = () => {
-		setContentType(undefined);
-		setPage(undefined);
+		setContentTypeUid(undefined);
+		setPageId(undefined);
 
 		setErrors((previousValue) => ({
 			...previousValue,
@@ -227,7 +232,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }) => {
 		}
 	};
 
-	const onTextChange = (event) => {
+	const onTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setLink((value) => ({ ...value, text: event.target.value }));
 	};
 

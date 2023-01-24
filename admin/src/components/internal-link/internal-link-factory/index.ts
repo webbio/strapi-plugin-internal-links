@@ -1,10 +1,9 @@
-import PropTypes from 'prop-types';
 import { object, mixed, string, number } from 'yup';
 
 export const INTERNAL_LINK_TYPE = {
 	INTERNAL: 'internal',
 	EXTERNAL: 'external'
-};
+} as const;
 
 export const internalLinkSchema = object({
 	id: number().nullable().positive().integer(),
@@ -20,15 +19,15 @@ export const internalLinkSchema = object({
 });
 
 export interface InternalLink {
-	id: string | number;
+	id: string | number | null;
 	sourceContentTypeUid: string;
-	sourceContentTypeId: string | number;
-	sourcefieldName: string;
+	sourceContentTypeId: string | number | null;
+	sourceFieldName: string;
 	targetContentTypeUid?: string;
-	targetContentTypeId: string | number;
+	targetContentTypeId: string | number | null;
 	url: string;
 	text: string;
-	type: 'internal' | 'external';
+	type: (typeof INTERNAL_LINK_TYPE)[keyof typeof INTERNAL_LINK_TYPE];
 	domain?: string;
 }
 
@@ -37,7 +36,7 @@ export const createInternalLink = (
 	sourceContentTypeId: string | null = null,
 	sourceFieldName: string = '',
 	initialText?: string
-) => ({
+): InternalLink => ({
 	id: null,
 	sourceContentTypeUid,
 	sourceContentTypeId,
