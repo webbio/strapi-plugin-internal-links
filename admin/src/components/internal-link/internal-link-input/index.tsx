@@ -145,13 +145,15 @@ const InternalLinkInput = ({
 
 	return (
 		<Suspense fallback={<></>}>
-			<Field name={name} id={name} error={errors?.url} hint={description && formatMessage(description)}>
+			<Field
+				name={name}
+				id={name}
+				error={errors?.url}
+				hint={description && formatMessage(description)}
+				required={required}
+			>
 				<Stack spacing={1}>
-					{intlLabel && (
-						<FieldLabel action={labelAction} required={required}>
-							{formatMessage(intlLabel)}
-						</FieldLabel>
-					)}
+					{intlLabel && <FieldLabel action={labelAction}>{formatMessage(intlLabel)}</FieldLabel>}
 
 					<InputGroup horizontal>
 						<FieldInput

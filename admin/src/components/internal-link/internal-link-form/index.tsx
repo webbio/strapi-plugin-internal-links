@@ -1,13 +1,16 @@
+import type { IContentTypeOption } from './queries/use-content-type-options';
+import type { IPageOption } from './queries/use-page-options';
+
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { string } from 'yup';
 import { ReactSelect } from '@strapi/helper-plugin';
 import { Alert, ToggleCheckbox, Stack, Button, FieldLabel, Field, FieldError, FieldInput } from '@strapi/design-system';
 
-import getTrad from '../../../utils/get-trad';
-import axios from '../../../utils/axiosInstance';
 import Option from './option';
-import pluginId from '../../../plugin-id';
+import useContentTypeOptions from './queries/use-content-type-options';
+import usePageOptions from './queries/use-page-options';
+import getTrad from '../../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../internal-link-factory';
 import { IUseInternalLinkInputReturn } from '../internal-link-input/use-internal-link-input';
 
@@ -15,96 +18,18 @@ interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isIn
 
 const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
-	const [checked, setChecked] = useState<boolean>(link.type === 'internal');
-	const [contentTypeUid, setContentTypeUid] = useState<string | undefined>();
-	const [contentTypeOptions, setContentTypeOptions] = useState<any[]>([]); // TODO: Server typing
-	const [contentTypeIsLoading, setContentTypeIsLoading] = useState<boolean>(false);
-	const [pageId, setPageId] = useState<number | undefined>();
-	const [pageOptions, setPageOptions] = useState<any[]>([]); // TODO: Server typing
-	const [pageIsLoading, setPageIsLoading] = useState<boolean>(false);
 
-	const page = pageOptions.find((item) => item.id === pageId); // TODO: Server typing
-	const contentType = contentTypeOptions.find((item) => item.uid === contentTypeUid); // TODO: Server typing
+	const [checked, setChecked] = useState<boolean>(link.type === 'internal');
+	const [contentTypeUid, setContentTypeUid] = useState<string | undefined>(link.targetContentTypeUid);
+	const [pageId, setPageId] = useState<number | undefined>(Number(link.targetContentTypeId));
+
+	const { contentTypeOptions, contentTypeOptionsIsLoading, contentTypeOptionsIsFetching } = useContentTypeOptions();
+	const contentType = contentTypeOptions?.find((item) => item.uid === (contentTypeUid || link.targetContentTypeUid));
+
+	const { pageOptions, pageOptionsIsLoading, pageOptionsIsFetching } = usePageOptions(contentType);
+	const page = pageOptions?.find((item) => item.id === pageId);
 
 	const translationLinkKey = checked ? 'generated-link' : 'link';
-
-	const getAllContentTypes = async (uid: string | undefined): Promise<void> => {
-		setContentTypeIsLoading(true);
-
-		try {
-			const { data } = await axios.get(`/${pluginId}/content-types`);
-
-			const options = data.map((item) => ({
-				...item,
-				label: item.displayName,
-				value: String(item.uid),
-				slugLabel: item.basePath || ''
-			}));
-
-			if (uid) {
-				setContentTypeUid(uid);
-			}
-
-			setContentTypeOptions(options);
-		} catch (error) {
-			console.error(error);
-		}
-
-		setContentTypeIsLoading(false);
-	};
-
-	const pageDataToOptionData = (data, id): void => {
-		const options = data.map((item) => {
-			const titlePath = contentType?.titleField.split('.');
-			const locale = item.locale && item.locale !== 'nl' ? `${item.locale}/` : '';
-			const label =
-				titlePath.length < 2
-					? item[contentType?.titleField]
-					: titlePath.reduce((previousValue, currentValue) => {
-							return previousValue[currentValue];
-					  }, item);
-
-			return {
-				...item,
-				label,
-				value: String(item.id),
-				slugLabel: contentType?.slugField !== false ? `${locale}${item[contentType?.slugField] || ''}` : '',
-				showIndicator: true
-			};
-		});
-
-		if (id) {
-			setPageId(id);
-		}
-
-		setPageOptions(options);
-	};
-
-	const getAllSingleTypeItems = async (contentTypeUid: string, contentTypeId: number): Promise<void> => {
-		setPageIsLoading(true);
-
-		try {
-			const { data } = await axios.get(`/${pluginId}/single-type/${contentTypeUid}`);
-			pageDataToOptionData(data, contentTypeId);
-		} catch (error) {
-			console.error(error);
-		}
-
-		setPageIsLoading(false);
-	};
-
-	const getAllItems = async (contentTypeUid: string, contentTypeId: number): Promise<void> => {
-		setPageIsLoading(true);
-
-		try {
-			const { data } = await axios.get(`/${pluginId}/collection-type/${contentTypeUid}`);
-			pageDataToOptionData(data, contentTypeId);
-		} catch (error) {
-			console.error(error);
-		}
-
-		setPageIsLoading(false);
-	};
 
 	const onToggleCheckbox = (): void => {
 		setChecked((prev) => !prev);
@@ -120,14 +45,14 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 		}));
 	};
 
-	// TODO: Server typing content type
-	const onContentTypeChange = (value: any) => {
+	const onContentTypeChange = (value: IContentTypeOption) => {
 		setPageId(undefined);
 		setContentTypeUid(value.uid);
 	};
 
-	// TODO: Server typing page type
-	const onPageChange = (value: any) => {
+	const onPageChange = (value: IPageOption) => {
+		if (!contentType) return;
+
 		setPageId(value.id);
 		setLink((previousValue) => ({
 			...previousValue,
@@ -237,25 +162,12 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 	};
 
 	useLayoutEffect(() => {
-		getAllContentTypes(link.targetContentTypeUid);
 		setChecked(!!link.targetContentTypeUid);
 		setLink((previousValue) => ({
 			...previousValue,
 			type: link.targetContentTypeUid ? INTERNAL_LINK_TYPE.INTERNAL : INTERNAL_LINK_TYPE.EXTERNAL
 		}));
 	}, []);
-
-	useEffect(() => {
-		setPageOptions([]);
-
-		if (contentType?.uid && contentType.kind === 'collectionType') {
-			getAllItems(contentType.uid, Number(link.targetContentTypeId));
-		}
-
-		if (contentType?.uid && contentType.kind === 'singleType') {
-			getAllSingleTypeItems(contentType.uid, Number(link.targetContentTypeId));
-		}
-	}, [contentType?.uid]);
 
 	useEffect(() => {
 		if (contentType?.domain) {
@@ -283,8 +195,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 				})}
 			</ToggleCheckbox>
 
-			<Field name="text" id="text" error={errors.text}>
-				<FieldLabel required>
+			<Field name="text" id="text" error={errors.text} required>
+				<FieldLabel>
 					{formatMessage({
 						id: getTrad('internal-link.form.text')
 					})}
@@ -296,8 +208,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 			</Field>
 
 			{!!checked && (
-				<Field>
-					<FieldLabel required>
+				<Field required>
+					<FieldLabel>
 						{formatMessage({
 							id: getTrad('internal-link.form.collection')
 						})}
@@ -310,12 +222,12 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 						menuPosition="absolute"
 						menuPlacement="auto"
 						components={{ Option }}
-						options={contentTypeOptions}
-						isLoading={contentTypeIsLoading}
-						isDisabled={contentTypeIsLoading}
+						options={contentTypeOptionsIsFetching ? [] : contentTypeOptions}
+						isLoading={contentTypeOptionsIsLoading}
+						isDisabled={contentTypeOptionsIsLoading}
 						onChange={onContentTypeChange}
 						placeholder={
-							contentTypeIsLoading
+							contentTypeOptionsIsLoading
 								? formatMessage({
 										id: getTrad('internal-link.loading')
 								  })
@@ -332,8 +244,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 			)}
 
 			{!!checked && (
-				<Field>
-					<FieldLabel required>
+				<Field required>
+					<FieldLabel>
 						{formatMessage({
 							id: getTrad('internal-link.form.page')
 						})}
@@ -346,12 +258,12 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 						menuPosition="absolute"
 						menuPlacement="auto"
 						components={{ Option }}
-						options={pageOptions}
-						isLoading={pageIsLoading}
-						isDisabled={!contentType || pageIsLoading}
+						options={pageOptionsIsFetching ? [] : pageOptions}
+						isLoading={pageOptionsIsLoading}
+						isDisabled={!contentType || pageOptionsIsLoading}
 						onChange={onPageChange}
 						placeholder={
-							pageIsLoading
+							pageOptionsIsLoading
 								? formatMessage({
 										id: getTrad('internal-link.loading')
 								  })
@@ -368,8 +280,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 			)}
 
 			<div style={checked ? { display: 'none' } : undefined}>
-				<Field name="link" id="link" error={errors.url}>
-					<FieldLabel required>
+				<Field name="link" id="link" error={errors.url} required>
+					<FieldLabel>
 						{formatMessage({
 							id: getTrad(`internal-link.form.${translationLinkKey}`)
 						})}
