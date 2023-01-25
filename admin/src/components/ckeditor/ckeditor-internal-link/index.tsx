@@ -1,5 +1,6 @@
+import type { IInternalLink } from '../../internal-link/internal-link-factory';
+
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useCMEditViewDataManager } from '@strapi/helper-plugin';
 import InternalLinkModal from '../../internal-link/internal-link-modal';
 import useInternalLinkInput from '../../internal-link/internal-link-input/use-internal-link-input';
@@ -9,40 +10,39 @@ interface IProps {
 	isOpen: boolean;
 	name: string;
 	text?: string;
-	value?: string;
-	error?: string,
+	value: string;
+	error?: string;
 	sourceUid?: string;
 	sourceId?: number;
-	onChange?: any;
-	onToggle?: any;
+	onChange?: (html: string, link: IInternalLink) => void;
+	onToggle?: (selectedValue?: string, initialValue?: string, isEdit?: boolean) => void;
 }
 
 const InternalLink = ({
 	text = '',
-	value= '',
+	value = '',
 	error,
 	name,
 	isOpen,
 	onToggle = () => {},
 	onChange = () => {},
 	sourceUid,
-	sourceId,
+	sourceId
 }: IProps) => {
 	if (!isOpen) return null;
 
 	const viewData = useCMEditViewDataManager();
 
-	const { link, setLink, errors, setErrors, initialLink } =
-		useInternalLinkInput(
-			value,
-			error,
-			sourceUid || viewData?.layout?.uid,
-			sourceId || viewData?.initialData?.id,
-			name,
-			text
-		);
+	const { link, setLink, errors, setErrors, initialLink } = useInternalLinkInput(
+		value,
+		error,
+		sourceUid || viewData?.layout?.uid,
+		sourceId || viewData?.initialData?.id,
+		name,
+		text
+	);
 
-	const handleChange = () => {
+	const handleChange = (): void => {
 		const html = `
 			<a
 				href="${link.url}"
@@ -54,19 +54,19 @@ const InternalLink = ({
 		onChange(html, link);
 	};
 
-	const saveModal = () => {
+	const saveModal = (): void => {
 		initialLink.current = link;
 		handleChange();
 		onToggle();
 	};
 
-	const closeModal = () => {
+	const closeModal = (): void => {
 		setLink(initialLink.current);
 		setErrors((previousValue) => ({
 			...previousValue,
 			text: undefined,
 			url: undefined,
-			link: undefined,
+			link: undefined
 		}));
 		onToggle();
 	};

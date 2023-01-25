@@ -1,11 +1,12 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, DefaultTheme } from 'styled-components';
 import { style as common } from './common';
 import { style as light } from './light';
 import { style as dark } from './dark';
 import { style as markdownStyles } from './markdown';
 
-export const getGlobalStyling = (theme: any) => {
+export const getGlobalStyling = (theme: string | null) => {
 	let themeStyle: any = null;
+
 	switch (theme) {
 		case 'dark':
 			themeStyle = dark;

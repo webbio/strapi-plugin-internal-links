@@ -1,13 +1,12 @@
+// import type ClassicEditor from '@ckeditor/ckeditor5-editor-classic';
+
 import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
-
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-
+import { useIntl, MessageDescriptor, IntlFormatters } from 'react-intl';
 /*eslint-disable */
 import ckeditor5Dll from 'ckeditor5/build/ckeditor5-dll.js';
 import ckeditor5EditorClassicDll from '@ckeditor/ckeditor5-editor-classic/build/editor-classic.js';
 /*eslint-enable */
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 
 import Configurator from './configurator';
 import { getGlobalStyling } from './styles';
@@ -16,17 +15,36 @@ import { Field, FieldHint, FieldError, FieldLabel, Stack } from '@strapi/design-
 import MediaLib from '../ckeditor-media-lib';
 import InternalLink from '../ckeditor-internal-link';
 
-interface IProps {
-	intlLabel: any;
-	onChange: any;
-	attribute: any;
-	name: string;
-	description: any;
-	disabled: boolean;
-	error: string | null;
-	labelAction: any;
-	required: boolean;
-	value: string;
+type IIntlText = MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
+
+type IEditorPresetTypes = 'markdown' | 'light' | 'standard' | 'rich';
+
+export interface IEditorOptions {
+	preset: IEditorPresetTypes;
+	sourceId?: number;
+	sourceUid?: string;
+	maxLengthCharacters?: number;
+}
+
+export interface IEditorAttributes {
+	pluginOptions?: { slug?: { targetField?: string; field?: string } };
+	required?: boolean;
+	options: IEditorOptions;
+}
+
+export interface ICKEditorInputProps {
+	intlLabel?: IIntlText;
+	onChange?: any;
+	attribute: IEditorAttributes;
+	name?: string;
+	description?: IIntlText;
+	disabled?: boolean;
+	error?: any;
+	labelAction?: any;
+	required?: boolean;
+	value?: string;
+	contentTypeUID?: string;
+	placeholder?: IIntlText;
 }
 
 const CKEditorInput = ({
@@ -35,26 +53,28 @@ const CKEditorInput = ({
 	name,
 	value = '',
 	disabled = false,
-	labelAction = null,
+	labelAction,
 	intlLabel,
 	required = false,
-	description = null,
+	description,
 	error = null
-}: IProps) => {
+}: ICKEditorInputProps) => {
+	if (!window.CKEditor5) return <>BIEM</>;
+
 	const { formatMessage } = useIntl();
 	const { maxLengthCharacters: maxLength, sourceId, sourceUid, ...options } = attribute.options;
 
 	const configurator = new Configurator({ options, maxLength });
 	const editorConfig = configurator.getEditorConfig();
-	const wordCounter = useRef<any>(null);
+	const wordCounter = useRef<HTMLDivElement>(null);
 	const strapiTheme = localStorage.getItem('STRAPI_THEME');
 	const GlobalStyling = getGlobalStyling(strapiTheme);
 
-	const [editorInstance, setEditorInstance] = useState<any>(false);
-	const [mediaLibVisible, setMediaLibVisible] = useState(false);
-	const [internalLinkVisible, setInternalLinkVisible] = useState(false);
-	const [errors, setErrors] = useState(error);
-	const [selectedText, setSelectedText] = useState(undefined);
+	const [editorInstance, setEditorInstance] = useState<any | false>(false);
+	const [mediaLibVisible, setMediaLibVisible] = useState<boolean>(false);
+	const [internalLinkVisible, setInternalLinkVisible] = useState<boolean>(false);
+	const [errors, setErrors] = useState<any>(error);
+	const [selectedText, setSelectedText] = useState<string | undefined>(undefined);
 	const [initialLink, setInitialLink] = useState<string | null | undefined>(error);
 	const [isEdit, setIsEdit] = useState<boolean | undefined>(undefined);
 
@@ -78,14 +98,14 @@ const CKEditorInput = ({
 		toggleMediaLibVisible();
 	};
 
-	const toggleInternalLinkVisible = (selectedValue, initialValue, isEdit) => {
+	const toggleInternalLinkVisible = (selectedValue?: string, initialValue?: string, isEdit?: boolean) => {
 		setSelectedText(selectedValue);
 		setInitialLink(initialValue);
 		setIsEdit(isEdit);
 		setInternalLinkVisible((previousValue) => !previousValue);
 	};
 
-	const handleLinkInsert = (html, link) => {
+	const handleLinkInsert = (html: string, link) => {
 		if (!html) return;
 		const viewFragment = editorInstance.data.processor.toView(html);
 		const modelFragment = editorInstance.data.toModel(viewFragment);
@@ -101,57 +121,62 @@ const CKEditorInput = ({
 		setIsEdit(false);
 	};
 
+	const onEditorReady = (editor: any) => {
+		const wordCountPlugin = editor.plugins.get('WordCount');
+		const wordCountWrapper = wordCounter.current;
+
+		if (wordCountWrapper) {
+			wordCountWrapper.appendChild(wordCountPlugin.wordCountContainer);
+		}
+
+		if (editor.plugins.has('strapiMediaLib')) {
+			const mediaLibPlugin = editor.plugins.get('strapiMediaLib');
+			mediaLibPlugin.connect(toggleMediaLibVisible);
+		}
+
+		if (editor.plugins.has('strapiInternalLink')) {
+			const internalLinkPlugin = editor.plugins.get('strapiInternalLink');
+			internalLinkPlugin.connect(toggleInternalLinkVisible);
+		}
+
+		setEditorInstance(editor);
+	};
+
+	const onEditorChange = (_: Event, editor: any) => {
+		const data = editor.getData();
+		onChange({ target: { name, value: data } });
+
+		if (!maxLength) return;
+
+		const wordCountPlugin = editor.plugins.get('WordCount');
+		const numberOfCharacters = wordCountPlugin.characters;
+
+		if (numberOfCharacters > maxLength) {
+			setErrors('Too long');
+		}
+	};
+
+	const onEditorFocus = () => {
+		if (editorInstance?.plugins?.has('Markdown')) {
+			document?.body?.classList?.add('ck-markdown-active');
+		} else {
+			document?.body?.classList?.remove('ck-markdown-active');
+		}
+	};
+
 	return (
-		<Field
-			name={name}
-			id={name}
-			// GenericInput calls formatMessage and returns a string for the error
-			error={errors}
-			hint={description && formatMessage(description)}
-		>
+		<Field name={name} id={name} error={errors} hint={description && formatMessage(description)}>
 			<GlobalStyling />
 
 			<Stack spacing={1} required={required}>
-				<FieldLabel action={labelAction}>{formatMessage(intlLabel)}</FieldLabel>
+				{intlLabel && <FieldLabel action={labelAction}>{formatMessage(intlLabel)}</FieldLabel>}
 				<CKEditor
 					editor={window.CKEditor5.editorClassic.ClassicEditor}
 					data={value}
 					disabled={disabled}
-					onReady={(editor) => {
-						const wordCountPlugin = editor.plugins.get('WordCount');
-						const wordCountWrapper = wordCounter.current;
-						wordCountWrapper.appendChild(wordCountPlugin.wordCountContainer);
-
-						if (editor.plugins.has('strapiMediaLib')) {
-							const mediaLibPlugin = editor.plugins.get('strapiMediaLib');
-							mediaLibPlugin.connect(toggleMediaLibVisible);
-						}
-
-						if (editor.plugins.has('strapiInternalLink')) {
-							const internalLinkPlugin = editor.plugins.get('strapiInternalLink');
-							internalLinkPlugin.connect(toggleInternalLinkVisible);
-						}
-
-						setEditorInstance(editor);
-					}}
-					onChange={(event, editor) => {
-						const data = editor.getData();
-						onChange({ target: { name, value: data } });
-
-						const wordCountPlugin = editor.plugins.get('WordCount');
-						const numberOfCharacters = wordCountPlugin.characters;
-
-						if (numberOfCharacters > maxLength) {
-							setErrors('Too long');
-						}
-					}}
-					onFocus={() => {
-						if (editorInstance?.plugins?.has('Markdown')) {
-							document?.body?.classList?.add('ck-markdown-active');
-						} else {
-							document?.body?.classList?.remove('ck-markdown-active');
-						}
-					}}
+					onReady={onEditorReady}
+					onChange={onEditorChange}
+					onFocus={onEditorFocus}
 					config={editorConfig}
 				/>
 
@@ -166,9 +191,9 @@ const CKEditorInput = ({
 				isOpen={internalLinkVisible}
 				onChange={handleLinkInsert}
 				onToggle={toggleInternalLinkVisible}
-				name={name}
+				name={name || ''}
 				text={selectedText}
-				value={initialLink}
+				value={initialLink || ''}
 				sourceId={sourceId}
 				sourceUid={sourceUid}
 			/>

@@ -11,12 +11,10 @@ const IconBox = styled(Flex)`
 	}
 `;
 
-const CKEditorIcon = () => {
-	return (
-		<IconBox justifyContent="center" alignItems="center" width={7} height={6} hasRadius aria-hidden>
-			<Icon height={5} as={SvgIcon} />
-		</IconBox>
-	);
-};
+const CKEditorIcon = (): JSX.Element => (
+	<IconBox justifyContent="center" alignItems="center" width={7} height={6} hasRadius aria-hidden>
+		<Icon height={5} as={SvgIcon} />
+	</IconBox>
+);
 
 export default CKEditorIcon;

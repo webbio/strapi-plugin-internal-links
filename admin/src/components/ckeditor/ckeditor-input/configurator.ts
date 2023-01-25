@@ -1,3 +1,5 @@
+import type { IEditorOptions } from '.';
+
 /* eslint-disable */
 import ckeditor5Dll from 'ckeditor5/build/ckeditor5-dll.js';
 import ckeditor5AlignmentDll from '@ckeditor/ckeditor5-alignment/build/alignment.js';
@@ -325,17 +327,30 @@ const CKEDITOR_BASE_CONFIG_FOR_PRESETS = {
 	}
 };
 
+type IRichConfig = (typeof CKEDITOR_BASE_CONFIG_FOR_PRESETS)['rich'];
+
+interface IConfiguratorConfig extends Partial<IRichConfig> {
+	maximumLength?: {
+		characters: number;
+	};
+}
+
+interface IConfiguratorOptions {
+	options: IEditorOptions;
+	maxLength?: number;
+}
+
 export default class Configurator {
-	private fieldConfig: any;
-	
-	constructor(fieldConfig) {
+	private fieldConfig: IConfiguratorOptions;
+
+	constructor(fieldConfig: IConfiguratorOptions) {
 		this.fieldConfig = fieldConfig;
 	}
 
 	getEditorConfig() {
-		const config = this._getBaseConfig();
+		const config: IConfiguratorConfig = this._getBaseConfig();
 
-		if (this.fieldConfig.maxLength) {
+		if (this.fieldConfig.maxLength && config.plugins) {
 			config.plugins.push(window.CKEditor5.maximumLength.MaximumLength);
 
 			config.maximumLength = {

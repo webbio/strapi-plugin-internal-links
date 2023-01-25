@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-const SvgIcon = (props) => (
+export interface ISvgIconProps extends React.HTMLAttributes<HTMLOrSVGElement> {}
+
+const SvgIcon = (props: ISvgIconProps): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -7 50 37" {...props}>
 		<path d="M15.34 14.18Z" fill="#141A25" />
 		<path
