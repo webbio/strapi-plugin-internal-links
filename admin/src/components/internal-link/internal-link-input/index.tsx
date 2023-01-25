@@ -8,8 +8,8 @@ import { Pencil, Link, Trash } from '@strapi/icons';
 
 import getTrad from '../../../utils/get-trad';
 import createInternalLink from '../internal-link-factory';
-import { InputGroup, Actions } from './styles';
 import useInternalLinkInput from './use-internal-link-input';
+import { InputGroup, Actions } from './styles';
 
 export interface IInternalLinkInputProps {
 	intlLabel?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;

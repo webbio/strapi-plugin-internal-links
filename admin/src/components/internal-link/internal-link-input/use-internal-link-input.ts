@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import getTrad from '../../../utils/get-trad';
-import createInternalLink, { InternalLink } from '../internal-link-factory';
+import createInternalLink, { IInternalLink } from '../internal-link-factory';
 
 export interface IInternalLinkErrors {
 	input?: string;
@@ -11,11 +11,11 @@ export interface IInternalLinkErrors {
 }
 
 export interface IUseInternalLinkInputReturn {
-	link: InternalLink;
-	setLink: React.Dispatch<React.SetStateAction<InternalLink>>;
+	link: IInternalLink;
+	setLink: React.Dispatch<React.SetStateAction<IInternalLink>>;
 	errors: IInternalLinkErrors;
 	setErrors: React.Dispatch<React.SetStateAction<IInternalLinkErrors>>;
-	initialLink: React.MutableRefObject<InternalLink>;
+	initialLink: React.MutableRefObject<IInternalLink>;
 	isInitialData: boolean;
 }
 
@@ -30,7 +30,7 @@ export const isJson = (string: string): boolean => {
 	}
 };
 
-export const isInternalLink = (object: any): object is InternalLink => {
+export const isInternalLink = (object: any): object is IInternalLink => {
 	return (
 		'id' in object &&
 		'sourceContentTypeUid' in object &&
@@ -51,7 +51,7 @@ const useInternalLinkInput = (
 	initialText?: string
 ): IUseInternalLinkInputReturn => {
 	const { formatMessage } = useIntl();
-	const parsedInitialValue = useMemo((): InternalLink => {
+	const parsedInitialValue = useMemo((): IInternalLink => {
 		const initialValueIsJson = isJson(initialValue);
 		const newInternalLink = createInternalLink(layoutUid, initialDataId, fieldName, initialText);
 
@@ -72,7 +72,7 @@ const useInternalLinkInput = (
 		};
 	}, []);
 
-	const [link, setLink] = useState<InternalLink>(parsedInitialValue);
+	const [link, setLink] = useState<IInternalLink>(parsedInitialValue);
 	const [errors, setErrors] = useState<IInternalLinkErrors>({
 		text: undefined,
 		url: initialError,
