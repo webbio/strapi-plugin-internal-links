@@ -51,7 +51,7 @@ const InternalLinkModal = ({
 					</Flex>
 				</Typography>
 			</ModalHeader>
-			<ModalBody>
+			<ModalBody style={{ overflow: 'overlay' }}>
 				<Typography fontWeight="bold" textColor={colors.text} id="body">
 					<InternalLinkForm link={link} setLink={setLink} errors={errors} setErrors={setErrors} />
 				</Typography>

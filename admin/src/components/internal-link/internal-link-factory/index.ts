@@ -18,7 +18,7 @@ export const internalLinkSchema = object({
 	domain: string()
 });
 
-export interface InternalLink {
+export interface IInternalLink {
 	id: string | number | null;
 	sourceContentTypeUid: string;
 	sourceContentTypeId: string | number | null;
@@ -36,7 +36,7 @@ export const createInternalLink = (
 	sourceContentTypeId: string | null = null,
 	sourceFieldName: string = '',
 	initialText?: string
-): InternalLink => ({
+): IInternalLink => ({
 	id: null,
 	sourceContentTypeUid,
 	sourceContentTypeId,

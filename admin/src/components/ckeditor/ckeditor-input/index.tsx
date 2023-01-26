@@ -111,10 +111,8 @@ const CKEditorInput = ({
 		>
 			<GlobalStyling />
 
-			<Stack spacing={1}>
-				<FieldLabel action={labelAction} required={required}>
-					{formatMessage(intlLabel)}
-				</FieldLabel>
+			<Stack spacing={1} required={required}>
+				<FieldLabel action={labelAction}>{formatMessage(intlLabel)}</FieldLabel>
 				<CKEditor
 					editor={window.CKEditor5.editorClassic.ClassicEditor}
 					data={value}

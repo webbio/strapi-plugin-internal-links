@@ -13,8 +13,8 @@ const find = () => {
 			uid: contentType.uid,
 			kind: contentType.kind,
 			displayName: contentType.info.displayName,
-			titleField: titleField || null,
-			slugField: slugField || null,
+			titleField: titleField,
+			slugField: slugField,
 			basePath: contentType.attributes[basePathField]?.default,
 			domain
 		};

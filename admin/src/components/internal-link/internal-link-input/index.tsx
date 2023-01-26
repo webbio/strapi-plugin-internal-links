@@ -8,8 +8,8 @@ import { Pencil, Link, Trash } from '@strapi/icons';
 
 import getTrad from '../../../utils/get-trad';
 import createInternalLink from '../internal-link-factory';
-import { InputGroup, Actions } from './styles';
 import useInternalLinkInput from './use-internal-link-input';
+import { InputGroup, Actions } from './styles';
 
 export interface IInternalLinkInputProps {
 	intlLabel?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
@@ -145,13 +145,15 @@ const InternalLinkInput = ({
 
 	return (
 		<Suspense fallback={<></>}>
-			<Field name={name} id={name} error={errors?.url} hint={description && formatMessage(description)}>
+			<Field
+				name={name}
+				id={name}
+				error={errors?.url}
+				hint={description && formatMessage(description)}
+				required={required}
+			>
 				<Stack spacing={1}>
-					{intlLabel && (
-						<FieldLabel action={labelAction} required={required}>
-							{formatMessage(intlLabel)}
-						</FieldLabel>
-					)}
+					{intlLabel && <FieldLabel action={labelAction}>{formatMessage(intlLabel)}</FieldLabel>}
 
 					<InputGroup horizontal>
 						<FieldInput
