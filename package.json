@@ -1,7 +1,7 @@
 {
 	"name": "@webbio/strapi-plugin-internal-links",
 	"version": "0.0.1",
-	"description": "This is the description of the internal-link plugin.",
+	"description": "A custom field for Strapi that can create internal links",
 	"scripts": {
 		"develop": "tsc -w",
 		"build": "tsc",
@@ -12,7 +12,7 @@
 	"types": "dist/types.js",
 	"strapi": {
 		"name": "internal-links",
-		"description": "Description of internal-link plugin",
+		"description": "A custom field that can create a URL based on an internal relation",
 		"displayName": "Internal Link",
 		"kind": "plugin"
 	},
