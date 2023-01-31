@@ -9,7 +9,8 @@ import getTrad from '../../../utils/get-trad';
 import InternalLinkForm from '../internal-link-form';
 import { IUseInternalLinkInputReturn } from '../internal-link-input/use-internal-link-input';
 
-interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData'> {
+
+interface IInternalLinkModalProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData'> {
 	toggleModal: () => void;
 	closeModal: () => void;
 }
@@ -25,7 +26,7 @@ const InternalLinkModal = ({
 	closeModal = () => {
 		console.warn('Modal close function not set');
 	}
-}: IProps): JSX.Element => {
+}: IInternalLinkModalProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 
 	const hasErrors = Object.values(errors).some((item) => !!item);
@@ -51,11 +52,14 @@ const InternalLinkModal = ({
 					</Flex>
 				</Typography>
 			</ModalHeader>
-			<ModalBody style={{ overflow: 'overlay' }}>
+
+			{/* New Strapi design system overflow styling breaks dropdowns in modals */}
+			<ModalBody style={{ overflow: 'initial' }}>
 				<Typography fontWeight="bold" textColor={colors.text} id="body">
 					<InternalLinkForm link={link} setLink={setLink} errors={errors} setErrors={setErrors} />
 				</Typography>
 			</ModalBody>
+
 			<ModalFooter
 				startActions={
 					<Button onClick={closeModal} variant="tertiary">

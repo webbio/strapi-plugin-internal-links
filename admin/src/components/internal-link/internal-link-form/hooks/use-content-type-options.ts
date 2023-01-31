@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from '../../../../utils/axiosInstance';
 import pluginId from '../../../../plugin-id';
@@ -25,10 +26,16 @@ const fetchContentTypeOptions = async (): Promise<IContentTypeOption[]> => {
 	return options;
 };
 
-export const useContentTypeOptions = () => {
+export const useContentTypeOptions = (initialUid?: string) => {
 	const { data, status, isLoading, isFetching, isError } = useQuery(['content-type-options'], fetchContentTypeOptions);
 
+	const [contentTypeUid, setContentTypeUid] = useState<string | undefined>(initialUid);
+	const contentType = data?.find((item) => item.uid === (contentTypeUid || initialUid));
+
 	return {
+		contentType,
+		contentTypeUid,
+		setContentTypeUid,
 		contentTypeOptions: data,
 		contentTypeOptionsStatus: status,
 		contentTypeOptionsIsFetching: isFetching,

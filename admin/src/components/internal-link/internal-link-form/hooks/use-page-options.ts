@@ -1,4 +1,5 @@
-import type { IContentTypeOption } from './use-content-type-options';
+import { useState } from 'react';
+import { IContentTypeOption } from './use-content-type-options';
 
 import { useQuery } from 'react-query';
 import axios from '../../../../utils/axiosInstance';
@@ -46,12 +47,18 @@ const fetchPageOptions = async (contentType?: IContentTypeOption): Promise<IPage
 	return mapPageData(data, contentType);
 };
 
-export const usePageOptions = (contentType?: IContentTypeOption) => {
+export const usePageOptions = (contentType?: IContentTypeOption, initialId?: string | number | null) => {
 	const { data, status, isLoading, isFetching, isError } = useQuery(['page-options', contentType], () =>
 		fetchPageOptions(contentType)
 	);
 
+	const [pageId, setPageId] = useState<number | undefined>(Number(initialId));
+	const page = data?.find((item) => item.id === pageId);
+
 	return {
+		page,
+		pageId,
+		setPageId,
 		pageOptions: data,
 		pageOptionsStatus: status,
 		pageOptionsIsFetching: isFetching,

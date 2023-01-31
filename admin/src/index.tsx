@@ -2,7 +2,6 @@ import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './plugin-id';
 import Initializer from './components/initializer';
-import PluginIcon from './components/plugin-icon';
 import getTrad from './utils/get-trad';
 import LinkIcon from './components/internal-link/internal-link-icon';
 
@@ -10,36 +9,16 @@ const name = pluginPkg.strapi.name;
 
 export default {
 	register(app) {
-		app.addMenuLink({
-			to: `/plugins/${pluginId}`,
-			icon: PluginIcon,
-			intlLabel: {
-				id: `${pluginId}.plugin.name`,
-				defaultMessage: name
-			},
-			Component: async () => {
-				const component = await import(/* webpackChunkName: "[request]" */ './pages/app');
-
-				return component;
-			},
-			permissions: [
-				// Uncomment to set the permissions of the plugin here
-				// {
-				//   action: '', // the action name should be plugin::plugin-name.actionType
-				//   subject: null,
-				// },
-			]
-		});
-		const plugin = {
+		app.registerPlugin({
 			id: pluginId,
 			initializer: Initializer,
 			isReady: false,
 			name
-		};
-		app.registerPlugin(plugin);
+		});
+
 		app.customFields.register({
+			pluginId,
 			name: 'internal-link',
-			pluginId: 'internal-links',
 			type: 'json',
 			default: {
 				sourceContentTypeUid: null,
@@ -59,13 +38,12 @@ export default {
 			icon: LinkIcon,
 			components: {
 				Input: async () =>
-					import(/* webpackChunkName: "internal-link-component" */ './components/internal-link/internal-link-input')
+					import(/* webpackChunkName: "internal-links" */ './components/internal-link/internal-link-input')
 			},
 			options: {
 				base: [
 					{
 						sectionTitle: {
-							// Add a "Format" settings section
 							id: 'color-picker.color.section.format',
 							defaultMessage: 'Settings'
 						},
@@ -124,7 +102,9 @@ export default {
 			}
 		});
 	},
+
 	bootstrap(app) {},
+
 	async registerTrads(app) {
 		const { locales } = app;
 
