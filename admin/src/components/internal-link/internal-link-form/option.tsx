@@ -3,7 +3,7 @@ import { components, OptionProps } from 'react-select';
 import { Typography, Stack } from '@strapi/design-system';
 import PublishStateIcon from '../publish-state-icon';
 
-interface IProps extends OptionProps {
+interface IOptionProps extends OptionProps {
 	isFocused: boolean;
 	data: {
 		displayName: string;
@@ -19,7 +19,7 @@ interface IProps extends OptionProps {
 	};
 }
 
-const Option = (props: IProps): JSX.Element => {
+const Option = (props: IOptionProps): JSX.Element => {
 	const { label, slugLabel, publishedAt } = props.data;
 	const Component = components.Option;
 

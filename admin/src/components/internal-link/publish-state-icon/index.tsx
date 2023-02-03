@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box } from '@strapi/design-system';
 
-interface IProps {
-	isPublished: boolean
+interface IPublishStateIconProps {
+	isPublished: boolean;
 }
 
-const PublishStateIcon = ({ isPublished = false }: IProps): JSX.Element => (
+const PublishStateIcon = ({ isPublished = false }: IPublishStateIconProps): JSX.Element => (
 	<Box
 		background={isPublished ? 'success600' : 'secondary600'}
 		style={{

@@ -1,6 +1,3 @@
-import type { IContentTypeOption } from './queries/use-content-type-options';
-import type { IPageOption } from './queries/use-page-options';
-
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { string } from 'yup';
@@ -8,8 +5,8 @@ import { ReactSelect } from '@strapi/helper-plugin';
 import { Alert, ToggleCheckbox, Stack, Button, FieldLabel, Field, FieldError, FieldInput } from '@strapi/design-system';
 
 import Option from './option';
-import useContentTypeOptions from './queries/use-content-type-options';
-import usePageOptions from './queries/use-page-options';
+import useContentTypeOptions, { IContentTypeOption } from './hooks/use-content-type-options';
+import usePageOptions, { IPageOption } from './hooks/use-page-options';
 import getTrad from '../../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../internal-link-factory';
 import { IUseInternalLinkInputReturn } from '../internal-link-input/use-internal-link-input';
@@ -19,16 +16,20 @@ interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isIn
 const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 
+	const {
+		contentType,
+		setContentTypeUid,
+		contentTypeOptions,
+		contentTypeOptionsIsLoading,
+		contentTypeOptionsIsFetching
+	} = useContentTypeOptions(link.targetContentTypeUid);
+
+	const { page, setPageId, pageOptions, pageOptionsIsLoading, pageOptionsIsFetching } = usePageOptions(
+		contentType,
+		link.targetContentTypeId
+	);
+
 	const [checked, setChecked] = useState<boolean>(link.type === 'internal');
-	const [contentTypeUid, setContentTypeUid] = useState<string | undefined>(link.targetContentTypeUid);
-	const [pageId, setPageId] = useState<number | undefined>(Number(link.targetContentTypeId));
-
-	const { contentTypeOptions, contentTypeOptionsIsLoading, contentTypeOptionsIsFetching } = useContentTypeOptions();
-	const contentType = contentTypeOptions?.find((item) => item.uid === (contentTypeUid || link.targetContentTypeUid));
-
-	const { pageOptions, pageOptionsIsLoading, pageOptionsIsFetching } = usePageOptions(contentType);
-	const page = pageOptions?.find((item) => item.id === pageId);
-
 	const translationLinkKey = checked ? 'generated-link' : 'link';
 
 	const onToggleCheckbox = (): void => {
