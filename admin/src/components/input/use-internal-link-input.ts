@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import getTrad from '../../../utils/get-trad';
-import createInternalLink, { IInternalLink } from '../internal-link-factory';
+import getTrad from '../../utils/get-trad';
+import createInternalLink, { IInternalLink } from '../factory';
 
 export interface IInternalLinkErrors {
 	input?: string;
@@ -17,6 +17,7 @@ export interface IUseInternalLinkInputReturn {
 	setErrors: React.Dispatch<React.SetStateAction<IInternalLinkErrors>>;
 	initialLink: React.MutableRefObject<IInternalLink>;
 	isInitialData: boolean;
+    resetInternalLink: () => void
 }
 
 export const isJson = (string: string): boolean => {
@@ -82,6 +83,10 @@ const useInternalLinkInput = (
 	const initialLink = useRef(link);
 	const isInitialData = JSON.stringify(initialLink.current) === JSON.stringify(link);
 
+    const resetInternalLink = (): void => {
+        setLink(initialLink.current)
+    }
+
 	useEffect(() => {
 		setErrors((previousValue) => ({
 			...previousValue,
@@ -99,7 +104,8 @@ const useInternalLinkInput = (
 		errors,
 		setErrors,
 		initialLink,
-		isInitialData
+		isInitialData,
+        resetInternalLink
 	};
 };
 

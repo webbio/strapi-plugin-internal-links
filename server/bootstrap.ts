@@ -385,9 +385,7 @@ const updateSourceEntities = async (uid, id, sanitizedEntity) => {
 		await strapi.entityService.update(uid, id, {
 			data: {
 				...updatedEntity,
-				lifecycleState: {
-					exit: true
-				}
+                disableLifecycleHooks: true,
 			}
 		});
 	} catch (error) {
@@ -427,9 +425,7 @@ const updateInternalLinksFromTargetContentType = async (targetContentTypeUid, ta
 				await strapi.entityService.update(uid, id, {
 					data: {
 						...updatedEntity,
-						lifecycleState: {
-							exit: true
-						}
+                        disableLifecycleHooks: true,
 					}
 				});
 			}
@@ -448,9 +444,7 @@ const updateInternalLinksFromTargetContentType = async (targetContentTypeUid, ta
 				await strapi.entityService.update(uid, id, {
 					data: {
 						...updatedEntity,
-						lifecycleState: {
-							exit: true
-						}
+                        disableLifecycleHooks: true,
 					}
 				});
 			}
@@ -478,7 +472,7 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 			event.state.exit = event.params.data?.lifecycleState?.exit || false;
 		},
 		async afterUpdate(event) {
-			if (event?.state?.exit) {
+            if (event?.state?.disableLifecycleHooks) {
 				return;
 			}
 

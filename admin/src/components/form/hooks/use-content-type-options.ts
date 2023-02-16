@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import axios from '../../../../utils/axiosInstance';
-import pluginId from '../../../../plugin-id';
+import axios from '../../../utils/axiosInstance';
+import pluginId from '../../../plugin-id';
 
 export interface IContentTypeOption {
 	uid: string;

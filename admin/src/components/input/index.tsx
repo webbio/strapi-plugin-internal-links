@@ -6,18 +6,27 @@ import { Stack, IconButton, Field, FieldHint, FieldError, FieldLabel, FieldInput
 
 import { Pencil, Link, Trash } from '@strapi/icons';
 
-import getTrad from '../../../utils/get-trad';
-import createInternalLink from '../internal-link-factory';
+import getTrad from '../../utils/get-trad';
+import createInternalLink from '../factory';
 import useInternalLinkInput from './use-internal-link-input';
 import { InputGroup, Actions } from './styles';
+
+export interface IInternalLinkAttribute {
+    customField: string;
+    type: string;
+    pluginOptions?: { slug?: { targetField?: string; field?: string } };
+    options?: {
+        required?: boolean;
+        tite?: string;
+        slug?: string;
+        'link-regex'?: string;
+    }
+}
 
 export interface IInternalLinkInputProps {
 	intlLabel?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
 	onChange?: any;
-	attribute?: {
-		pluginOptions?: { slug?: { targetField?: string; field?: string } };
-		required?: boolean;
-	};
+    attribute?: IInternalLinkAttribute;
 	name?: string;
 	description?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
 	disabled?: boolean;
@@ -29,7 +38,7 @@ export interface IInternalLinkInputProps {
 	placeholder?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
 }
 
-const InternalLinkModal = lazy(() => import('../internal-link-modal'));
+const InternalLinkModal = lazy(() => import('../modal'));
 
 const InternalLinkInput = ({
 	description,
@@ -39,11 +48,12 @@ const InternalLinkInput = ({
 	name,
 	onChange,
 	required,
-	value
+	value,
+    attribute
 }: IInternalLinkInputProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 	const { layout, initialData } = useCMEditViewDataManager();
-	const { link, setLink, initialLink, isInitialData, errors, setErrors } = useInternalLinkInput(
+    const { link, setLink, initialLink, isInitialData, errors, setErrors, resetInternalLink } = useInternalLinkInput(
 		value || '',
 		error,
 		layout.uid,
@@ -66,6 +76,8 @@ const InternalLinkInput = ({
 
 	const closeModal = (): void => {
 		setShowModal(false);
+        resetInternalLink();
+
 		setErrors((previousValue) => ({
 			...previousValue,
 			text: undefined,
@@ -85,7 +97,7 @@ const InternalLinkInput = ({
 	};
 
 	const onCopy = (): void => {
-		if (!navigator?.clipboard) return;
+		if (!(navigator || null)?.clipboard) return;
 
 		navigator.clipboard.writeText(link.url);
 
@@ -203,6 +215,7 @@ const InternalLinkInput = ({
 					link={link}
 					errors={errors}
 					setErrors={setErrors}
+                    attribute={attribute}
 				/>
 			)}
 		</Suspense>

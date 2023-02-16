@@ -3,8 +3,8 @@
 	"version": "0.0.1",
 	"description": "A custom field for Strapi that can create internal links",
 	"scripts": {
-		"develop": "tsc -w",
-		"build": "tsc",
+		"develop": "tsc -w && tsc -p ./tsconfig.admin.json -w",
+		"build": "tsc && tsc -p ./tsconfig.admin.json",
 		"format": "prettier --write .",
 		"prepublish": "tsc"
 	},

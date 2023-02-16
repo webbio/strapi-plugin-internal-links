@@ -11,10 +11,10 @@ const IconBox = styled(Flex)`
 	}
 `;
 
-const LinkIcon = (): JSX.Element => (
+const PluginIcon = (): JSX.Element => (
 	<IconBox justifyContent="center" alignItems="center" width={7} height={6} hasRadius aria-hidden>
 		<Icon height={3} as={Link} />
 	</IconBox>
 );
 
-export default LinkIcon;
+export default PluginIcon;
