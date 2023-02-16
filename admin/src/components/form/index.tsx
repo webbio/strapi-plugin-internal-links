@@ -11,7 +11,7 @@ import getTrad from '../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 
-interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData'> {
+interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
     attribute: {
         'link-regex'?: string
     }

@@ -11,7 +11,7 @@ import { IInternalLinkAttribute } from "../input";
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 
 
-interface IInternalLinkModalProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData'> {
+interface IInternalLinkModalProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
     attribute: IInternalLinkAttribute,
 	toggleModal: () => void;
 	closeModal: () => void;
