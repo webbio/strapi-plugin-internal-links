@@ -2,8 +2,6 @@ import { Strapi } from '@strapi/strapi';
 import { getPopulatedEntity, sanitizeEntity } from './utils/strapi';
 
 export default async ({ strapi }: { strapi: Strapi }) => {
-	console.log(strapi.services);
-
 	const contentTypeUids = Object.values(strapi.contentTypes)
 		.filter((contentType: any) => contentType?.uid?.startsWith('api::'))
 		.map((contentType: any) => contentType.uid);
