@@ -28,6 +28,8 @@
 	"peerDependencies": {
 		"@strapi/strapi": "^4.5.6"
 	},
+	"main": "dist/server/index.js",
+	"types": "dist/types.js",
 	"author": {
 		"name": "Webbio B.V.",
 		"email": "info@webbio.nl",
