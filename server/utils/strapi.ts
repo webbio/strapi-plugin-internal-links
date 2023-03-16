@@ -1,6 +1,6 @@
 import { sanitize } from '@strapi/utils';
 
-export const getDeepPopulate = (uid: string, populate?: any, depth = 0) => {
+export const getDeepPopulate = (uid: string, populate?: any, depth: number = 0) => {
 	if (populate) {
 		return populate;
 	}

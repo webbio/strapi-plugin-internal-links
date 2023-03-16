@@ -2,6 +2,7 @@ import { load } from 'cheerio';
 import { deserializeLink, serializeLink } from '../utils/serialize';
 import { getCustomFields, getPopulatedEntity, sanitizeEntity } from '../utils/strapi';
 import { groupBy, get, update, merge } from 'lodash';
+import { InternalLink } from '../interfaces/link';
 
 const getInternalLinksFromHtml = (html: string) => {
 	if (!html) {
@@ -18,14 +19,14 @@ const getInternalLinksFromHtml = (html: string) => {
 		.toArray();
 
 	// Deserialize links
-	const internalLinks = serializedLinks.map((link) => deserializeLink(link));
+	const internalLinks: InternalLink[] = serializedLinks.map((link: string) => deserializeLink(link));
 
 	// Filter external links
 	const filteredLinks = internalLinks.filter((link) => link.type === 'internal');
 	return filteredLinks;
 };
 
-const mapInternalLinks = (sourceContentTypeUid: string, sourceContentTypeId: string, internalLinks: any[]) => {
+const mapInternalLinks = (sourceContentTypeUid: string, sourceContentTypeId: string, internalLinks: InternalLink[]) => {
 	return internalLinks.map((internalLink) => ({
 		id: null,
 		sourceContentTypeUid,
@@ -43,7 +44,7 @@ const findManyInternalLinksByTarget = async (
 	targetContentTypeUid: string,
 	targetContentTypeId: string,
 	wysiwyg: boolean
-) => {
+): Promise<InternalLink[]> => {
 	const internalLinkContentType = wysiwyg
 		? 'plugin::internal-links.internal-link-wysiwyg'
 		: 'plugin::internal-links.internal-link';
@@ -65,14 +66,14 @@ const findManyInternalLinksByTarget = async (
 	});
 };
 
-const updateInternalLinksInHtml = (html: string, internalLinks: any[]) => {
+const updateInternalLinksInHtml = (html: string, internalLinks: InternalLink[]) => {
 	const wysiwygFieldValue = html;
 	const $ = load(wysiwygFieldValue, null, false);
 
 	$('[data-internal-link]')?.each((_idx, element): any => {
 		let internalLinkIdx = 0;
 		const currentElement = $(element);
-		const currentInternalLinkData = currentElement.data('internal-link');
+		const currentInternalLinkData = currentElement.data('internal-link') as string;
 		const deserializedInternalLinkData = deserializeLink(currentInternalLinkData);
 
 		if (deserializedInternalLinkData.type === 'external') {
@@ -149,7 +150,7 @@ const deleteManyInternalLinksBySource = async (
 const createManyInternalLinks = async (
 	sourceContentTypeUid: string,
 	sourceContentTypeId: string,
-	internalLinks: any[],
+	internalLinks: InternalLink[],
 	wysiwyg: boolean
 ) => {
 	if (internalLinks.length === 0) {
