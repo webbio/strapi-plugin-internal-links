@@ -8,8 +8,6 @@
 		"format": "prettier --write .",
 		"prepublish": "tsc"
 	},
-	"main": "dist/server/index.js",
-	"types": "dist/types.js",
 	"strapi": {
 		"name": "internal-links",
 		"description": "A custom field that can create a URL based on an internal relation",
