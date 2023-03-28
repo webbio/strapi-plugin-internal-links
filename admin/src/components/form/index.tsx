@@ -12,9 +12,9 @@ import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
-    attribute: {
-        'link-regex'?: string
-    }
+	attribute: {
+		'link-regex'?: string;
+	};
 }
 
 const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProps): JSX.Element => {
@@ -89,13 +89,11 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	};
 
 	const onLinkBlur = async (event) => {
-        const linkRegex = attribute?.['link-regex'];
-        const regexObject = new RegExp(linkRegex);
+		const linkRegex = attribute?.['link-regex'];
+		const regexObject = new RegExp(linkRegex);
 		const newValue = event.target.value;
 
-        const urlSchema = linkRegex
-			? yup.string().required().matches(regexObject)
-			: yup.string().required();
+		const urlSchema = linkRegex ? yup.string().required().matches(regexObject) : yup.string().required();
 
 		if (newValue) {
 			try {
@@ -155,23 +153,23 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 		const newValue = event.target.value;
 
 		if (newValue) {
-            try {
-                // If the text doesn't parse as JSON we cannot save the link.
-                JSON.parse(JSON.stringify({ text: newValue }));
-            } catch {
-                setErrors((previousValue) => ({
-                    ...previousValue,
-                    text: formatMessage({
-                        id: getTrad(`internal-link.form.text.error`),
-                    }),
-                }));
-            }
+			try {
+				// If the text doesn't parse as JSON we cannot save the link.
+				JSON.parse(JSON.stringify({ text: newValue }));
+			} catch {
+				setErrors((previousValue) => ({
+					...previousValue,
+					text: formatMessage({
+						id: getTrad(`internal-link.form.text.error`)
+					})
+				}));
+			}
 		} else {
 			setErrors((previousValue) => ({
 				...previousValue,
-                text: formatMessage({
-                    id: getTrad('internal-link.form.text.required'),
-                }),
+				text: formatMessage({
+					id: getTrad('internal-link.form.text.required')
+				})
 			}));
 		}
 	};

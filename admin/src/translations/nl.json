@@ -9,7 +9,7 @@
 	"internal-link.options.base.title": "Naam van titel veld",
 	"internal-link.options.base.title.description": "Vul de naam in van het titel veld binnen deze content type",
 	"internal-link.options.base.slug": "Naam van URL veld",
-    "internal-link.options.base.slug.description": "Vul de naam in van het URL veld binnen deze content type",
+	"internal-link.options.base.slug.description": "Vul de naam in van het URL veld binnen deze content type",
 	"internal-link.errors.remaining-links": "Er zijn nog gekoppelde pagina's",
 
 	"internal-link.modal.title": "Link toevoegen",

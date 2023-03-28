@@ -6,7 +6,8 @@ import getTrad from './utils/get-trad';
 import PluginIcon from './components/plugin-icon';
 
 const name = pluginPkg.strapi.name;
-const defaultUrlRegex = '(^((https?:\/\/)|(www\.)?)[a-zA-Z0-9]{1}[a-zA-Z0-9-]+\.[^\s]{2,})|(^(mailto\:)[a-zA-Z0-9_.+-]+\@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,})'
+const defaultUrlRegex =
+	'(^((https?://)|(www.)?)[a-zA-Z0-9]{1}[a-zA-Z0-9-]+.[^s]{2,})|(^(mailto:)[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]{2,})';
 
 export default {
 	register(app) {
@@ -36,10 +37,9 @@ export default {
 				id: getTrad('internal-link.description'),
 				defaultMessage: 'Description'
 			},
-            icon: PluginIcon,
+			icon: PluginIcon,
 			components: {
-				Input: async () =>
-					import(/* webpackChunkName: "internal-links" */ './components/input')
+				Input: async () => import(/* webpackChunkName: "internal-links" */ './components/input')
 			},
 			options: {
 				base: [
@@ -76,24 +76,24 @@ export default {
 					}
 				],
 				advanced: [
-                    {
-                        sectionTitle: null,
-                        items: [
-                            {
-                                name: 'options.link-regex',
-                                type: 'text',
-                                defaultValue: defaultUrlRegex,
-                                intlLabel: {
-                                    id: getTrad('form.attribute.item.text.regex'),
-                                    defaultMessage: 'RegExp pattern',
-                                },
-                                description: {
-                                    id: getTrad('form.attribute.item.text.regex.description'),
-                                    defaultMessage: 'The text of the regular expression',
-                                }
-                            },
-                        ]
-                    },
+					{
+						sectionTitle: null,
+						items: [
+							{
+								name: 'options.link-regex',
+								type: 'text',
+								defaultValue: defaultUrlRegex,
+								intlLabel: {
+									id: getTrad('form.attribute.item.text.regex'),
+									defaultMessage: 'RegExp pattern'
+								},
+								description: {
+									id: getTrad('form.attribute.item.text.regex.description'),
+									defaultMessage: 'The text of the regular expression'
+								}
+							}
+						]
+					},
 					{
 						sectionTitle: {
 							id: 'global.settings',
@@ -111,7 +111,7 @@ export default {
 									id: getTrad('color-picker.options.advanced.requiredField.description'),
 									defaultMessage: "You won't be able to create an entry if this field is empty"
 								}
-                            }
+							}
 						]
 					}
 				]

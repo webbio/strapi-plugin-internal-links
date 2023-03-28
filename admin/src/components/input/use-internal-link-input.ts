@@ -17,7 +17,7 @@ export interface IUseInternalLinkInputReturn {
 	setErrors: React.Dispatch<React.SetStateAction<IInternalLinkErrors>>;
 	initialLink: React.MutableRefObject<IInternalLink>;
 	isInitialData: boolean;
-    resetInternalLink: () => void
+	resetInternalLink: () => void;
 }
 
 export const isJson = (string: string): boolean => {
@@ -83,9 +83,9 @@ const useInternalLinkInput = (
 	const initialLink = useRef(link);
 	const isInitialData = JSON.stringify(initialLink.current) === JSON.stringify(link);
 
-    const resetInternalLink = (): void => {
-        setLink(initialLink.current)
-    }
+	const resetInternalLink = (): void => {
+		setLink(initialLink.current);
+	};
 
 	useEffect(() => {
 		setErrors((previousValue) => ({
@@ -105,7 +105,7 @@ const useInternalLinkInput = (
 		setErrors,
 		initialLink,
 		isInitialData,
-        resetInternalLink
+		resetInternalLink
 	};
 };
 

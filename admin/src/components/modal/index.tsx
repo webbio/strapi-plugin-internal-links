@@ -7,12 +7,12 @@ import { ModalLayout, ModalBody, ModalHeader, ModalFooter, Flex, Button, Typogra
 
 import getTrad from '../../utils/get-trad';
 import InternalLinkForm from '../form';
-import { IInternalLinkAttribute } from "../input";
+import { IInternalLinkAttribute } from '../input';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 
-
-interface IInternalLinkModalProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
-    attribute: IInternalLinkAttribute,
+interface IInternalLinkModalProps
+	extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
+	attribute: IInternalLinkAttribute;
 	toggleModal: () => void;
 	closeModal: () => void;
 }
@@ -22,7 +22,7 @@ const InternalLinkModal = ({
 	setLink,
 	errors,
 	setErrors,
-    attribute,
+	attribute,
 	toggleModal = () => {
 		console.warn('Modal toggle function not set');
 	},
@@ -59,7 +59,13 @@ const InternalLinkModal = ({
 			{/* New Strapi design system overflow styling breaks dropdowns in modals */}
 			<ModalBody style={{ overflow: 'initial' }}>
 				<Typography fontWeight="bold" textColor={colors.text} id="body">
-                    <InternalLinkForm link={link} setLink={setLink} errors={errors} setErrors={setErrors} attribute={attribute.options} />
+					<InternalLinkForm
+						link={link}
+						setLink={setLink}
+						errors={errors}
+						setErrors={setErrors}
+						attribute={attribute.options}
+					/>
 				</Typography>
 			</ModalBody>
 

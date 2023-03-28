@@ -12,21 +12,21 @@ import useInternalLinkInput from './use-internal-link-input';
 import { InputGroup, Actions } from './styles';
 
 export interface IInternalLinkAttribute {
-    customField: string;
-    type: string;
-    pluginOptions?: { slug?: { targetField?: string; field?: string } };
-    options?: {
-        required?: boolean;
-        tite?: string;
-        slug?: string;
-        'link-regex'?: string;
-    }
+	customField: string;
+	type: string;
+	pluginOptions?: { slug?: { targetField?: string; field?: string } };
+	options?: {
+		required?: boolean;
+		tite?: string;
+		slug?: string;
+		'link-regex'?: string;
+	};
 }
 
 export interface IInternalLinkInputProps {
 	intlLabel?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
 	onChange?: any;
-    attribute?: IInternalLinkAttribute;
+	attribute?: IInternalLinkAttribute;
 	name?: string;
 	description?: MessageDescriptor & Parameters<IntlFormatters['formatMessage']>;
 	disabled?: boolean;
@@ -49,11 +49,11 @@ const InternalLinkInput = ({
 	onChange,
 	required,
 	value,
-    attribute
+	attribute
 }: IInternalLinkInputProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 	const { layout, initialData } = useCMEditViewDataManager();
-    const { link, setLink, initialLink, isInitialData, errors, setErrors, resetInternalLink } = useInternalLinkInput(
+	const { link, setLink, initialLink, isInitialData, errors, setErrors, resetInternalLink } = useInternalLinkInput(
 		value || '',
 		error,
 		layout.uid,
@@ -76,7 +76,7 @@ const InternalLinkInput = ({
 
 	const closeModal = (): void => {
 		setShowModal(false);
-        resetInternalLink();
+		resetInternalLink();
 
 		setErrors((previousValue) => ({
 			...previousValue,
@@ -215,7 +215,7 @@ const InternalLinkInput = ({
 					link={link}
 					errors={errors}
 					setErrors={setErrors}
-                    attribute={attribute}
+					attribute={attribute}
 				/>
 			)}
 		</Suspense>
