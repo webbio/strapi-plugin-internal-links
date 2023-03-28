@@ -17,13 +17,13 @@ const getDomain = (uid: string) => {
 	return pluginConfig.domains.default[environment];
 };
 
-const constructURL = (uid, entity) => {
+const constructURL = (uid: string, entity: any) => {
 	const domain = getDomain(uid);
 	const slug = getSlug(uid, entity);
 	return `${domain}/${slug}`;
 };
 
-const getSlug = (uid, entity) => {
+const getSlug = (uid: string, entity: any) => {
 	const globalConfig = strapi.service('plugin::internal-links.config').getGlobalConfig();
 	const entityConfig = strapi.service('plugin::internal-links.config').getContentTypeConfig(uid);
     const slugField = entityConfig?.slug ?? 'fullPath';
