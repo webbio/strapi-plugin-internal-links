@@ -12,7 +12,7 @@ import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
-	attribute: {
+	attribute?: {
 		'link-regex'?: string;
 	};
 }
@@ -33,8 +33,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 		link.targetContentTypeId
 	);
 
-	const [checked, setChecked] = useState<boolean>(link.type === 'internal');
-	const translationLinkKey = checked ? 'generated-link' : 'link';
+	const [checked, setChecked] = useState<boolean>(link.type === 'external');
+	const translationLinkKey = !checked ? 'generated-link' : 'link';
 
 	const onToggleCheckbox = (): void => {
 		setChecked((prev) => !prev);
@@ -89,7 +89,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	};
 
 	const onLinkBlur = async (event) => {
-		const linkRegex = attribute?.['link-regex'];
+		const linkRegex = attribute?.['link-regex'] || '';
 		const regexObject = new RegExp(linkRegex);
 		const newValue = event.target.value;
 
@@ -179,11 +179,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	};
 
 	useLayoutEffect(() => {
-		setChecked(!!link.targetContentTypeUid);
-		setLink((previousValue) => ({
-			...previousValue,
-			type: link.targetContentTypeUid ? INTERNAL_LINK_TYPE.INTERNAL : INTERNAL_LINK_TYPE.EXTERNAL
-		}));
+		setChecked(link.type === 'external');
 	}, []);
 
 	useEffect(() => {
@@ -200,10 +196,10 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 			<ToggleCheckbox
 				checked={checked}
 				onChange={onToggleCheckbox}
-				offLabel={formatMessage({
+				onLabel={formatMessage({
 					id: getTrad('internal-link.form.type.external')
 				})}
-				onLabel={formatMessage({
+				offLabel={formatMessage({
 					id: getTrad('internal-link.form.type.internal')
 				})}
 			>
@@ -224,7 +220,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 				<FieldError />
 			</Field>
 
-			{!!checked && (
+			{!checked && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({
@@ -260,7 +256,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 				</Field>
 			)}
 
-			{!!checked && (
+			{!checked && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({
@@ -296,7 +292,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 				</Field>
 			)}
 
-			<div style={checked ? { display: 'none' } : undefined}>
+			<div style={!checked ? { display: 'none' } : undefined}>
 				<Field name="link" id="link" error={errors.url} required>
 					<FieldLabel>
 						{formatMessage({
@@ -310,7 +306,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 						onChange={onLinkChange}
 						onBlur={onLinkBlur}
 						required
-						disabled={checked}
+						disabled={!checked}
 						placeholder={formatMessage({
 							id: getTrad(`internal-link.form.${translationLinkKey}.placeholder`)
 						})}

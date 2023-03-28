@@ -10,6 +10,7 @@ import getTrad from '../../utils/get-trad';
 import createInternalLink from '../factory';
 import useInternalLinkInput from './use-internal-link-input';
 import { InputGroup, Actions } from './styles';
+import useContentTypeOptions from '../form/hooks/use-content-type-options';
 
 export interface IInternalLinkAttribute {
 	customField: string;
@@ -53,6 +54,7 @@ const InternalLinkInput = ({
 }: IInternalLinkInputProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 	const { layout, initialData } = useCMEditViewDataManager();
+
 	const { link, setLink, initialLink, isInitialData, errors, setErrors, resetInternalLink } = useInternalLinkInput(
 		value || '',
 		error,

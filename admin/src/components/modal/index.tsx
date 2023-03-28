@@ -12,7 +12,7 @@ import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 
 interface IInternalLinkModalProps
 	extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
-	attribute: IInternalLinkAttribute;
+	attribute?: IInternalLinkAttribute;
 	toggleModal: () => void;
 	closeModal: () => void;
 }
@@ -64,7 +64,7 @@ const InternalLinkModal = ({
 						setLink={setLink}
 						errors={errors}
 						setErrors={setErrors}
-						attribute={attribute.options}
+						attribute={attribute?.options}
 					/>
 				</Typography>
 			</ModalBody>
