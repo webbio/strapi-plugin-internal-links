@@ -7,10 +7,6 @@ import PluginIcon from './components/plugin-icon';
 
 const name = pluginPkg.strapi.name;
 
-// More information including tests: https://regexr.com/7b2ai
-const defaultUrlRegex =
-	'(^https?://(www.)?[a-zA-Z0-9]{1,}.[^s]{2,}((/[a-zA-Z0-9-_=?%&#]{1,}){1,})?)$|^mailto:[w-. +]+@([w-]+.)+[w-]{2,4}$|^tel:((+|00(s|s?-s?)?)31(s|s?-s?)?((0)[-s]?)?|0)[1-9]((s|s?-s?)?[0-9])((s|s?-s?)?[0-9])((s|s?-s?)?[0-9])s?[0-9]s?[0-9]s?[0-9]s?[0-9]s?[0-9]$';
-
 export default {
 	register(app) {
 		app.registerPlugin({
@@ -84,7 +80,6 @@ export default {
 							{
 								name: 'options.link-regex',
 								type: 'text',
-								defaultValue: defaultUrlRegex,
 								intlLabel: {
 									id: getTrad('form.attribute.item.text.regex'),
 									defaultMessage: 'RegExp pattern'
