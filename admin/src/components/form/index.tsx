@@ -1,19 +1,23 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
+import * as yup from 'yup';
 import { useIntl } from 'react-intl';
-import { string } from 'yup';
 import { ReactSelect } from '@strapi/helper-plugin';
 import { Alert, ToggleCheckbox, Stack, Button, FieldLabel, Field, FieldError, FieldInput } from '@strapi/design-system';
 
 import Option from './option';
 import useContentTypeOptions, { IContentTypeOption } from './hooks/use-content-type-options';
 import usePageOptions, { IPageOption } from './hooks/use-page-options';
-import getTrad from '../../../utils/get-trad';
-import { INTERNAL_LINK_TYPE } from '../internal-link-factory';
-import { IUseInternalLinkInputReturn } from '../internal-link-input/use-internal-link-input';
+import getTrad from '../../utils/get-trad';
+import { INTERNAL_LINK_TYPE } from '../factory';
+import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 
-interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData'> {}
+interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
+	attribute?: {
+		'link-regex'?: string;
+	};
+}
 
-const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Element => {
+const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 
 	const {
@@ -29,8 +33,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 		link.targetContentTypeId
 	);
 
-	const [checked, setChecked] = useState<boolean>(link.type === 'internal');
-	const translationLinkKey = checked ? 'generated-link' : 'link';
+	const [checked, setChecked] = useState<boolean>(link.type === 'external');
+	const translationLinkKey = !checked ? 'generated-link' : 'link';
 
 	const onToggleCheckbox = (): void => {
 		setChecked((prev) => !prev);
@@ -85,8 +89,11 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 	};
 
 	const onLinkBlur = async (event) => {
+		const linkRegex = attribute?.['link-regex'] || '';
+		const regexObject = new RegExp(linkRegex);
 		const newValue = event.target.value;
-		const urlSchema = string().url().required();
+
+		const urlSchema = linkRegex ? yup.string().required().matches(regexObject) : yup.string().required();
 
 		if (newValue) {
 			try {
@@ -142,32 +149,37 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 		});
 	};
 
-	const onTextBlur = (event) => {
+	const onTextBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
 		const newValue = event.target.value;
 
 		if (newValue) {
-			setErrors((previousValue) => ({
-				...previousValue,
-				text: undefined
-			}));
+			try {
+				// If the text doesn't parse as JSON we cannot save the link.
+				JSON.parse(JSON.stringify({ text: newValue }));
+			} catch {
+				setErrors((previousValue) => ({
+					...previousValue,
+					text: formatMessage({
+						id: getTrad(`internal-link.form.text.error`)
+					})
+				}));
+			}
 		} else {
 			setErrors((previousValue) => ({
 				...previousValue,
-				text: 'This is required'
+				text: formatMessage({
+					id: getTrad('internal-link.form.text.required')
+				})
 			}));
 		}
 	};
 
 	const onTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setLink((value) => ({ ...value, text: event.target.value }));
+		setLink((value) => ({ ...value, text: (event.target satisfies HTMLInputElement).value }));
 	};
 
 	useLayoutEffect(() => {
-		setChecked(!!link.targetContentTypeUid);
-		setLink((previousValue) => ({
-			...previousValue,
-			type: link.targetContentTypeUid ? INTERNAL_LINK_TYPE.INTERNAL : INTERNAL_LINK_TYPE.EXTERNAL
-		}));
+		setChecked(link.type === 'external');
 	}, []);
 
 	useEffect(() => {
@@ -184,10 +196,10 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 			<ToggleCheckbox
 				checked={checked}
 				onChange={onToggleCheckbox}
-				offLabel={formatMessage({
+				onLabel={formatMessage({
 					id: getTrad('internal-link.form.type.external')
 				})}
-				onLabel={formatMessage({
+				offLabel={formatMessage({
 					id: getTrad('internal-link.form.type.internal')
 				})}
 			>
@@ -208,7 +220,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 				<FieldError />
 			</Field>
 
-			{!!checked && (
+			{!checked && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({
@@ -244,7 +256,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 				</Field>
 			)}
 
-			{!!checked && (
+			{!checked && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({
@@ -280,7 +292,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 				</Field>
 			)}
 
-			<div style={checked ? { display: 'none' } : undefined}>
+			<div style={!checked ? { display: 'none' } : undefined}>
 				<Field name="link" id="link" error={errors.url} required>
 					<FieldLabel>
 						{formatMessage({
@@ -294,7 +306,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors }: IProps): JSX.Ele
 						onChange={onLinkChange}
 						onBlur={onLinkBlur}
 						required
-						disabled={checked}
+						disabled={!checked}
 						placeholder={formatMessage({
 							id: getTrad(`internal-link.form.${translationLinkKey}.placeholder`)
 						})}

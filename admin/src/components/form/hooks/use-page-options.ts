@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { IContentTypeOption } from './use-content-type-options';
 
 import { useQuery } from 'react-query';
-import axios from '../../../../utils/axiosInstance';
-import pluginId from '../../../../plugin-id';
+import axios from '../../../utils/axiosInstance';
+import pluginId from '../../../plugin-id';
 
 export interface IPageOption {
 	id: number;

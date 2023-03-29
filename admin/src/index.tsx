@@ -3,9 +3,13 @@ import pluginPkg from '../../package.json';
 import pluginId from './plugin-id';
 import Initializer from './components/initializer';
 import getTrad from './utils/get-trad';
-import LinkIcon from './components/internal-link/internal-link-icon';
+import PluginIcon from './components/plugin-icon';
 
 const name = pluginPkg.strapi.name;
+
+// More information including tests: https://regexr.com/7b2ai
+const defaultUrlRegex =
+	'(^https?://(www.)?[a-zA-Z0-9]{1,}.[^s]{2,}((/[a-zA-Z0-9-_=?%&#]{1,}){1,})?)$|^mailto:[w-. +]+@([w-]+.)+[w-]{2,4}$|^tel:((+|00(s|s?-s?)?)31(s|s?-s?)?((0)[-s]?)?|0)[1-9]((s|s?-s?)?[0-9])((s|s?-s?)?[0-9])((s|s?-s?)?[0-9])s?[0-9]s?[0-9]s?[0-9]s?[0-9]s?[0-9]$';
 
 export default {
 	register(app) {
@@ -35,18 +39,14 @@ export default {
 				id: getTrad('internal-link.description'),
 				defaultMessage: 'Description'
 			},
-			icon: LinkIcon,
+			icon: PluginIcon,
 			components: {
-				Input: async () =>
-					import(/* webpackChunkName: "internal-links" */ './components/internal-link/internal-link-input')
+				Input: async () => import(/* webpackChunkName: "internal-links" */ './components/input')
 			},
 			options: {
 				base: [
 					{
-						sectionTitle: {
-							id: 'color-picker.color.section.format',
-							defaultMessage: 'Settings'
-						},
+						sectionTitle: null,
 						items: [
 							{
 								intlLabel: {
@@ -56,10 +56,10 @@ export default {
 								name: 'options.title',
 								description: {
 									id: getTrad('internal-link.options.base.title.description'),
-									defaultMessage: 'Select the title field'
+									defaultMessage: 'Select the name of the title field'
 								},
 								type: 'text',
-								defaultValue: ''
+								defaultValue: 'title'
 							},
 							{
 								intlLabel: {
@@ -69,15 +69,33 @@ export default {
 								name: 'options.slug',
 								description: {
 									id: getTrad('internal-link.options.base.slug.description'),
-									defaultMessage: 'Select the slug field'
+									defaultMessage: 'Select the name of the slug field'
 								},
 								type: 'text',
-								defaultValue: ''
+								defaultValue: 'slug'
 							}
 						]
 					}
 				],
 				advanced: [
+					{
+						sectionTitle: null,
+						items: [
+							{
+								name: 'options.link-regex',
+								type: 'text',
+								defaultValue: defaultUrlRegex,
+								intlLabel: {
+									id: getTrad('form.attribute.item.text.regex'),
+									defaultMessage: 'RegExp pattern'
+								},
+								description: {
+									id: getTrad('form.attribute.item.text.regex.description'),
+									defaultMessage: 'The text of the regular expression'
+								}
+							}
+						]
+					},
 					{
 						sectionTitle: {
 							id: 'global.settings',

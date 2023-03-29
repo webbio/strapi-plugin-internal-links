@@ -19,8 +19,8 @@ const mapInternalLinks = (sourceContentTypeUid: string, sourceContentTypeId: str
 const findManyInternalLinksByTarget = async (
 	targetContentTypeUid: string,
 	targetContentTypeId: string
-	): Promise<InternalLink[]> => {
-	return strapi.db.query("plugin::internal-links.internal-link").findMany({
+): Promise<InternalLink[]> => {
+	return strapi.db.query('plugin::internal-links.internal-link').findMany({
 		where: {
 			$and: [
 				{
@@ -38,10 +38,7 @@ const findManyInternalLinksByTarget = async (
 	});
 };
 
-const findManyInternalLinksBySource = async (
-	sourceContentTypeUid: string,
-	sourceContentTypeId: string,
-) => {
+const findManyInternalLinksBySource = async (sourceContentTypeUid: string, sourceContentTypeId: string) => {
 	return strapi.db.query('plugin::internal-links.internal-link').findMany({
 		where: {
 			$and: [
@@ -60,10 +57,7 @@ const findManyInternalLinksBySource = async (
 	});
 };
 
-const deleteManyInternalLinksBySource = async (
-	sourceContentTypeUid: string,
-	sourceContentTypeId: string,
-) => {
+const deleteManyInternalLinksBySource = async (sourceContentTypeUid: string, sourceContentTypeId: string) => {
 	await strapi.db.query('plugin::internal-links.internal-link').deleteMany({
 		where: {
 			$and: [
@@ -85,7 +79,7 @@ const deleteManyInternalLinksBySource = async (
 const createManyInternalLinks = async (
 	sourceContentTypeUid: string,
 	sourceContentTypeId: string,
-	internalLinks: InternalLink[],
+	internalLinks: InternalLink[]
 ) => {
 	if (internalLinks.length === 0) {
 		return [];
@@ -122,7 +116,11 @@ const getInternalLinksFromCustomFields = async (sanitizedEntity: any, uid: strin
 	return mappedInternalLinks;
 };
 
-const updateManyInternalLinksByTarget = async (targetContentTypeUid: string, targetContentTypeId: string, sanitizedEntity: any) => {
+const updateManyInternalLinksByTarget = async (
+	targetContentTypeUid: string,
+	targetContentTypeId: string,
+	sanitizedEntity: any
+) => {
 	const updatedUrl = strapi.service('plugin::internal-links.url').constructURL(targetContentTypeUid, sanitizedEntity);
 	await strapi.db.query('plugin::internal-links.internal-link').updateMany({
 		where: {
@@ -172,7 +170,11 @@ const updateSourceEntities = async (uid: string, id: string, sanitizedEntity: an
 	}
 };
 
-const updateInternalLinksFromTargetContentType = async (targetContentTypeUid: string, targetContentTypeId: string, sanitizedEntity: any) => {
+const updateInternalLinksFromTargetContentType = async (
+	targetContentTypeUid: string,
+	targetContentTypeId: string,
+	sanitizedEntity: any
+) => {
 	// Update links with new URL
 	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity);
 

@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": ".",
+		"baseUrl": "./",
+		"target": "es6",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"module": "esnext",
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"incremental": true,
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"resolveJsonModule": true,
+		"noEmit": false,
+		"jsx": "react-jsx",
+		"moduleResolution": "node"
+	},
+	"include": ["admin/src/components/index.ts", "server/**/*.json"],
+	"exclude": ["node_modules/", "dist/", "server/", "**/*.test.ts", "package.json"]
+}
