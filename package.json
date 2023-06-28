@@ -19,14 +19,14 @@
 		"url": "https://github.com/webbio/strapi-plugin-internal-links.git"
 	},
 	"dependencies": {
-		"@strapi/icons": "^1.4.1",
-		"cheerio": "1.0.0-rc.12"
+		"@strapi/icons": "^1.8.0",
+		"@strapi/utils": "^4.11.2"
 	},
 	"devDependencies": {
-		"typescript": "^4.9.4"
+		"typescript": "^5.1.3"
 	},
 	"peerDependencies": {
-		"@strapi/strapi": "^4.8.0"
+		"@strapi/strapi": "^4.11.2"
 	},
 	"main": "dist/server/index.js",
 	"types": "dist/types.js",
