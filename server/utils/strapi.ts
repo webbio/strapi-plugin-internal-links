@@ -1,4 +1,3 @@
-// @ts-expect-error sanitize does exist
 import { sanitize } from '@strapi/utils';
 
 export const getDeepPopulate = (uid: string, populate?: any, depth: number = 0) => {
