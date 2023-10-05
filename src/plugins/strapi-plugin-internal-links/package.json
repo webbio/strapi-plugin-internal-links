@@ -1,0 +1,69 @@
+{
+	"name": "@webbio/strapi-plugin-internal-links",
+	"version": "0.0.13",
+	"description": "A custom field for Strapi that can create internal links",
+	"scripts": {
+		"develop": "tsc -p tsconfig.server.json -w",
+		"build": "tsc -p tsconfig.server.json",
+		"prepublish": "tsc -p tsconfig.server.json",
+		"format": "prettier --write .",
+		"spu": "yarn upgrade-interactive --latest"
+	},
+	"strapi": {
+		"name": "internal-links",
+		"description": "A custom field that can create a URL based on an internal relation",
+		"displayName": "Internal Link",
+		"kind": "plugin"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/webbio/strapi-plugin-internal-links.git"
+	},
+	"dependencies": {
+		"@strapi/design-system": "^1.12.0",
+		"@strapi/helper-plugin": "^4.14.3",
+		"@strapi/icons": "^1.12.0",
+		"@strapi/typescript-utils": "^4.14.3",
+		"@strapi/utils": "^4.14.3"
+	},
+	"devDependencies": {
+		"typescript": "^5.2.2",
+		"@types/react": "^18.2.21",
+		"@types/react-dom": "^18.2.7",
+		"@types/react-router-dom": "^5.3.3",
+		"@types/styled-components": "^5.1.26",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-router-dom": "^5.3.4",
+		"styled-components": "^5.3.6",
+		"@babel/preset-react": "^7.22.15"
+	},
+	"peerDependencies": {
+		"@strapi/strapi": "^4.14.3",
+		"react": "^17.0.0 || ^18.0.0",
+		"react-dom": "^17.0.0 || ^18.0.0",
+		"react-router-dom": "^5.3.4",
+		"styled-components": "^5.3.6"
+	},
+	"author": {
+		"name": "Webbio B.V.",
+		"email": "info@webbio.nl",
+		"url": "https://webbio.nl"
+	},
+	"maintainers": [
+		{
+			"name": "Webbio B.V.",
+			"email": "info@webbio.nl",
+			"url": "https://webbio.nl"
+		}
+	],
+	"engines": {
+		"node": ">=14.19.1 <=18.x.x",
+		"npm": ">=6.0.0"
+	},
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org"
+	}
+}

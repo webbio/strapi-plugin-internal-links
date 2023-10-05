@@ -1,0 +1,19 @@
+{
+	"collectionName": "components_modules_texts",
+	"info": {
+		"displayName": "text",
+		"icon": "arrowLeft",
+		"description": ""
+	},
+	"options": {},
+	"attributes": {
+		"text": {
+			"type": "string"
+		},
+		"textInText": {
+			"type": "component",
+			"repeatable": true,
+			"component": "modules.text-in-text"
+		}
+	}
+}

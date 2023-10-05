@@ -1,0 +1,15 @@
+name: Vulnerabilities Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Audit
+        run: npx audit-ci@^6 -c --skip-dev --config ./audit-ci.jsonc

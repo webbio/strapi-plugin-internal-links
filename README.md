@@ -1,54 +1,57 @@
-# Strapi plugin internal-link
+# 🚀 Getting started with Strapi
 
-## Features
+Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
 
-- 1
-- 2
-- 3
+### `develop`
 
-## Installation
+Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
 
-To install this plugin, you need to add an NPM dependency to your Strapi application.
-
-```sh
-# Using Yarn
-yarn add @webbio/strapi-plugin-internal-links
-
-# Or using NPM
-npm install @webbio/strapi-plugin-internal-links
+```
+npm run develop
+# or
+yarn develop
 ```
 
-## How it works
+### `start`
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nulla ex, maximus quis libero ut, aliquet tincidunt erat. Nulla ut eleifend est, non hendrerit ante. Duis convallis dui quam, quis vehicula sem pulvinar sed. Praesent sit amet lorem eleifend, rutrum mi et, efficitur dolor. Nullam ullamcorper, nisl ac vestibulum tincidunt, purus tellus bibendum ante, at bibendum dui tortor et lectus. Ut volutpat pellentesque aliquam. Nulla euismod nibh nec augue bibendum posuere. Integer tincidunt sagittis leo sed viverra. Ut urna lorem, consectetur sit amet volutpat ut, aliquet non nulla. Fusce varius nisi at nibh feugiat, nec porta justo porttitor. Vivamus eros arcu, congue et quam eu, finibus tincidunt justo. Proin nec tortor lectus. Duis at lectus neque. Duis rhoncus lorem sit amet est dignissim congue. Etiam mattis maximus urna sed euismod.
+Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
 
-## Configuration
-
-`./config/plugins.js`
-
-```js
-module.exports = ({ env }) => ({
-	// ...
-	internal-links: {
-		enabled: true,
-		config: {
-			// ...
-		}
-	}
-	// ...
-});
+```
+npm run start
+# or
+yarn start
 ```
 
-Then, you'll need to build your admin panel:
+### `build`
 
-```sh
-# Using Yarn
-yarn build
+Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
 
-# Or using NPM
+```
 npm run build
+# or
+yarn build
 ```
 
-## internal-links settings page
+## ⚙️ Deployment
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nulla ex, maximus quis libero ut, aliquet tincidunt erat. Nulla ut eleifend est, non hendrerit ante. Duis convallis dui quam, quis vehicula sem pulvinar sed. Praesent sit amet lorem eleifend, rutrum mi et, efficitur dolor. Nullam ullamcorper, nisl ac vestibulum tincidunt, purus tellus bibendum ante, at bibendum dui tortor et lectus. Ut volutpat pellentesque aliquam. Nulla euismod nibh nec augue bibendum posuere. Integer tincidunt sagittis leo sed viverra. Ut urna lorem, consectetur sit amet volutpat ut, aliquet non nulla. Fusce varius nisi at nibh feugiat, nec porta justo porttitor. Vivamus eros arcu, congue et quam eu, finibus tincidunt justo. Proin nec tortor lectus. Duis at lectus neque. Duis rhoncus lorem sit amet est dignissim congue. Etiam mattis maximus urna sed euismod.
+Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
+
+## 📚 Learn more
+
+- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
+- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
+- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
+- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
+- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
+
+Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
+
+## ✨ Community
+
+- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
+- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
+- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+
+---
+
+<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
