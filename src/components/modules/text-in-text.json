@@ -1,0 +1,13 @@
+{
+	"collectionName": "components_modules_text_in_texts",
+	"info": {
+		"displayName": "text in text",
+		"icon": "bell"
+	},
+	"options": {},
+	"attributes": {
+		"text": {
+			"type": "string"
+		}
+	}
+}
