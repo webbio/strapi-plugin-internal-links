@@ -9,6 +9,7 @@ const findInternalLinkSchema = object({
 });
 
 const find = async (ctx) => {
+	console.log('HI');
 	await validateContext(ctx, findInternalLinkSchema);
 	const localesArray = await strapi.plugins.i18n.services.locales.find();
 	const entityConfig = strapi.service('plugin::internal-links.config').getContentTypeConfig(ctx.params.uid);

@@ -10,6 +10,7 @@ import usePageOptions, { IPageOption } from './hooks/use-page-options';
 import getTrad from '../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
+import { useGetDefaultStrapiLocale } from '../../utils/use-get-default-locale';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
 	attribute?: {
@@ -19,6 +20,7 @@ interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isIn
 
 const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
+	const { defaultLocale } = useGetDefaultStrapiLocale();
 
 	// More information including tests: https://regexr.com/7b2ai
 	const defaultUrlRegex = new RegExp(
@@ -56,6 +58,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	};
 
 	const onContentTypeChange = (value: IContentTypeOption) => {
+		console.log('va', value);
 		setPageId(undefined);
 		setContentTypeUid(value.uid);
 	};
@@ -68,7 +71,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 			...previousValue,
 			targetContentTypeUid: contentType.uid,
 			targetContentTypeId: value.id || null,
-			url: [link.domain, value.locale !== 'nl' ? value.locale : undefined, value[contentType.slugField] || '']
+			url: [link.domain, value.locale !== defaultLocale ? value.locale : undefined, value[contentType.slugField] || '']
 				.filter((item) => !!item)
 				.join('/')
 		}));

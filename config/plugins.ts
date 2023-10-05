@@ -5,6 +5,7 @@ export default ({ env }) => {
 			resolve: './src/plugins/strapi-plugin-internal-links',
 			config: {
 				environment: 'test',
+				singleCollectionType: 'api::page.page',
 				domains: {
 					default: {
 						test: 'https://webbio.nl',

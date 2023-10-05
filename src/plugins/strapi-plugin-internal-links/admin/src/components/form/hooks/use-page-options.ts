@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { IContentTypeOption } from './use-content-type-options';
-
 import { useQuery } from 'react-query';
-import axios from '../../../utils/axiosInstance';
+
+import { useFetchClient } from '@strapi/helper-plugin';
+
+import { IContentTypeOption } from './use-content-type-options';
 import pluginId from '../../../plugin-id';
+import { useGetDefaultStrapiLocale } from '../../../utils/use-get-default-locale';
 
 export interface IPageOption {
 	id: number;
@@ -15,10 +17,14 @@ export interface IPageOption {
 }
 
 // Single- and collection type data not typed in Strapi
-const mapPageData = (data: any, contentType: IContentTypeOption): IPageOption[] => {
+const mapPageData = (
+	data: Record<string, any>,
+	contentType: IContentTypeOption,
+	defaultLocale: string
+): IPageOption[] => {
 	const options = data.map((item: any) => {
 		const titlePath = contentType.titleField.split('.');
-		const locale = item.locale && item.locale !== 'nl' ? `${item.locale}/` : '';
+		const locale = item.locale && item.locale !== defaultLocale ? `${item.locale}/` : '';
 		const label =
 			titlePath.length < 2
 				? item[contentType.titleField]
@@ -38,18 +44,25 @@ const mapPageData = (data: any, contentType: IContentTypeOption): IPageOption[] 
 	return options;
 };
 
-const fetchPageOptions = async (contentType?: IContentTypeOption): Promise<IPageOption[]> => {
+const fetchPageOptions = async (
+	defaultLocale: string,
+	fetchClient?: any,
+	contentType?: IContentTypeOption
+): Promise<IPageOption[]> => {
 	if (!contentType) return [];
 
 	const type = contentType.kind === 'singleType' ? 'single-type' : 'collection-type';
-	const { data } = await axios.get(`/${pluginId}/${type}/${contentType.uid}`);
+	const { data } = await fetchClient.get(`/${pluginId}/${type}/${contentType.uid}`);
 
-	return mapPageData(data, contentType);
+	return mapPageData(data, contentType, defaultLocale);
 };
 
 export const usePageOptions = (contentType?: IContentTypeOption, initialId?: string | number | null) => {
+	const { defaultLocale } = useGetDefaultStrapiLocale();
+	const fetchClient = useFetchClient();
+
 	const { data, status, isLoading, isFetching, isError } = useQuery(['page-options', contentType], () =>
-		fetchPageOptions(contentType)
+		fetchPageOptions(defaultLocale, fetchClient, contentType)
 	);
 
 	const [pageId, setPageId] = useState<number | undefined>(Number(initialId));

@@ -1,8 +1,14 @@
-const find = () => {
-	const filter = Object.values(strapi.contentTypes).filter(
-		(contentType: any) =>
-			contentType.uid?.startsWith('api::') && contentType?.pluginOptions?.['internal-links']?.enabled !== false
-	);
+const find = async () => {
+	const { singleCollectionType } = await strapi.service('plugin::internal-links.config').getGlobalConfig();
+
+	const filter = Object.values(strapi.contentTypes).filter((contentType: any) => {
+		if (contentType?.pluginOptions?.['internal-links']?.enabled !== false) {
+			return singleCollectionType ? contentType.uid === singleCollectionType : contentType.uid?.startsWith('api::');
+		}
+
+		return false;
+	});
+
 	return filter?.map((contentType: any) => {
 		const domain = strapi.service('plugin::internal-links.url').getDomain(contentType?.uid);
 		const titleField = contentType?.pluginOptions?.['internal-links']?.title || 'title';
