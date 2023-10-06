@@ -1,18 +1,19 @@
 const find = async () => {
-	const { singleCollectionType } = await strapi.service('plugin::internal-links.config').getGlobalConfig();
+	const { pageBuilder } = await strapi.service('plugin::internal-links.config').getGlobalConfig();
+	const pageBuilderPathField = pageBuilder?.pathField;
 
 	const filter = Object.values(strapi.contentTypes).filter((contentType: any) => {
-		if (contentType?.pluginOptions?.['internal-links']?.enabled !== false) {
-			return singleCollectionType ? contentType.uid === singleCollectionType : contentType.uid?.startsWith('api::');
+		if (contentType?.pluginOptions?.['internal-links']?.enabled === false) {
+			return false;
 		}
 
-		return false;
+		return pageBuilder?.enabled ? contentType.uid === pageBuilder?.pageUid : contentType.uid?.startsWith('api::');
 	});
 
 	return filter?.map((contentType: any) => {
 		const domain = strapi.service('plugin::internal-links.url').getDomain(contentType?.uid);
 		const titleField = contentType?.pluginOptions?.['internal-links']?.title || 'title';
-		const slugField = contentType?.pluginOptions?.['internal-links']?.slug || 'fullPath';
+		const slugField = pageBuilderPathField || contentType?.pluginOptions?.['internal-links']?.slug || 'fullPath';
 		const basePathField = contentType?.pluginOptions?.['internal-links']?.basePath || 'basePath';
 
 		return {
@@ -21,7 +22,7 @@ const find = async () => {
 			displayName: contentType.info.displayName,
 			titleField: titleField,
 			slugField: slugField,
-			basePath: contentType.attributes[basePathField]?.default,
+			basePath: contentType.attributes?.[basePathField]?.default,
 			domain
 		};
 	});

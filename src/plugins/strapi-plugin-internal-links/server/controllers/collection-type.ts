@@ -1,3 +1,4 @@
+import { Strapi } from '@strapi/strapi'; // Import Strapi so TS doesn't complain about unknown strapi type
 import { object, string } from 'yup';
 
 const findParamsSchema = object({
@@ -9,7 +10,6 @@ const findInternalLinkSchema = object({
 });
 
 const find = async (ctx) => {
-	console.log('HI');
 	await validateContext(ctx, findInternalLinkSchema);
 	const localesArray = await strapi.plugins.i18n.services.locales.find();
 	const entityConfig = strapi.service('plugin::internal-links.config').getContentTypeConfig(ctx.params.uid);

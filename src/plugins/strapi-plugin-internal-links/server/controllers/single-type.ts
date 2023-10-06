@@ -16,7 +16,7 @@ const find = async (ctx) => {
 	const locales = localesArray.map((locale) => locale.code);
 	const entityManager = strapi.plugin('content-manager').service('entity-manager');
 
-	let data = [];
+	let data: any[] = [];
 
 	for (let locale of locales) {
 		query.locale = locale;

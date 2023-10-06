@@ -11,6 +11,7 @@ import getTrad from '../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 import { useGetDefaultStrapiLocale } from '../../utils/use-get-default-locale';
+import { useGetPluginConfig } from '../../utils/use-get-plugin-config';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
 	attribute?: {
@@ -21,6 +22,8 @@ interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isIn
 const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 	const { defaultLocale } = useGetDefaultStrapiLocale();
+
+	const { config: pluginConfig, isLoading: isLoadingConfig } = useGetPluginConfig();
 
 	// More information including tests: https://regexr.com/7b2ai
 	const defaultUrlRegex = new RegExp(
@@ -57,8 +60,13 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 		}));
 	};
 
+	useEffect(() => {
+		if (pluginConfig?.pageBuilder.enabled) {
+			setContentTypeUid(pluginConfig.pageBuilder.pageUid);
+		}
+	}, [pluginConfig]);
+
 	const onContentTypeChange = (value: IContentTypeOption) => {
-		console.log('va', value);
 		setPageId(undefined);
 		setContentTypeUid(value.uid);
 	};
@@ -71,9 +79,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 			...previousValue,
 			targetContentTypeUid: contentType.uid,
 			targetContentTypeId: value.id || null,
-			url: [link.domain, value.locale !== defaultLocale ? value.locale : undefined, value[contentType.slugField] || '']
-				.filter((item) => !!item)
-				.join('/')
+			url: [link.domain, value.slugLabel].filter((item) => !!item).join('/')
 		}));
 	};
 
@@ -231,7 +237,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 				<FieldError />
 			</Field>
 
-			{!checked && (
+			{!checked && !isLoadingConfig && !pluginConfig?.pageBuilder.enabled && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({

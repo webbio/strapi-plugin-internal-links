@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import trim from 'lodash/trim';
 
 import { useFetchClient } from '@strapi/helper-plugin';
 
@@ -24,7 +25,7 @@ const mapPageData = (
 ): IPageOption[] => {
 	const options = data.map((item: any) => {
 		const titlePath = contentType.titleField.split('.');
-		const locale = item.locale && item.locale !== defaultLocale ? `${item.locale}/` : '';
+		const locale = item.locale && item.locale !== defaultLocale ? `${item.locale}` : '';
 		const label =
 			titlePath.length < 2
 				? item[contentType.titleField]
@@ -32,11 +33,13 @@ const mapPageData = (
 						return previousValue[currentValue];
 				  }, item);
 
+		const slugField = item?.[contentType?.slugField] === '/' ? '' : item[contentType?.slugField] || '';
+
 		return {
 			...item,
 			label,
 			value: String(item.id),
-			slugLabel: contentType?.slugField ? `${locale}${item[contentType?.slugField] || ''}` : '',
+			slugLabel: contentType?.slugField ? trim(`${locale}/${slugField}`, '/') : '',
 			showIndicator: true
 		};
 	});
@@ -61,7 +64,7 @@ export const usePageOptions = (contentType?: IContentTypeOption, initialId?: str
 	const { defaultLocale } = useGetDefaultStrapiLocale();
 	const fetchClient = useFetchClient();
 
-	const { data, status, isLoading, isFetching, isError } = useQuery(['page-options', contentType], () =>
+	const { data, status, isLoading, isFetching, isError } = useQuery(['page-options', contentType, defaultLocale], () =>
 		fetchPageOptions(defaultLocale, fetchClient, contentType)
 	);
 
