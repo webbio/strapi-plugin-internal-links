@@ -29,10 +29,21 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nulla ex, ma
 ```js
 module.exports = ({ env }) => ({
 	// ...
-	internal-links: {
+	'internal-links': {
 		enabled: true,
 		config: {
-			// ...
+			environment: 'test',
+			pageBuilder: {
+				enabled: true, // When enabled, pageBuilder plugin logic is applied.
+				pageUid: 'undefined | string',
+				pathField: 'undefined | string'
+			},
+			domains: {
+				default: {
+					test: 'https://webbio.nl',
+					production: 'https://webbio.nl'
+				}
+			}
 		}
 	}
 	// ...

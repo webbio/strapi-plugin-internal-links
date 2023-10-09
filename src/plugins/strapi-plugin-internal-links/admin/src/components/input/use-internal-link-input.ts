@@ -71,7 +71,7 @@ const useInternalLinkInput = (
 			url: data.url,
 			text: data.text || data.url
 		};
-	}, []);
+	}, [initialDataId]);
 
 	const [link, setLink] = useState<IInternalLink>(parsedInitialValue);
 	const [errors, setErrors] = useState<IInternalLinkErrors>({
@@ -86,6 +86,10 @@ const useInternalLinkInput = (
 	const resetInternalLink = (): void => {
 		setLink(initialLink.current);
 	};
+
+	useEffect(() => {
+		setLink(parsedInitialValue);
+	}, [initialDataId]);
 
 	useEffect(() => {
 		setErrors((previousValue) => ({

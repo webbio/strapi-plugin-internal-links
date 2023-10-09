@@ -15,6 +15,7 @@ export interface IPageOption {
 	slugLabel: string;
 	showIndicator: boolean;
 	locale: string;
+	platform?: { domain?: string };
 }
 
 // Single- and collection type data not typed in Strapi
@@ -29,9 +30,7 @@ const mapPageData = (
 		const label =
 			titlePath.length < 2
 				? item[contentType.titleField]
-				: titlePath.reduce((previousValue, currentValue) => {
-						return previousValue[currentValue];
-				  }, item);
+				: titlePath.reduce((previousValue, currentValue) => previousValue[currentValue], item);
 
 		const slugField = item?.[contentType?.slugField] === '/' ? '' : item[contentType?.slugField] || '';
 

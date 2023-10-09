@@ -566,6 +566,10 @@ export interface ApiPagePage extends Schema.CollectionType {
 		i18n: {
 			localized: true;
 		};
+		'internal-links': {
+			title: 'title';
+			slug: 'path';
+		};
 	};
 	attributes: {
 		title: Attribute.String &
@@ -595,24 +599,54 @@ export interface ApiPagePage extends Schema.CollectionType {
 				};
 			}>;
 		link: Attribute.JSON &
-			Attribute.CustomField<
-				'plugin::internal-links.internal-link',
-				{
-					title: 'title';
-					slug: 'path';
-				}
-			> &
+			Attribute.CustomField<'plugin::internal-links.internal-link'> &
 			Attribute.SetPluginOptions<{
 				i18n: {
 					localized: true;
 				};
 			}>;
+		platform: Attribute.Relation<'api::page.page', 'oneToOne', 'api::platform.platform'>;
 		createdAt: Attribute.DateTime;
 		updatedAt: Attribute.DateTime;
 		publishedAt: Attribute.DateTime;
 		createdBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> & Attribute.Private;
 		updatedBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> & Attribute.Private;
 		localizations: Attribute.Relation<'api::page.page', 'oneToMany', 'api::page.page'>;
+		locale: Attribute.String;
+	};
+}
+
+export interface ApiPlatformPlatform extends Schema.CollectionType {
+	collectionName: 'platforms';
+	info: {
+		singularName: 'platform';
+		pluralName: 'platforms';
+		displayName: 'Platform';
+	};
+	options: {
+		draftAndPublish: true;
+	};
+	pluginOptions: {
+		i18n: {
+			localized: true;
+		};
+	};
+	attributes: {
+		title: Attribute.String &
+			Attribute.Required &
+			Attribute.Unique &
+			Attribute.SetPluginOptions<{
+				i18n: {
+					localized: true;
+				};
+			}>;
+		domain: Attribute.String;
+		createdAt: Attribute.DateTime;
+		updatedAt: Attribute.DateTime;
+		publishedAt: Attribute.DateTime;
+		createdBy: Attribute.Relation<'api::platform.platform', 'oneToOne', 'admin::user'> & Attribute.Private;
+		updatedBy: Attribute.Relation<'api::platform.platform', 'oneToOne', 'admin::user'> & Attribute.Private;
+		localizations: Attribute.Relation<'api::platform.platform', 'oneToMany', 'api::platform.platform'>;
 		locale: Attribute.String;
 	};
 }
@@ -667,6 +701,7 @@ declare module '@strapi/types' {
 			'plugin::users-permissions.role': PluginUsersPermissionsRole;
 			'plugin::users-permissions.user': PluginUsersPermissionsUser;
 			'api::page.page': ApiPagePage;
+			'api::platform.platform': ApiPlatformPlatform;
 			'api::post.post': ApiPostPost;
 		}
 	}

@@ -10,7 +10,6 @@ import usePageOptions, { IPageOption } from './hooks/use-page-options';
 import getTrad from '../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
-import { useGetDefaultStrapiLocale } from '../../utils/use-get-default-locale';
 import { useGetPluginConfig } from '../../utils/use-get-plugin-config';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
@@ -21,7 +20,6 @@ interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isIn
 
 const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
-	const { defaultLocale } = useGetDefaultStrapiLocale();
 
 	const { config: pluginConfig, isLoading: isLoadingConfig } = useGetPluginConfig();
 
@@ -74,12 +72,14 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	const onPageChange = (value: IPageOption) => {
 		if (!contentType) return;
 
+		const domain = value.platform?.domain || link.domain;
+
 		setPageId(value.id);
 		setLink((previousValue) => ({
 			...previousValue,
 			targetContentTypeUid: contentType.uid,
 			targetContentTypeId: value.id || null,
-			url: [link.domain, value.slugLabel].filter((item) => !!item).join('/')
+			url: [domain, value.slugLabel].filter((item) => !!item).join('/')
 		}));
 	};
 
@@ -200,13 +200,13 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	}, []);
 
 	useEffect(() => {
-		if (contentType?.domain) {
+		if (page?.platform?.domain || contentType?.domain) {
 			setLink((previousValue) => ({
 				...previousValue,
-				domain: contentType?.domain
+				domain: page?.platform?.domain || contentType?.domain
 			}));
 		}
-	}, [contentType?.domain]);
+	}, [contentType?.domain, page]);
 
 	return (
 		<Stack spacing={6}>

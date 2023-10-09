@@ -31,7 +31,7 @@ export const createInternalLink = (
 	url: '',
 	text: initialText || '',
 	type: INTERNAL_LINK_TYPE.INTERNAL,
-	domain: 'https://gelderland.nl'
+	domain: ''
 });
 
 export default createInternalLink;
