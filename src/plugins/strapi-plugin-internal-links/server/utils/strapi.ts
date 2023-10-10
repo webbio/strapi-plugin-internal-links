@@ -46,7 +46,7 @@ export const getDeepPopulate = (
 };
 
 export const sanitizeEntity = async (entity: Record<string, any>, uid: Common.UID.ContentType) => {
-	return sanitize.contentAPI.output(entity, strapi.getModel(uid));
+	return await sanitize.contentAPI.output(entity, strapi.getModel(uid));
 };
 
 export const getPopulatedEntity = async (uid: Common.UID.ContentType, id: string) => {

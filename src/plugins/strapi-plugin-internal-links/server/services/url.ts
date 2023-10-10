@@ -1,11 +1,21 @@
 import get from 'lodash/get';
 import trim from 'lodash/trim';
 
-const getDomain = (uid: string, entity?: Record<string, any>) => {
+const getDomain = async (uid: string, entity?: Record<string, any>) => {
 	const pluginConfig = strapi.service('plugin::internal-links.config').getGlobalConfig();
 
-	if (pluginConfig?.pageBuilder?.enabled && entity?.page?.platform?.domain) {
-		return entity.page.platform.domain;
+	if (pluginConfig?.pageBuilder?.enabled && entity?.link?.targetContentTypeId) {
+		const targetPage: any = await strapi.entityService.findOne(
+			entity?.link?.targetContentTypeUid,
+			entity?.link?.targetContentTypeId,
+			{
+				populate: {
+					platform: true
+				}
+			} as Record<string, any>
+		);
+
+		return targetPage?.platform?.domain;
 	}
 
 	const environment = pluginConfig?.environment || 'production';
@@ -22,8 +32,9 @@ const getDomain = (uid: string, entity?: Record<string, any>) => {
 	return pluginConfig.domains.default[environment];
 };
 
-const constructURL = (uid: string, entity: Record<string, any>) => {
-	const domain = getDomain(uid, entity);
+const constructURL = async (uid: string, entity: Record<string, any>) => {
+	const domain = await getDomain(uid, entity);
+	console.log('constructURL', domain);
 	const slug = getSlug(uid, entity);
 
 	return trim(`${domain}/${slug}`, '/');

@@ -1,7 +1,11 @@
 import { Common } from '@strapi/strapi';
 import isEmpty from 'lodash/isEmpty';
 import set from 'lodash/set';
-import { DEFAULT_PAGEBUILDER_COLLECTION, DEFAULT_PAGEBUILDER_PATH_FIELD } from '../utils/constants';
+import {
+	DEFAULT_PAGEBUILDER_COLLECTION,
+	DEFAULT_PAGEBUILDER_PATH_FIELD,
+	DEFAULT_PAGEBUILDER_PLATFORM_UID
+} from '../utils/constants';
 
 const getGlobalConfig = () => {
 	const config: Record<string, any> | undefined = strapi.config?.get('plugin.internal-links');
@@ -13,6 +17,10 @@ const getGlobalConfig = () => {
 
 		if (!config?.pageBuilder?.pathField) {
 			set(config, 'pageBuilder.pathField', DEFAULT_PAGEBUILDER_PATH_FIELD);
+		}
+
+		if (!config?.pageBuilder?.platformUid) {
+			set(config, 'pageBuilder.platformUid', DEFAULT_PAGEBUILDER_PLATFORM_UID);
 		}
 	}
 

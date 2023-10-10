@@ -2,8 +2,17 @@ import { Common, Strapi } from '@strapi/strapi';
 import { getPopulatedEntity, sanitizeEntity } from './utils/strapi';
 
 export default async ({ strapi }: { strapi: Strapi }) => {
+	const { pageBuilder } = await strapi.service('plugin::internal-links.config').getGlobalConfig();
 	const contentTypeUids = Object.values(strapi.contentTypes)
-		.filter((contentType: any) => contentType?.uid?.startsWith('api::'))
+		.filter((contentType: any) => {
+			if (contentType?.pluginOptions?.['internal-links']?.enabled === false) {
+				return false;
+			}
+
+			return pageBuilder?.enabled
+				? contentType.uid === pageBuilder?.pageUid || contentType.uid === pageBuilder?.platformUid
+				: contentType.uid?.startsWith('api::');
+		})
 		.map((contentType: any) => contentType.uid);
 
 	// Lifecycles for all entitities
@@ -30,15 +39,21 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 			}
 
 			const uid = event.model.uid as Common.UID.ContentType;
+
 			// @ts-ignore
 			const id = event.result.id;
 			const entity: any = await getPopulatedEntity(uid, id);
-			const sanitizedEntity = await sanitizeEntity(entity, uid);
+			const sanitizedEntity: Record<string, any> = (await sanitizeEntity(entity, uid)) as any;
 
-			await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
-			await strapi
-				.service('plugin::internal-links.internal-link')
-				.updateInternalLinksFromTargetContentType(uid, id, sanitizedEntity);
+			if (uid === pageBuilder?.platformUid && sanitizedEntity?.id) {
+				console.log('sanitizedEntity', sanitizedEntity);
+				await strapi.service('plugin::internal-links.internal-link').updateAllLinkedDomains(sanitizedEntity?.id);
+			} else {
+				await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
+				await strapi
+					.service('plugin::internal-links.internal-link')
+					.updateInternalLinksFromTargetContentType(uid, id, sanitizedEntity);
+			}
 		},
 		async beforeDelete(event) {
 			// TODO

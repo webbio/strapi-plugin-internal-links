@@ -44,6 +44,20 @@ const findManyInternalLinksByTarget = async (
 	});
 };
 
+const findManyInternalLinksByUid = async (targetContentTypeUid: Common.UID.ContentType): Promise<InternalLink[]> => {
+	return strapi.db.query('plugin::internal-links.internal-link').findMany({
+		where: {
+			$and: [
+				{
+					targetContentTypeUid: {
+						$eq: targetContentTypeUid
+					}
+				}
+			]
+		}
+	});
+};
+
 const findManyInternalLinksBySource = async (sourceContentTypeUid: string, sourceContentTypeId: string) => {
 	return strapi.db.query('plugin::internal-links.internal-link').findMany({
 		where: {
@@ -108,9 +122,9 @@ const getInternalLinksFromCustomFields = async (
 	uid: Common.UID.ContentType,
 	id: string
 ): Promise<InternalLink[]> => {
-	// Get all internal lkink custom fields
+	// Get all internal link custom fields
 	const internalLinkFields = getCustomFields(sanitizedEntity, uid, 'plugin::internal-links.internal-link');
-
+	console.log('WHA', internalLinkFields);
 	const internalLinks = internalLinkFields
 		.filter((field) => field?.value?.type === 'internal')
 		.map((field) => field.value);
@@ -131,7 +145,10 @@ const updateManyInternalLinksByTarget = async (
 	targetContentTypeId: string,
 	sanitizedEntity: any
 ) => {
-	const updatedUrl = strapi.service('plugin::internal-links.url').constructURL(targetContentTypeUid, sanitizedEntity);
+	console.log('UPDATE', targetContentTypeUid, targetContentTypeId, sanitizeEntity);
+	const updatedUrl = await strapi
+		.service('plugin::internal-links.url')
+		.constructURL(targetContentTypeUid, sanitizedEntity);
 	await strapi.db.query('plugin::internal-links.internal-link').updateMany({
 		where: {
 			$and: [
@@ -151,6 +168,23 @@ const updateManyInternalLinksByTarget = async (
 			url: updatedUrl
 		}
 	});
+};
+
+const updateAllLinkedDomains = async (platformId: number) => {
+	const pageLinks = await findManyInternalLinksByUid('api::page.page');
+
+	const pageIdsToUpdate: string[] = pageLinks.map((x) => x?.targetContentTypeId).filter(Boolean) as any;
+
+	const promises = pageIdsToUpdate.map(async (x) => {
+		const entity: any = await getPopulatedEntity('api::page.page', x);
+		const sanitizedEntity: Record<string, any> = (await sanitizeEntity(entity, 'api::page.page')) as any;
+
+		return sanitizedEntity;
+	});
+
+	const all = await Promise.all(promises);
+
+	console.log('hi', all);
 };
 
 const updateSourceEntities = async (uid: Common.UID.ContentType, id: string, sanitizedEntity: any) => {
@@ -223,5 +257,6 @@ const updateInternalLinksFromTargetContentType = async (
 export default {
 	updateInternalLinksFromTargetContentType,
 	updateSourceEntities,
-	deleteManyInternalLinksBySource
+	deleteManyInternalLinksBySource,
+	updateAllLinkedDomains
 };
