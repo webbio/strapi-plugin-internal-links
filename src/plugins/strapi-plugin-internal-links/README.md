@@ -36,7 +36,8 @@ module.exports = ({ env }) => ({
 			pageBuilder: {
 				enabled: true, // When enabled, pageBuilder plugin logic is applied.
 				pageUid: 'undefined | string',
-				pathField: 'undefined | string'
+				pathField: 'undefined | string',
+				platformUid: 'undefined |string'
 			},
 			domains: {
 				default: {

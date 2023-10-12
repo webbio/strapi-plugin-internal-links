@@ -1,8 +1,9 @@
 import { groupBy, update } from 'lodash';
 import { Common } from '@strapi/strapi';
 
-import { getCustomFields, getPopulatedEntities, getPopulatedEntity, sanitizeEntity } from '../utils/strapi';
+import { getCustomFields, getPopulatedEntity, sanitizeEntity } from '../utils/strapi';
 import { InternalLink } from '../interfaces/link';
+import { DEFAULT_PAGEBUILDER_COLLECTION } from '../utils/constants';
 
 const mapInternalLinks = (
 	sourceContentTypeUid: Common.UID.ContentType,
@@ -171,7 +172,7 @@ const updateManyInternalLinksByTarget = async (
 
 const updateAllLinkedDomains = async (platformId: number, locale: string) => {
 	const pages: Record<string, any>[] =
-		((await strapi.entityService.findMany('api::page.page', {
+		((await strapi.entityService.findMany(DEFAULT_PAGEBUILDER_COLLECTION, {
 			filters: {
 				platform: {
 					id: platformId
@@ -184,10 +185,12 @@ const updateAllLinkedDomains = async (platformId: number, locale: string) => {
 		})) as any) || [];
 
 	pages.forEach(async (page) => {
-		await strapi.service('plugin::internal-links.internal-link').updateSourceEntities('api::page.page', page.id, page),
+		await strapi
+			.service('plugin::internal-links.internal-link')
+			.updateSourceEntities(DEFAULT_PAGEBUILDER_COLLECTION, page.id, page),
 			await strapi
 				.service('plugin::internal-links.internal-link')
-				.updateInternalLinksFromTargetContentType('api::page.page', page.id, page);
+				.updateInternalLinksFromTargetContentType(DEFAULT_PAGEBUILDER_COLLECTION, page.id, page);
 	});
 };
 
