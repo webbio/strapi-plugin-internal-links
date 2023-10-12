@@ -4,6 +4,14 @@ export default {
 		routes: [
 			{
 				method: 'GET',
+				path: '/config',
+				handler: 'config.find',
+				config: {
+					policies: []
+				}
+			},
+			{
+				method: 'GET',
 				path: '/content-types',
 				handler: 'content-type.find',
 				config: {

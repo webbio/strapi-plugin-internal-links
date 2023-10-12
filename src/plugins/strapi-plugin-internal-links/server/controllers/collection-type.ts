@@ -1,3 +1,4 @@
+import { Strapi } from '@strapi/strapi'; // Import Strapi so TS doesn't complain about unknown strapi type
 import { object, string } from 'yup';
 
 const findParamsSchema = object({
@@ -17,7 +18,10 @@ const find = async (ctx) => {
 	const locales: string[] = localesArray.map((locale: Record<string, any>) => locale.code);
 	return await strapi.entityService.findMany(ctx.params.uid, {
 		locale: locales,
-		sort: [{ locale: 'desc' }, { publishedAt: 'desc' }, { [titleField]: 'asc' }]
+		sort: [{ locale: 'desc' }, { publishedAt: 'desc' }, { [titleField]: 'asc' }],
+		populate: {
+			platform: true
+		}
 	} as Record<string, any>);
 };
 

@@ -10,6 +10,7 @@ import usePageOptions, { IPageOption } from './hooks/use-page-options';
 import getTrad from '../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
+import { useGetPluginConfig } from '../../utils/use-get-plugin-config';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
 	attribute?: {
@@ -19,6 +20,8 @@ interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isIn
 
 const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
+
+	const { config: pluginConfig, isLoading: isLoadingConfig } = useGetPluginConfig();
 
 	// More information including tests: https://regexr.com/7b2ai
 	const defaultUrlRegex = new RegExp(
@@ -55,6 +58,12 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 		}));
 	};
 
+	useEffect(() => {
+		if (pluginConfig?.pageBuilder.enabled) {
+			setContentTypeUid(pluginConfig.pageBuilder.pageUid);
+		}
+	}, [pluginConfig]);
+
 	const onContentTypeChange = (value: IContentTypeOption) => {
 		setPageId(undefined);
 		setContentTypeUid(value.uid);
@@ -63,14 +72,14 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	const onPageChange = (value: IPageOption) => {
 		if (!contentType) return;
 
+		const domain = value.platform?.domain || link.domain;
+
 		setPageId(value.id);
 		setLink((previousValue) => ({
 			...previousValue,
 			targetContentTypeUid: contentType.uid,
 			targetContentTypeId: value.id || null,
-			url: [link.domain, value.locale !== 'nl' ? value.locale : undefined, value[contentType.slugField] || '']
-				.filter((item) => !!item)
-				.join('/')
+			url: [domain, value.slugLabel].filter((item) => !!item).join('/')
 		}));
 	};
 
@@ -191,13 +200,13 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	}, []);
 
 	useEffect(() => {
-		if (contentType?.domain) {
+		if (page?.platform?.domain || contentType?.domain) {
 			setLink((previousValue) => ({
 				...previousValue,
-				domain: contentType?.domain
+				domain: page?.platform?.domain || contentType?.domain
 			}));
 		}
-	}, [contentType?.domain]);
+	}, [contentType?.domain, page]);
 
 	return (
 		<Stack spacing={6}>
@@ -228,7 +237,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 				<FieldError />
 			</Field>
 
-			{!checked && (
+			{!checked && !isLoadingConfig && !pluginConfig?.pageBuilder.enabled && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({

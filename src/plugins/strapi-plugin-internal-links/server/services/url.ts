@@ -1,7 +1,12 @@
 import get from 'lodash/get';
+import trim from 'lodash/trim';
 
-const getDomain = (uid: string) => {
+const getDomain = async (uid: string, entity?: Record<string, any>) => {
 	const pluginConfig = strapi.service('plugin::internal-links.config').getGlobalConfig();
+
+	if (pluginConfig?.pageBuilder?.enabled) {
+		return entity?.platform?.domain;
+	}
 
 	const environment = pluginConfig?.environment || 'production';
 
@@ -17,18 +22,20 @@ const getDomain = (uid: string) => {
 	return pluginConfig.domains.default[environment];
 };
 
-const constructURL = (uid: string, entity: any) => {
-	const domain = getDomain(uid);
+const constructURL = async (uid: string, entity: Record<string, any>) => {
+	const domain = await getDomain(uid, entity);
 	const slug = getSlug(uid, entity);
-	return `${domain}/${slug}`;
+
+	return trim(`${domain}/${slug}`, '/');
 };
 
-const getSlug = (uid: string, entity: any) => {
+const getSlug = (uid: string, entity: Record<string, any>) => {
 	const globalConfig = strapi.service('plugin::internal-links.config').getGlobalConfig();
 	const entityConfig = strapi.service('plugin::internal-links.config').getContentTypeConfig(uid);
 	const slugField = entityConfig?.slug ?? 'fullPath';
 	const slug = get(entity, slugField, null);
-	return slug ?? globalConfig?.notFoundSlug ?? '404';
+
+	return trim(slug, '/') ?? globalConfig?.notFoundSlug ?? '404';
 };
 
 export default {

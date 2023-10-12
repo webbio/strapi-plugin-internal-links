@@ -46,13 +46,26 @@ export const getDeepPopulate = (
 };
 
 export const sanitizeEntity = async (entity: Record<string, any>, uid: Common.UID.ContentType) => {
-	return sanitize.contentAPI.output(entity, strapi.getModel(uid));
+	return await sanitize.contentAPI.output(entity, strapi.getModel(uid));
 };
 
 export const getPopulatedEntity = async (uid: Common.UID.ContentType, id: string) => {
 	const populate = getDeepPopulate(uid);
 
 	return strapi.entityService.findOne(uid, Number(id), {
+		populate
+	});
+};
+
+export const getPopulatedEntities = async (uid: Common.UID.ContentType, ids: string[]) => {
+	const populate = getDeepPopulate(uid);
+
+	return strapi.entityService.findMany(uid, {
+		filters: {
+			id: {
+				$in: ids
+			}
+		},
 		populate
 	});
 };

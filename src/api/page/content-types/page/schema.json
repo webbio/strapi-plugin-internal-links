@@ -1,75 +1,78 @@
 {
-  "kind": "collectionType",
-  "collectionName": "pages",
-  "info": {
-    "singularName": "page",
-    "pluralName": "pages",
-    "displayName": "Pagina's",
-    "description": ""
-  },
-  "options": {
-    "draftAndPublish": true
-  },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
-  "attributes": {
-    "title": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "string",
-      "required": true
-    },
-    "path": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "string",
-      "required": false
-    },
-    "parent": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::page.page"
-    },
-    "excerpt": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "text"
-    },
-    "modules": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "dynamiczone",
-      "components": [
-        "modules.text"
-      ]
-    },
-    "link": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "customField",
-      "options": {
-        "title": "title",
-        "slug": "path"
-      },
-      "customField": "plugin::internal-links.internal-link"
-    }
-  }
+	"kind": "collectionType",
+	"collectionName": "pages",
+	"info": {
+		"singularName": "page",
+		"pluralName": "pages",
+		"displayName": "Pagina's",
+		"description": ""
+	},
+	"options": {
+		"draftAndPublish": true
+	},
+	"pluginOptions": {
+		"i18n": {
+			"localized": true
+		},
+		"internal-links": {
+			"title": "title",
+			"slug": "path"
+		}
+	},
+	"attributes": {
+		"title": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"type": "string",
+			"required": true
+		},
+		"path": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"type": "string",
+			"required": false
+		},
+		"parent": {
+			"type": "relation",
+			"relation": "oneToOne",
+			"target": "api::page.page"
+		},
+		"excerpt": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"type": "text"
+		},
+		"modules": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"type": "dynamiczone",
+			"components": ["modules.text"]
+		},
+		"link": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"type": "customField",
+			"customField": "plugin::internal-links.internal-link"
+		},
+		"platform": {
+			"type": "relation",
+			"relation": "oneToOne",
+			"target": "api::platform.platform"
+		}
+	}
 }

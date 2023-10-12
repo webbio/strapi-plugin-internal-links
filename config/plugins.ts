@@ -5,6 +5,9 @@ export default ({ env }) => {
 			resolve: './src/plugins/strapi-plugin-internal-links',
 			config: {
 				environment: 'test',
+				pageBuilder: {
+					enabled: true
+				},
 				domains: {
 					default: {
 						test: 'https://webbio.nl',

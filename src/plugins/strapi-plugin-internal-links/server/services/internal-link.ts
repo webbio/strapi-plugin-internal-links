@@ -3,6 +3,7 @@ import { Common } from '@strapi/strapi';
 
 import { getCustomFields, getPopulatedEntity, sanitizeEntity } from '../utils/strapi';
 import { InternalLink } from '../interfaces/link';
+import { DEFAULT_PAGEBUILDER_COLLECTION } from '../utils/constants';
 
 const mapInternalLinks = (
 	sourceContentTypeUid: Common.UID.ContentType,
@@ -37,6 +38,20 @@ const findManyInternalLinksByTarget = async (
 				{
 					targetContentTypeId: {
 						$eq: targetContentTypeId
+					}
+				}
+			]
+		}
+	});
+};
+
+const findManyInternalLinksByUid = async (targetContentTypeUid: Common.UID.ContentType): Promise<InternalLink[]> => {
+	return strapi.db.query('plugin::internal-links.internal-link').findMany({
+		where: {
+			$and: [
+				{
+					sourceContentTypeUid: {
+						$eq: targetContentTypeUid
 					}
 				}
 			]
@@ -108,7 +123,7 @@ const getInternalLinksFromCustomFields = async (
 	uid: Common.UID.ContentType,
 	id: string
 ): Promise<InternalLink[]> => {
-	// Get all internal lkink custom fields
+	// Get all internal link custom fields
 	const internalLinkFields = getCustomFields(sanitizedEntity, uid, 'plugin::internal-links.internal-link');
 
 	const internalLinks = internalLinkFields
@@ -131,7 +146,9 @@ const updateManyInternalLinksByTarget = async (
 	targetContentTypeId: string,
 	sanitizedEntity: any
 ) => {
-	const updatedUrl = strapi.service('plugin::internal-links.url').constructURL(targetContentTypeUid, sanitizedEntity);
+	const updatedUrl = await strapi
+		.service('plugin::internal-links.url')
+		.constructURL(targetContentTypeUid, sanitizedEntity);
 	await strapi.db.query('plugin::internal-links.internal-link').updateMany({
 		where: {
 			$and: [
@@ -150,6 +167,30 @@ const updateManyInternalLinksByTarget = async (
 		data: {
 			url: updatedUrl
 		}
+	});
+};
+
+const updateAllLinkedDomains = async (platformId: number, locale: string) => {
+	const pages: Record<string, any>[] =
+		((await strapi.entityService.findMany(DEFAULT_PAGEBUILDER_COLLECTION, {
+			filters: {
+				platform: {
+					id: platformId
+				}
+			},
+			locale,
+			populate: {
+				platform: true
+			}
+		})) as any) || [];
+
+	pages.forEach(async (page) => {
+		await strapi
+			.service('plugin::internal-links.internal-link')
+			.updateSourceEntities(DEFAULT_PAGEBUILDER_COLLECTION, page.id, page),
+			await strapi
+				.service('plugin::internal-links.internal-link')
+				.updateInternalLinksFromTargetContentType(DEFAULT_PAGEBUILDER_COLLECTION, page.id, page);
 	});
 };
 
@@ -223,5 +264,6 @@ const updateInternalLinksFromTargetContentType = async (
 export default {
 	updateInternalLinksFromTargetContentType,
 	updateSourceEntities,
-	deleteManyInternalLinksBySource
+	deleteManyInternalLinksBySource,
+	updateAllLinkedDomains
 };

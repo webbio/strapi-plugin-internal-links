@@ -3,7 +3,6 @@ import { useIntl, MessageDescriptor, IntlFormatters } from 'react-intl';
 
 import { useCMEditViewDataManager } from '@strapi/helper-plugin';
 import { Stack, IconButton, Field, FieldHint, FieldError, FieldLabel, FieldInput } from '@strapi/design-system';
-
 import { Pencil, Link, Trash } from '@strapi/icons';
 
 import getTrad from '../../utils/get-trad';
