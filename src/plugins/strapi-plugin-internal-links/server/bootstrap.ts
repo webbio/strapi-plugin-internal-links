@@ -46,8 +46,9 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 			const sanitizedEntity: Record<string, any> = (await sanitizeEntity(entity, uid)) as any;
 
 			if (uid === pageBuilder?.platformUid && sanitizedEntity?.id) {
-				console.log('sanitizedEntity', sanitizedEntity);
-				await strapi.service('plugin::internal-links.internal-link').updateAllLinkedDomains(sanitizedEntity?.id);
+				await strapi
+					.service('plugin::internal-links.internal-link')
+					.updateAllLinkedDomains(sanitizedEntity?.id, sanitizedEntity?.locale);
 			} else {
 				await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
 				await strapi

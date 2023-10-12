@@ -57,6 +57,19 @@ export const getPopulatedEntity = async (uid: Common.UID.ContentType, id: string
 	});
 };
 
+export const getPopulatedEntities = async (uid: Common.UID.ContentType, ids: string[]) => {
+	const populate = getDeepPopulate(uid);
+
+	return strapi.entityService.findMany(uid, {
+		filters: {
+			id: {
+				$in: ids
+			}
+		},
+		populate
+	});
+};
+
 export const getCustomFields = (
 	entity: any,
 	uid: Common.UID.ContentType,
