@@ -53,7 +53,10 @@ export const getPopulatedEntity = async (uid: Common.UID.ContentType, id: string
 	const populate = getDeepPopulate(uid);
 
 	return strapi.entityService.findOne(uid, Number(id), {
-		populate
+		populate: {
+			...populate,
+			platform: true
+		}
 	});
 };
 

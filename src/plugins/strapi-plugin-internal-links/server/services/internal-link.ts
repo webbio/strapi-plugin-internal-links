@@ -192,7 +192,9 @@ const updateManyInternalLinksByTarget = async (
 		? 'plugin::internal-links.internal-link-wysiwyg'
 		: 'plugin::internal-links.internal-link';
 
-	const updatedUrl = strapi.service('plugin::internal-links.url').constructURL(targetContentTypeUid, sanitizedEntity);
+	const updatedUrl = await strapi
+		.service('plugin::internal-links.url')
+		.constructURL(targetContentTypeUid, sanitizedEntity);
 
 	await strapi.db.query(internalLinkContentType).updateMany({
 		where: {
@@ -243,16 +245,22 @@ const updateSourceEntities = async (uid: Common.UID.ContentType, id: any, saniti
 	// Update internal links for wysiwyg internal links
 	const internalLinksFromWysiwyg = await getInternalLinksFromWysiwygFields(sanitizedEntity, uid, id);
 
+	console.log(internalLinksFromWysiwyg);
+
 	// Delete links
 	await deleteManyInternalLinksBySource(uid, id, true);
 	// Insert links
 	const createdInternalLinksFromWysiwyg = await createManyInternalLinks(uid, id, internalLinksFromWysiwyg, true);
+
+	console.log(createdInternalLinksFromWysiwyg);
 
 	// Update entity
 	const updatedEntityWysiwyg = mapInternalLinksWysiwygToEntity(sanitizedEntity, createdInternalLinksFromWysiwyg);
 
 	// Update internal links for normal internal links
 	const internalLinksFromNormal = await getInternalLinksFromCustomFields(sanitizedEntity, uid, id);
+
+	console.log(internalLinksFromNormal);
 
 	// Delete links
 	await deleteManyInternalLinksBySource(uid, id, false);
@@ -268,7 +276,9 @@ const updateSourceEntities = async (uid: Common.UID.ContentType, id: any, saniti
 		await strapi.entityService.update(uid, id, {
 			data: {
 				...updatedEntity,
-				disableLifecycleHooks: true
+				lifecycleState: {
+					exit: true
+				}
 			}
 		});
 	} catch (error) {
@@ -308,12 +318,15 @@ const updateInternalLinksFromTargetContentType = async (
 					const uid = internalLinks[0]?.sourceContentTypeUid;
 					const id = internalLinks[0]?.sourceContentTypeId;
 					const entity: any = await getPopulatedEntity(uid, id);
+					console.log('entity', entity);
 					const sanitizedEntity = await sanitizeEntity(entity, uid);
 					const updatedEntity = mapInternalLinksWysiwygToEntity(sanitizedEntity, internalLinks);
 					await strapi.entityService.update(uid, id, {
 						data: {
 							...updatedEntity,
-							disableLifecycleHooks: true
+							lifecycleState: {
+								exit: true
+							}
 						}
 					});
 				} catch (error) {

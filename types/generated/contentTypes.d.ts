@@ -631,7 +631,7 @@ export interface ApiPagePage extends Schema.CollectionType {
 					localized: true;
 				};
 			}>;
-		modules: Attribute.DynamicZone<['modules.text']> &
+		modules: Attribute.DynamicZone<['modules.text', 'modules.link-list']> &
 			Attribute.SetPluginOptions<{
 				i18n: {
 					localized: true;

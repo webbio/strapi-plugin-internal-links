@@ -24,7 +24,8 @@
 		"@strapi/plugin-i18n": "4.14.3",
 		"@strapi/plugin-users-permissions": "4.14.3",
 		"@strapi/strapi": "4.14.3",
-		"better-sqlite3": "9.0.0"
+		"better-sqlite3": "9.0.0",
+		"mysql": "^2.18.1"
 	},
 	"devDependencies": {
 		"@babel/preset-react": "^7.22.15",
