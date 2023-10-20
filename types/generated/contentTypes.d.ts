@@ -645,6 +645,18 @@ export interface ApiPagePage extends Schema.CollectionType {
 				};
 			}>;
 		platform: Attribute.Relation<'api::page.page', 'oneToOne', 'api::platform.platform'>;
+		wysiwyg: Attribute.RichText &
+			Attribute.CustomField<
+				'plugin::tiptap.tiptap',
+				{
+					preset: 'rich';
+				}
+			> &
+			Attribute.SetPluginOptions<{
+				i18n: {
+					localized: true;
+				};
+			}>;
 		createdAt: Attribute.DateTime;
 		updatedAt: Attribute.DateTime;
 		publishedAt: Attribute.DateTime;

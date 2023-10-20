@@ -6,7 +6,7 @@ export default ({ env }) => {
 			config: {
 				environment: 'test',
 				pageBuilder: {
-					enabled: true
+					enabled: false
 				},
 				domains: {
 					default: {
@@ -15,6 +15,9 @@ export default ({ env }) => {
 					}
 				}
 			}
+		},
+		tiptap: {
+			enabled: true
 		},
 		graphql: {
 			enabled: true,

@@ -24,6 +24,7 @@
 		"@strapi/plugin-i18n": "4.14.3",
 		"@strapi/plugin-users-permissions": "4.14.3",
 		"@strapi/strapi": "4.14.3",
+		"@webbio/strapi-plugin-tiptap": "^0.0.8",
 		"better-sqlite3": "9.0.0",
 		"mysql": "^2.18.1"
 	},
