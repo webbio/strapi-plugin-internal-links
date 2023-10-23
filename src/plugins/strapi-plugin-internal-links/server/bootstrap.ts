@@ -29,9 +29,8 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 			await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
 		},
 		async beforeUpdate(event) {
-			const slugHasChanged = await strapi.service('plugin::internal-links.internal-link').hasSlugChanged(event);
 			// @ts-ignore
-			event.state.exit = event.params.data?.lifecycleState?.exit || !slugHasChanged || false;
+			event.state.exit = event.params.data?.lifecycleState?.exit || false;
 		},
 		async afterUpdate(event) {
 			// @ts-ignore
