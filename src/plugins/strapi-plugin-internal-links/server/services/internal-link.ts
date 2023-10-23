@@ -1,5 +1,6 @@
 import { groupBy, update, get, merge } from 'lodash';
 import { Common } from '@strapi/strapi';
+import { Event } from '@strapi/database/lib/lifecycles';
 import cheerio from 'cheerio';
 
 import { deserializeLink, getCustomFields, getPopulatedEntity, sanitizeEntity, serializeLink } from '../utils/strapi';
@@ -409,7 +410,14 @@ const updateInternalLinksInHtml = (html, internalLinks) => {
 	return $.html();
 };
 
-const slugHasChanged = async (uid: Common.UID.ContentType, id: number, data: any) => {
+const slugHasChanged = async (event: Event) => {
+	const uid = event.model.uid as Common.UID.ContentType;
+	const id = event.params.data?.id;
+
+	if (id == null) {
+		return false;
+	}
+
 	const contentTypeConfig = strapi.service('plugin::internal-links.config').getContentTypeConfig(uid);
 	const slugField = contentTypeConfig?.slugField ?? 'path';
 
@@ -417,7 +425,11 @@ const slugHasChanged = async (uid: Common.UID.ContentType, id: number, data: any
 		fields: [slugField]
 	});
 	const oldSlug = oldEntity?.path;
-	const newSlug = data?.[slugField];
+	const newSlug = event.params.data?.[slugField];
+
+	if (newSlug == null) {
+		return false;
+	}
 
 	return oldSlug !== newSlug;
 };

@@ -18,7 +18,7 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 	// Lifecycles for all entitities
 	strapi.db?.lifecycles.subscribe({
 		// @ts-ignore
-		models: ['api::page.page'],
+		models: contentTypeUids,
 		async afterCreate(event) {
 			const uid = event.model.uid as Common.UID.ContentType;
 			// @ts-ignore
@@ -29,21 +29,9 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 			await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
 		},
 		async beforeUpdate(event) {
-			// const uid = event.model.uid as Common.UID.ContentType;
-			// const id = event.params.data?.id ?? event.params.where.id ?? null;
-
-			// if (id == null) {
-			// 	// @ts-ignore
-			// 	event.state.exit = true;
-			// 	return;
-			// }
-
-			// const slugHasChanged = await strapi
-			// 	.service('plugin::internal-links.internal-link')
-			// 	.slugHasChanged(uid, id, event.params.data);
-
+			const slugHasChanged = await strapi.service('plugin::internal-links.internal-link').hasSlugChanged(event);
 			// @ts-ignore
-			event.state.exit = event.params.data?.lifecycleState?.exit || false;
+			event.state.exit = event.params.data?.lifecycleState?.exit || !slugHasChanged || false;
 		},
 		async afterUpdate(event) {
 			// @ts-ignore
