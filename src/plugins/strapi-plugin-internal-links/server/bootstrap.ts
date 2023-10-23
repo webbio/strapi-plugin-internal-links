@@ -29,8 +29,9 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 			await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
 		},
 		async beforeUpdate(event) {
+			const slugHasChanged = await strapi.service('plugin::internal-links.internal-link').hasSlugChanged(event);
 			// @ts-ignore
-			event.state.exit = event.params.data?.lifecycleState?.exit || false;
+			event.state.exit = event.params.data?.lifecycleState?.exit || !slugHasChanged || false;
 		},
 		async afterUpdate(event) {
 			// @ts-ignore
@@ -45,16 +46,10 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 			const entity: any = await getPopulatedEntity(uid, id);
 			const sanitizedEntity: Record<string, any> = (await sanitizeEntity(entity, uid)) as any;
 
-			if (uid === pageBuilder?.platformUid && sanitizedEntity?.id) {
-				await strapi
-					.service('plugin::internal-links.internal-link')
-					.updateAllLinkedDomains(sanitizedEntity?.id, sanitizedEntity?.locale);
-			} else {
-				await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
-				await strapi
-					.service('plugin::internal-links.internal-link')
-					.updateInternalLinksFromTargetContentType(uid, id, sanitizedEntity);
-			}
+			await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
+			await strapi
+				.service('plugin::internal-links.internal-link')
+				.updateInternalLinksFromTargetContentType(uid, id, sanitizedEntity);
 		},
 		async beforeDelete(event) {
 			// TODO

@@ -407,6 +407,45 @@ export interface PluginInternalLinksInternalLink extends Schema.CollectionType {
 	};
 }
 
+export interface PluginInternalLinksInternalLinkWysiwyg extends Schema.CollectionType {
+	collectionName: 'internal_links_wysiwyg';
+	info: {
+		singularName: 'internal-link-wysiwyg';
+		pluralName: 'internal-links-wysiwyg';
+		displayName: 'internal-link-wysiwyg';
+	};
+	options: {
+		draftAndPublish: false;
+		populateCreatorFields: false;
+		removeRestrictedRelations: true;
+		comment: '';
+	};
+	pluginOptions: {
+		'content-manager': {
+			visible: false;
+		};
+		'content-type-builder': {
+			visible: false;
+		};
+	};
+	attributes: {
+		sourceContentTypeUid: Attribute.String;
+		sourceContentTypeId: Attribute.String;
+		sourceFieldName: Attribute.String;
+		targetContentTypeUid: Attribute.String;
+		targetContentTypeId: Attribute.String;
+		url: Attribute.String;
+		text: Attribute.String;
+		type: Attribute.String;
+		createdAt: Attribute.DateTime;
+		updatedAt: Attribute.DateTime;
+		createdBy: Attribute.Relation<'plugin::internal-links.internal-link-wysiwyg', 'oneToOne', 'admin::user'> &
+			Attribute.Private;
+		updatedBy: Attribute.Relation<'plugin::internal-links.internal-link-wysiwyg', 'oneToOne', 'admin::user'> &
+			Attribute.Private;
+	};
+}
+
 export interface PluginI18NLocale extends Schema.CollectionType {
 	collectionName: 'i18n_locale';
 	info: {
@@ -592,7 +631,7 @@ export interface ApiPagePage extends Schema.CollectionType {
 					localized: true;
 				};
 			}>;
-		modules: Attribute.DynamicZone<['modules.text']> &
+		modules: Attribute.DynamicZone<['modules.text', 'modules.link-list']> &
 			Attribute.SetPluginOptions<{
 				i18n: {
 					localized: true;
@@ -606,6 +645,18 @@ export interface ApiPagePage extends Schema.CollectionType {
 				};
 			}>;
 		platform: Attribute.Relation<'api::page.page', 'oneToOne', 'api::platform.platform'>;
+		wysiwyg: Attribute.RichText &
+			Attribute.CustomField<
+				'plugin::tiptap.tiptap',
+				{
+					preset: 'rich';
+				}
+			> &
+			Attribute.SetPluginOptions<{
+				i18n: {
+					localized: true;
+				};
+			}>;
 		createdAt: Attribute.DateTime;
 		updatedAt: Attribute.DateTime;
 		publishedAt: Attribute.DateTime;
@@ -696,6 +747,7 @@ declare module '@strapi/types' {
 			'plugin::upload.file': PluginUploadFile;
 			'plugin::upload.folder': PluginUploadFolder;
 			'plugin::internal-links.internal-link': PluginInternalLinksInternalLink;
+			'plugin::internal-links.internal-link-wysiwyg': PluginInternalLinksInternalLinkWysiwyg;
 			'plugin::i18n.locale': PluginI18NLocale;
 			'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
 			'plugin::users-permissions.role': PluginUsersPermissionsRole;
