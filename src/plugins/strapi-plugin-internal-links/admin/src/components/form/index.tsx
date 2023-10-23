@@ -59,7 +59,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	};
 
 	useEffect(() => {
-		if (pluginConfig?.pageBuilder.enabled) {
+		if (pluginConfig?.pageBuilder?.enabled) {
 			setContentTypeUid(pluginConfig.pageBuilder.pageUid);
 		}
 	}, [pluginConfig]);
@@ -237,7 +237,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 				<FieldError />
 			</Field>
 
-			{!checked && !isLoadingConfig && !pluginConfig?.pageBuilder.enabled && (
+			{!checked && !isLoadingConfig && !pluginConfig?.pageBuilder?.enabled && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({

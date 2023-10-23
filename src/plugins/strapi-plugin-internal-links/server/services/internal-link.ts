@@ -410,7 +410,7 @@ const updateInternalLinksInHtml = (html, internalLinks) => {
 	return $.html();
 };
 
-const slugHasChanged = async (event: Event) => {
+const hasSlugChanged = async (event: Event) => {
 	const uid = event.model.uid as Common.UID.ContentType;
 	const id = event.params.data?.id;
 
@@ -439,5 +439,5 @@ export default {
 	updateSourceEntities,
 	deleteManyInternalLinksBySource,
 	updateAllLinkedDomains,
-	slugHasChanged
+	hasSlugChanged
 };
