@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import trim from 'lodash/trim';
 
-const getDomain = async (uid: string, entity?: Record<string, any>) => {
+const getDomain = (uid: string, entity?: Record<string, any>) => {
 	const pluginConfig = strapi.service('plugin::internal-links.config').getGlobalConfig();
 
 	if (pluginConfig?.pageBuilder?.enabled) {
@@ -23,7 +23,7 @@ const getDomain = async (uid: string, entity?: Record<string, any>) => {
 };
 
 const constructURL = async (uid: string, entity: Record<string, any>) => {
-	const domain = await getDomain(uid, entity);
+	const domain = getDomain(uid, entity);
 	const slug = getSlug(uid, entity);
 
 	return trim(`${domain}/${slug}`, '/');
