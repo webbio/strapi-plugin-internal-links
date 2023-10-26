@@ -4,8 +4,8 @@
 	"description": "A custom field for Strapi that can create internal links",
 	"scripts": {
 		"develop": "tsc -p tsconfig.server.json -w",
-		"build": "tsc -p tsconfig.server.json",
-		"prepublish": "tsc -p tsconfig.server.json",
+		"build": "tsc -p tsconfig.server.json && tsc -p tsconfig.admin.json",
+		"prepublish": "yarn build",
 		"format": "prettier --write .",
 		"spu": "yarn upgrade-interactive --latest"
 	},
