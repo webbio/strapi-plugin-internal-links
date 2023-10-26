@@ -33,6 +33,7 @@ module.exports = ({ env }) => ({
 		enabled: true,
 		config: {
 			environment: 'test',
+			useSinglePageType: 'api::page.page', // Optional option to use a single page type like the page builder (without page builder options)
 			pageBuilder: {
 				enabled: true, // When enabled, pageBuilder plugin logic is applied.
 				pageUid: 'undefined | string',

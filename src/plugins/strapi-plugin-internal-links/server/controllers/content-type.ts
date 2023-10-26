@@ -2,6 +2,7 @@ const find = async () => {
 	const { pageBuilder } = await strapi.service('plugin::internal-links.config').getGlobalConfig();
 	const pageBuilderPathField = pageBuilder?.pathField;
 
+	// TODO: Should we check the useSinglePageType option here?
 	const filter = Object.values(strapi.contentTypes).filter((contentType: any) => {
 		if (contentType?.pluginOptions?.['internal-links']?.enabled === false) {
 			return false;

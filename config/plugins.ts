@@ -5,6 +5,7 @@ export default ({ env }) => {
 			resolve: './src/plugins/strapi-plugin-internal-links',
 			config: {
 				environment: 'test',
+				useSinglePageType: 'api::page.page',
 				pageBuilder: {
 					enabled: false
 				},
