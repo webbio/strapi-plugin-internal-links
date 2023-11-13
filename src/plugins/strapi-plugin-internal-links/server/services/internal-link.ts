@@ -1,7 +1,9 @@
-import { groupBy, update } from 'lodash';
+import { groupBy, update, get, merge } from 'lodash';
 import { Common } from '@strapi/strapi';
+import { Event } from '@strapi/database/lib/lifecycles';
+import cheerio from 'cheerio';
 
-import { getCustomFields, getPopulatedEntity, sanitizeEntity } from '../utils/strapi';
+import { deserializeLink, getCustomFields, getPopulatedEntity, sanitizeEntity, serializeLink } from '../utils/strapi';
 import { InternalLink } from '../interfaces/link';
 import { DEFAULT_PAGEBUILDER_COLLECTION } from '../utils/constants';
 
@@ -25,9 +27,13 @@ const mapInternalLinks = (
 
 const findManyInternalLinksByTarget = async (
 	targetContentTypeUid: Common.UID.ContentType,
-	targetContentTypeId: string
-): Promise<InternalLink[]> => {
-	return strapi.db.query('plugin::internal-links.internal-link').findMany({
+	targetContentTypeId: string,
+	wysiwyg: boolean
+) => {
+	const internalLinkContentType = wysiwyg
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
+	return strapi.db.query(internalLinkContentType).findMany({
 		where: {
 			$and: [
 				{
@@ -45,22 +51,15 @@ const findManyInternalLinksByTarget = async (
 	});
 };
 
-const findManyInternalLinksByUid = async (targetContentTypeUid: Common.UID.ContentType): Promise<InternalLink[]> => {
-	return strapi.db.query('plugin::internal-links.internal-link').findMany({
-		where: {
-			$and: [
-				{
-					sourceContentTypeUid: {
-						$eq: targetContentTypeUid
-					}
-				}
-			]
-		}
-	});
-};
-
-const findManyInternalLinksBySource = async (sourceContentTypeUid: string, sourceContentTypeId: string) => {
-	return strapi.db.query('plugin::internal-links.internal-link').findMany({
+const findManyInternalLinksBySource = async (
+	sourceContentTypeUid: string,
+	sourceContentTypeId: string,
+	wysiwyg: boolean
+) => {
+	const internalLinkContentType = wysiwyg
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
+	return strapi.db.query(internalLinkContentType).findMany({
 		where: {
 			$and: [
 				{
@@ -78,8 +77,16 @@ const findManyInternalLinksBySource = async (sourceContentTypeUid: string, sourc
 	});
 };
 
-const deleteManyInternalLinksBySource = async (sourceContentTypeUid: string, sourceContentTypeId: string) => {
-	await strapi.db.query('plugin::internal-links.internal-link').deleteMany({
+const deleteManyInternalLinksBySource = async (
+	sourceContentTypeUid: string,
+	sourceContentTypeId: string,
+	wysiwyg: boolean
+) => {
+	const internalLinkContentType = wysiwyg
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
+
+	await strapi.db.query(internalLinkContentType).deleteMany({
 		where: {
 			$and: [
 				{
@@ -100,16 +107,51 @@ const deleteManyInternalLinksBySource = async (sourceContentTypeUid: string, sou
 const createManyInternalLinks = async (
 	sourceContentTypeUid: string,
 	sourceContentTypeId: string,
-	internalLinks: InternalLink[]
+	internalLinks: InternalLink[],
+	wysiwyg: boolean
 ) => {
 	if (internalLinks.length === 0) {
 		return [];
 	}
 
-	await strapi.db.query('plugin::internal-links.internal-link').createMany({
+	const internalLinkContentType = wysiwyg
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
+	await strapi.db.query(internalLinkContentType).createMany({
 		data: internalLinks
 	});
-	return findManyInternalLinksBySource(sourceContentTypeUid, sourceContentTypeId);
+	return findManyInternalLinksBySource(sourceContentTypeUid, sourceContentTypeId, wysiwyg);
+};
+
+const mapInternalLinksWysiwygToEntity = (sanitizedEntity, internalLinks) => {
+	const insertedInternalLinksGroupedByFieldName = groupBy(internalLinks, (iteratee) => iteratee.sourceFieldName);
+
+	const updatedEntity = Object.entries(insertedInternalLinksGroupedByFieldName)?.reduce(
+		(previous, [fieldName, internalLinks]) => {
+			const originalHtml = get(previous, fieldName);
+			const updatedHtml = updateInternalLinksInHtml(originalHtml, internalLinks);
+			return update(previous, fieldName, () => updatedHtml);
+		},
+		sanitizedEntity
+	);
+
+	return updatedEntity;
+};
+
+const getInternalLinksFromWysiwygFields = async (sanitizedEntity, uid, id) => {
+	// Get all wysiwyg fields
+	const wysiwygFields = getCustomFields(sanitizedEntity, uid, 'plugin::tiptap.tiptap');
+
+	// Get all internal links from wysiwyg fields
+	const internalLinks = wysiwygFields.flatMap((field) => getInternalLinksFromHtml(field));
+
+	if (internalLinks.length === 0) {
+		return [];
+	}
+
+	// Sanitize
+	const mappedInternalLinks = mapInternalLinks(uid, id, internalLinks);
+	return mappedInternalLinks;
 };
 
 const mapInternalLinksToEntity = (sanitizedEntity, internalLinks) => {
@@ -123,12 +165,12 @@ const getInternalLinksFromCustomFields = async (
 	uid: Common.UID.ContentType,
 	id: string
 ): Promise<InternalLink[]> => {
-	// Get all internal link custom fields
+	// Get all internal lkink custom fields
 	const internalLinkFields = getCustomFields(sanitizedEntity, uid, 'plugin::internal-links.internal-link');
 
 	const internalLinks = internalLinkFields
 		.filter((field) => field?.value?.type === 'internal')
-		.map((field) => field.value);
+		.map((field) => ({ ...field.value, sourceFieldName: field.key }));
 
 	// Return an empty array if no fields have been found
 	if (internalLinks.length === 0) {
@@ -144,12 +186,18 @@ const getInternalLinksFromCustomFields = async (
 const updateManyInternalLinksByTarget = async (
 	targetContentTypeUid: string,
 	targetContentTypeId: string,
-	sanitizedEntity: any
+	sanitizedEntity: any,
+	wysiwyg: boolean
 ) => {
+	const internalLinkContentType = wysiwyg
+		? 'plugin::internal-links.internal-link-wysiwyg'
+		: 'plugin::internal-links.internal-link';
+
 	const updatedUrl = await strapi
 		.service('plugin::internal-links.url')
 		.constructURL(targetContentTypeUid, sanitizedEntity);
-	await strapi.db.query('plugin::internal-links.internal-link').updateMany({
+
+	await strapi.db.query(internalLinkContentType).updateMany({
 		where: {
 			$and: [
 				{
@@ -194,21 +242,33 @@ const updateAllLinkedDomains = async (platformId: number, locale: string) => {
 	});
 };
 
-const updateSourceEntities = async (uid: Common.UID.ContentType, id: string, sanitizedEntity: any) => {
+const updateSourceEntities = async (uid: Common.UID.ContentType, id: any, sanitizedEntity: any) => {
+	// Update internal links for wysiwyg internal links
+	const internalLinksFromWysiwyg = await getInternalLinksFromWysiwygFields(sanitizedEntity, uid, id);
+
+	// Delete links
+	await deleteManyInternalLinksBySource(uid, id, true);
+	// Insert links
+	const createdInternalLinksFromWysiwyg = await createManyInternalLinks(uid, id, internalLinksFromWysiwyg, true);
+
+	// Update entity
+	const updatedEntityWysiwyg = mapInternalLinksWysiwygToEntity(sanitizedEntity, createdInternalLinksFromWysiwyg);
+
 	// Update internal links for normal internal links
 	const internalLinksFromNormal = await getInternalLinksFromCustomFields(sanitizedEntity, uid, id);
 
 	// Delete links
-	await deleteManyInternalLinksBySource(uid, id);
-
+	await deleteManyInternalLinksBySource(uid, id, false);
 	// Insert links
-	const createdInternalLinksFromNormal = await createManyInternalLinks(uid, id, internalLinksFromNormal);
+	const createdInternalLinksFromNormal = await createManyInternalLinks(uid, id, internalLinksFromNormal, false);
 
 	// Update entity
-	const updatedEntity = mapInternalLinksToEntity(sanitizedEntity, createdInternalLinksFromNormal);
+	const updatedEntityNormal = mapInternalLinksToEntity(sanitizedEntity, createdInternalLinksFromNormal);
+
+	const updatedEntity = merge(updatedEntityWysiwyg, updatedEntityNormal);
 
 	try {
-		await strapi.entityService.update(uid, id as any, {
+		await strapi.entityService.update(uid, id, {
 			data: {
 				...updatedEntity,
 				lifecycleState: {
@@ -227,28 +287,59 @@ const updateInternalLinksFromTargetContentType = async (
 	sanitizedEntity: any
 ) => {
 	// Update links with new URL
-	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity);
+	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity, true);
+	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity, false);
 
 	// Get source entitites by target
-	const internalLinks = await findManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId);
+	const internalLinksWysiwyg = await findManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, true);
+	const internalLinksCustom = await findManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, false);
 
+	// Update Source pages
+	const internalLinksWysiwygGroupedBySource = groupBy(
+		internalLinksWysiwyg,
+		(iteratee) => `${iteratee.sourceContentTypeUid}-${iteratee.sourceContentTypeId}`
+	);
 	const internalLinksCustomGroupedBySource = groupBy(
-		internalLinks,
+		internalLinksCustom,
 		(iteratee) => `${iteratee.sourceContentTypeUid}-${iteratee.sourceContentTypeId}`
 	);
 
+	// Update Wysiwyg fields
+	await Promise.all(
+		Object.entries(internalLinksWysiwygGroupedBySource).map(
+			// eslint-disable-next-line no-unused-vars
+			async ([_key, internalLinks]) => {
+				try {
+					const uid = internalLinks[0]?.sourceContentTypeUid;
+					const id = internalLinks[0]?.sourceContentTypeId;
+					const entity: any = await getPopulatedEntity(uid, id);
+					const sanitizedEntity = await sanitizeEntity(entity, uid);
+					const updatedEntity = mapInternalLinksWysiwygToEntity(sanitizedEntity, internalLinks);
+					await strapi.entityService.update(uid, id, {
+						data: {
+							...updatedEntity,
+							lifecycleState: {
+								exit: true
+							}
+						}
+					});
+				} catch (error) {
+					console.log('error', error);
+				}
+			}
+		)
+	);
 	// Update normal custom fields links
 	await Promise.all(
 		Object.entries(internalLinksCustomGroupedBySource).map(
 			// eslint-disable-next-line no-unused-vars
 			async ([_key, internalLinks]) => {
-				const uid = internalLinks[0]?.sourceContentTypeUid as Common.UID.ContentType;
-				const id = internalLinks[0]?.sourceContentTypeId as string;
+				const uid = internalLinks[0]?.sourceContentTypeUid;
+				const id = internalLinks[0]?.sourceContentTypeId;
 				const entity: any = await getPopulatedEntity(uid, id);
 				const sanitizedEntity = await sanitizeEntity(entity, uid);
 				const updatedEntity = mapInternalLinksToEntity(sanitizedEntity, internalLinks);
-
-				await strapi.entityService.update(uid, Number(id), {
+				await strapi.entityService.update(uid, id, {
 					data: {
 						...updatedEntity,
 						lifecycleState: {
@@ -261,9 +352,92 @@ const updateInternalLinksFromTargetContentType = async (
 	);
 };
 
+const getInternalLinksFromHtml = ({ key, value }) => {
+	if (!value) {
+		return [];
+	}
+	const wysiwygFieldValue = value;
+	const $ = cheerio.load(wysiwygFieldValue, null, false);
+
+	// Get all links that have the data-internal-link attribute
+	const serializedLinks = $('[data-internal-link]')
+		.map((_idx, element) => {
+			return $(element).data('internal-link');
+		})
+		.toArray();
+
+	// Deserialize links
+	const internalLinks = serializedLinks.map((link) => {
+		const deserializedLink = deserializeLink(link);
+		return {
+			...deserializedLink,
+			sourceFieldName: key
+		};
+	});
+
+	// Filter external links
+	const filteredLinks = internalLinks.filter((link) => link.type === 'internal');
+
+	return filteredLinks;
+};
+
+const updateInternalLinksInHtml = (html, internalLinks) => {
+	const wysiwygFieldValue = html;
+	const $ = cheerio.load(wysiwygFieldValue, null, false);
+	let internalLinkIdx = 0;
+
+	// @ts-ignore
+	$('[data-internal-link]').each((_idx: any, element: any) => {
+		const currentElement = $(element);
+		const currentInternalLinkData = currentElement.data('internal-link');
+		const deserializedInternalLinkData = deserializeLink(currentInternalLinkData);
+
+		if (deserializedInternalLinkData.type === 'external') {
+			return currentElement;
+		}
+
+		const currentInternalLink = internalLinks[internalLinkIdx];
+		const updatedSerializedLink = serializeLink(currentInternalLink);
+		const updatedLink = $(element)
+			.attr('data-internal-link', updatedSerializedLink)
+			.attr('href', currentInternalLink.url);
+
+		internalLinkIdx = internalLinkIdx + 1;
+
+		return updatedLink;
+	});
+
+	return $.html();
+};
+
+const hasSlugChanged = async (event: Event) => {
+	const uid = event.model.uid as Common.UID.ContentType;
+	const id = event.params.data?.id;
+
+	if (id == null) {
+		return false;
+	}
+
+	const contentTypeConfig = strapi.service('plugin::internal-links.config').getContentTypeConfig(uid);
+	const slugField = contentTypeConfig?.slugField ?? 'path';
+
+	const oldEntity = await strapi.entityService?.findOne(uid, id, {
+		fields: [slugField]
+	});
+	const oldSlug = oldEntity?.path;
+	const newSlug = event.params.data?.[slugField];
+
+	if (newSlug == null) {
+		return false;
+	}
+
+	return oldSlug !== newSlug;
+};
+
 export default {
 	updateInternalLinksFromTargetContentType,
 	updateSourceEntities,
 	deleteManyInternalLinksBySource,
-	updateAllLinkedDomains
+	updateAllLinkedDomains,
+	hasSlugChanged
 };

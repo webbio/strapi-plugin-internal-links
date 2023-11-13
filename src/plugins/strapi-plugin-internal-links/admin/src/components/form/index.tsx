@@ -20,8 +20,9 @@ interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isIn
 
 const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
-
 	const { config: pluginConfig, isLoading: isLoadingConfig } = useGetPluginConfig();
+
+	const useSinglePageType = !!pluginConfig?.useSinglePageType || pluginConfig?.pageBuilder?.enabled;
 
 	// More information including tests: https://regexr.com/7b2ai
 	const defaultUrlRegex = new RegExp(
@@ -59,8 +60,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 	};
 
 	useEffect(() => {
-		if (pluginConfig?.pageBuilder.enabled) {
-			setContentTypeUid(pluginConfig.pageBuilder.pageUid);
+		if (pluginConfig && useSinglePageType) {
+			setContentTypeUid(pluginConfig.pageBuilder?.pageUid || pluginConfig.useSinglePageType);
 		}
 	}, [pluginConfig]);
 
@@ -237,7 +238,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 				<FieldError />
 			</Field>
 
-			{!checked && !isLoadingConfig && !pluginConfig?.pageBuilder.enabled && (
+			{!checked && !isLoadingConfig && !useSinglePageType && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({

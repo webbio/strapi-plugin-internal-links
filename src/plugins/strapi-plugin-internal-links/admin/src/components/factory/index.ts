@@ -20,7 +20,8 @@ export const createInternalLink = (
 	sourceContentTypeUid: string = '',
 	sourceContentTypeId: string | null = null,
 	sourceFieldName: string = '',
-	initialText?: string
+	initialText?: string,
+	initialLink?: string
 ): IInternalLink => ({
 	id: null,
 	sourceContentTypeUid,
@@ -28,7 +29,7 @@ export const createInternalLink = (
 	sourceFieldName,
 	targetContentTypeUid: '',
 	targetContentTypeId: null,
-	url: '',
+	url: initialLink || '',
 	text: initialText || '',
 	type: INTERNAL_LINK_TYPE.INTERNAL,
 	domain: ''

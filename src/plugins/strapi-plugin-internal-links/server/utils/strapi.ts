@@ -53,7 +53,10 @@ export const getPopulatedEntity = async (uid: Common.UID.ContentType, id: string
 	const populate = getDeepPopulate(uid);
 
 	return strapi.entityService.findOne(uid, Number(id), {
-		populate
+		populate: {
+			...populate,
+			platform: true
+		}
 	});
 };
 
@@ -110,7 +113,7 @@ export const getCustomFields = (
 					componentUid,
 					customFieldName,
 					interalLinks,
-					previousKey ? `${previousKey}.${idx}.${key}` : `${key}.${idx}`
+					previousKey ? `${previousKey}.${key}.${idx}` : `${key}.${idx}`
 				);
 			});
 		}
@@ -130,4 +133,16 @@ export const getCustomFields = (
 	});
 
 	return interalLinks;
+};
+
+export const serializeLink = (value: any) => {
+	const stringified = JSON.stringify(value);
+	const base64 = Buffer.from(stringified).toString('base64');
+	return base64;
+};
+
+export const deserializeLink = (value: any) => {
+	const stringified = Buffer.from(value, 'base64').toString();
+	const parsed = JSON.parse(stringified);
+	return parsed;
 };

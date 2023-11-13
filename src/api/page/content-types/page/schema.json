@@ -58,7 +58,7 @@
 				}
 			},
 			"type": "dynamiczone",
-			"components": ["modules.text"]
+			"components": ["modules.text", "modules.link-list"]
 		},
 		"link": {
 			"pluginOptions": {
@@ -73,6 +73,18 @@
 			"type": "relation",
 			"relation": "oneToOne",
 			"target": "api::platform.platform"
+		},
+		"wysiwyg": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"type": "customField",
+			"options": {
+				"preset": "rich"
+			},
+			"customField": "plugin::tiptap.tiptap"
 		}
 	}
 }
