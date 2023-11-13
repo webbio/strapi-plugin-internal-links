@@ -1,6 +1,10 @@
 {
 	"name": "@webbio/strapi-plugin-internal-links",
+<<<<<<< Updated upstream
 	"version": "0.0.21",
+=======
+	"version": "0.0.14",
+>>>>>>> Stashed changes
 	"description": "A custom field for Strapi that can create internal links",
 	"scripts": {
 		"develop": "tsc -p tsconfig.server.json -w",
