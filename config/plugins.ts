@@ -7,7 +7,7 @@ export default ({ env }) => {
 				environment: 'test',
 				useSinglePageType: 'api::page.page',
 				pageBuilder: {
-					enabled: false
+					enabled: true
 				},
 				domains: {
 					default: {

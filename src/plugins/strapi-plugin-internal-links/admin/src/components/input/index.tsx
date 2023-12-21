@@ -51,7 +51,7 @@ const InternalLinkInput = ({
 	attribute
 }: IInternalLinkInputProps): JSX.Element => {
 	const { formatMessage } = useIntl();
-	const { layout, initialData } = useCMEditViewDataManager();
+	const { layout, initialData } = useCMEditViewDataManager() as any;
 
 	const { link, setLink, initialLink, isInitialData, errors, setErrors, resetInternalLink } = useInternalLinkInput(
 		value || '',

@@ -8,7 +8,7 @@ import PluginIcon from './components/plugin-icon';
 const name = pluginPkg.strapi.name;
 
 export default {
-	register(app) {
+	register(app: any) {
 		app.registerPlugin({
 			id: pluginId,
 			initializer: Initializer,
@@ -116,9 +116,9 @@ export default {
 		});
 	},
 
-	bootstrap(app) {},
+	bootstrap(app: any) {},
 
-	async registerTrads(app) {
+	async registerTrads(app: any) {
 		const { locales } = app;
 
 		const importedTrads = await Promise.all(

@@ -15,7 +15,7 @@ export interface IPageOption {
 	slugLabel: string;
 	showIndicator: boolean;
 	locale: string;
-	platform?: { domain?: string };
+	platform?: { id: number; domain?: string };
 }
 
 // Single- and collection type data not typed in Strapi

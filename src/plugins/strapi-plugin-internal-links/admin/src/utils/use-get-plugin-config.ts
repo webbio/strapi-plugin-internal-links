@@ -1,10 +1,11 @@
 import { useFetchClient } from '@strapi/helper-plugin';
 import { useEffect, useState } from 'react';
 import getRequestUrl from './get-request-url';
+import { GlobalPluginConfig } from '../../../utils/config.types';
 
 export const useGetPluginConfig = () => {
 	const { get } = useFetchClient();
-	const [config, setConfig] = useState<Record<string, any> | undefined>(undefined);
+	const [config, setConfig] = useState<GlobalPluginConfig | undefined>(undefined);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {

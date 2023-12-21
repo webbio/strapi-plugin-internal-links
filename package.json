@@ -1,5 +1,5 @@
 {
-	"name": "strapi-plugin-page-builder",
+	"name": "strapi-plugin-internal-links",
 	"private": true,
 	"version": "0.1.0",
 	"description": "A Strapi application",
@@ -20,10 +20,10 @@
 		"spu": "yarn upgrade-interactive --latest"
 	},
 	"dependencies": {
-		"@strapi/plugin-graphql": "4.14.3",
-		"@strapi/plugin-i18n": "4.14.3",
-		"@strapi/plugin-users-permissions": "4.14.3",
-		"@strapi/strapi": "4.14.3",
+		"@strapi/plugin-graphql": "<4.15.0",
+		"@strapi/plugin-i18n": "<4.15.0",
+		"@strapi/plugin-users-permissions": "<4.15.0",
+		"@strapi/strapi": "<4.15.0",
 		"@webbio/strapi-plugin-tiptap": "^0.0.8",
 		"better-sqlite3": "9.0.0",
 		"mysql": "^2.18.1"
