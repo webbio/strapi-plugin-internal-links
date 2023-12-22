@@ -638,7 +638,12 @@ export interface ApiPagePage extends Schema.CollectionType {
 				};
 			}>;
 		link: Attribute.JSON &
-			Attribute.CustomField<'plugin::internal-links.internal-link'> &
+			Attribute.CustomField<
+				'plugin::internal-links.internal-link',
+				{
+					noTitle: true;
+				}
+			> &
 			Attribute.SetPluginOptions<{
 				i18n: {
 					localized: true;
@@ -716,9 +721,19 @@ export interface ApiPostPost extends Schema.CollectionType {
 		i18n: {
 			localized: true;
 		};
+		'internal-links': {
+			title: 'title';
+			slug: 'path';
+		};
 	};
 	attributes: {
 		title: Attribute.String &
+			Attribute.SetPluginOptions<{
+				i18n: {
+					localized: true;
+				};
+			}>;
+		path: Attribute.String &
 			Attribute.SetPluginOptions<{
 				i18n: {
 					localized: true;

@@ -12,7 +12,7 @@ export const useGetDefaultStrapiLocale = () => {
 	const getDefaultLocale = async () => {
 		const { data } = await get('i18n/locales');
 
-		setDefaultLocale(data.find((l) => l.isDefault)?.code || '');
+		setDefaultLocale(data.find((l: any) => l.isDefault)?.code || '');
 	};
 
 	return {

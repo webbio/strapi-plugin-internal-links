@@ -1,6 +1,6 @@
 import { groupBy, update, get, merge } from 'lodash';
 import { Common } from '@strapi/strapi';
-import { Event } from '@strapi/database/lib/lifecycles';
+
 import cheerio from 'cheerio';
 
 import { deserializeLink, getCustomFields, getPopulatedEntity, sanitizeEntity, serializeLink } from '../utils/strapi';
@@ -410,7 +410,7 @@ const updateInternalLinksInHtml = (html, internalLinks) => {
 	return $.html();
 };
 
-const hasSlugChanged = async (event: Event) => {
+const hasSlugChanged = async (event: Record<string, any>) => {
 	const uid = event.model.uid as Common.UID.ContentType;
 	const id = event.params.data?.id;
 

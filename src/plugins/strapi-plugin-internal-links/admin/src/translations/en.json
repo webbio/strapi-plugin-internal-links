@@ -11,6 +11,8 @@
 	"internal-link.options.base.slug": "Slug field name",
 	"internal-link.options.base.slug.description": "Fill in the name of the slug field within this content type",
 	"internal-link.errors.remaining-links": "There are still pages that link to this page",
+	"internal-link.options.base.noTitle": "Disable link text",
+	"internal-link.options.base.noTitle.description": "Enable this to hide the link text field",
 
 	"internal-link.modal.title": "Add link",
 	"internal-link.modal.buttons.cancel": "Cancel",
@@ -29,6 +31,9 @@
 	"internal-link.form.page": "Select page/language",
 	"internal-link.form.page.placeholder": "Select a page or language",
 	"internal-link.form.page.clear": "Reset page selection",
+	"internal-link.form.platform": "Select platform",
+	"internal-link.form.platform.placeholder": "Select a platform",
+	"internal-link.form.platform.clear": "Reset platform selection",
 	"internal-link.form.generated-link": "Created link",
 	"internal-link.form.generated-link.placeholder": "Select the collection type and page",
 	"internal-link.form.link": "Link",

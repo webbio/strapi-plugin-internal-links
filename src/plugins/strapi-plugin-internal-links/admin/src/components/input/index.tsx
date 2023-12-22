@@ -16,9 +16,10 @@ export interface IInternalLinkAttribute {
 	pluginOptions?: { slug?: { targetField?: string; field?: string } };
 	options?: {
 		required?: boolean;
-		tite?: string;
+		title?: string;
 		slug?: string;
 		'link-regex'?: string;
+		noTitle?: boolean;
 	};
 }
 
@@ -51,7 +52,7 @@ const InternalLinkInput = ({
 	attribute
 }: IInternalLinkInputProps): JSX.Element => {
 	const { formatMessage } = useIntl();
-	const { layout, initialData } = useCMEditViewDataManager();
+	const { layout, initialData } = useCMEditViewDataManager() as any;
 
 	const { link, setLink, initialLink, isInitialData, errors, setErrors, resetInternalLink } = useInternalLinkInput(
 		value || '',

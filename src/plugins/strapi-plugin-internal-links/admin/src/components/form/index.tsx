@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect, ChangeEvent } from 'react';
 import * as yup from 'yup';
 import { useIntl } from 'react-intl';
 import { ReactSelect } from '@strapi/helper-plugin';
@@ -6,23 +6,25 @@ import { Alert, ToggleCheckbox, Stack, Button, FieldLabel, Field, FieldError, Fi
 
 import Option from './option';
 import useContentTypeOptions, { IContentTypeOption } from './hooks/use-content-type-options';
-import usePageOptions, { IPageOption } from './hooks/use-page-options';
+import usePageOptions from './hooks/use-page-options';
 import getTrad from '../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
 import { useGetPluginConfig } from '../../utils/use-get-plugin-config';
+import usePlatformOptions from './hooks/use-platform-options';
+import { PageSearch } from './page-select';
+import { Platform } from '../../api/platform';
+import { IInternalLinkAttribute } from '..';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
-	attribute?: {
-		'link-regex'?: string;
-	};
+	attributeOptions?: IInternalLinkAttribute['options'];
 }
 
-const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProps): JSX.Element => {
+const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 	const { config: pluginConfig, isLoading: isLoadingConfig } = useGetPluginConfig();
-
 	const useSinglePageType = !!pluginConfig?.useSinglePageType || pluginConfig?.pageBuilder?.enabled;
+	const pageBuilderEnabled = pluginConfig?.pageBuilder?.enabled;
 
 	// More information including tests: https://regexr.com/7p9qh
 	const defaultUrlRegex = new RegExp(
@@ -37,10 +39,12 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 		contentTypeOptionsIsFetching
 	} = useContentTypeOptions(link.targetContentTypeUid);
 
-	const { page, setPageId, pageOptions, pageOptionsIsLoading, pageOptionsIsFetching } = usePageOptions(
+	const { page, pageId, setPageId, pageOptions, pageOptionsIsLoading, pageOptionsIsFetching } = usePageOptions(
 		contentType,
 		link.targetContentTypeId
 	);
+	const { platform, setPlatformId, platformOptions, platformOptionsIsLoading, platformOptionsIsFetching } =
+		usePlatformOptions({ page, pageOptionsIsLoading });
 
 	const [checked, setChecked] = useState<boolean>(link.type === 'external');
 	const translationLinkKey = !checked ? 'generated-link' : 'link';
@@ -70,23 +74,21 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 		setContentTypeUid(value.uid);
 	};
 
-	const onPageChange = (value: IPageOption) => {
+	const onPageChange = (id?: number, path?: string, domain?: string) => {
 		if (!contentType) return;
 
-		const domain = value.platform?.domain || link.domain;
-
-		setPageId(value.id);
+		setPageId(id);
 		setLink((previousValue) => ({
 			...previousValue,
-			targetContentTypeUid: contentType.uid,
-			targetContentTypeId: value.id || null,
-			url: [domain, value.slugLabel].filter((item) => !!item).join('/')
+			targetContentTypeUid: id ? contentType.uid : '',
+			targetContentTypeId: id || null,
+			url: [domain, path].filter(Boolean).join('/')
 		}));
 	};
 
-	const onLinkChange = (event) => {
+	const onLinkChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (link.targetContentTypeUid) {
-			event.prefentDefault;
+			event.preventDefault;
 			setErrors((previousValue) => ({
 				...previousValue,
 				link: formatMessage({
@@ -103,8 +105,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 		}));
 	};
 
-	const onLinkBlur = async (event) => {
-		const linkRegex = attribute?.['link-regex'];
+	const onLinkBlur = async (event: ChangeEvent<HTMLInputElement>) => {
+		const linkRegex = attributeOptions?.['link-regex'];
 		const regexObject = linkRegex ? new RegExp(linkRegex) : defaultUrlRegex;
 		const newValue = event.target.value;
 		const urlSchema = yup.string().required().matches(regexObject);
@@ -192,6 +194,11 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 		}
 	};
 
+	const onPlatformChange = (value?: Platform) => {
+		setPlatformId(value?.id);
+		onPageChange();
+	};
+
 	const onTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setLink((value) => ({ ...value, text: (event.target satisfies HTMLInputElement).value }));
 	};
@@ -226,17 +233,19 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 				})}
 			</ToggleCheckbox>
 
-			<Field name="text" id="text" error={errors.text} required>
-				<FieldLabel>
-					{formatMessage({
-						id: getTrad('internal-link.form.text')
-					})}
-				</FieldLabel>
+			{!attributeOptions?.noTitle && (
+				<Field name="text" id="text" error={errors.text} required>
+					<FieldLabel>
+						{formatMessage({
+							id: getTrad('internal-link.form.text')
+						})}
+					</FieldLabel>
 
-				<FieldInput type="text" value={link.text} onChange={onTextChange} onBlur={onTextBlur} required />
+					<FieldInput type="text" value={link.text} onChange={onTextChange} onBlur={onTextBlur} required />
 
-				<FieldError />
-			</Field>
+					<FieldError />
+				</Field>
+			)}
 
 			{!checked && !isLoadingConfig && !useSinglePageType && (
 				<Field required>
@@ -252,10 +261,12 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 						value={contentType}
 						menuPosition="absolute"
 						menuPlacement="auto"
+						// @ts-ignore Option is of correct type
 						components={{ Option }}
 						options={contentTypeOptionsIsFetching ? [] : contentTypeOptions}
 						isLoading={contentTypeOptionsIsLoading}
 						isDisabled={contentTypeOptionsIsLoading}
+						// @ts-ignore onChange is of correct type
 						onChange={onContentTypeChange}
 						placeholder={
 							contentTypeOptionsIsLoading
@@ -269,45 +280,59 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attribute }: IProp
 						loadingMessage={getLoadingMessage}
 						noOptionsMessage={getNoOptionsMessage}
 						isSearchable
+						// @ts-ignore isClear is of correct type
+						isClear
+					/>
+				</Field>
+			)}
+
+			{!checked && pageBuilderEnabled && platformOptions.length > 1 && (
+				<Field required>
+					<FieldLabel>
+						{formatMessage({
+							id: getTrad('internal-link.form.platform')
+						})}
+					</FieldLabel>
+
+					<ReactSelect
+						inputId="platform"
+						name="platform"
+						value={platform}
+						menuPosition="absolute"
+						menuPlacement="auto"
+						// @ts-ignore Option is of correct type
+						components={{ Option }}
+						options={platformOptionsIsFetching ? [] : platformOptions}
+						isLoading={platformOptionsIsLoading}
+						isDisabled={!contentType || platformOptionsIsLoading || !platform}
+						// @ts-ignore onChange is of correct type
+						onChange={onPlatformChange}
+						placeholder={
+							platformOptionsIsLoading
+								? formatMessage({
+										id: getTrad('internal-link.loading')
+								  })
+								: formatMessage({
+										id: getTrad('internal-link.form.platform.placeholder')
+								  })
+						}
+						loadingMessage={getLoadingMessage}
+						noOptionsMessage={getNoOptionsMessage}
+						isSearchable
+						// @ts-ignore isClear is of correct type
 						isClear
 					/>
 				</Field>
 			)}
 
 			{!checked && (
-				<Field required>
-					<FieldLabel>
-						{formatMessage({
-							id: getTrad('internal-link.form.page')
-						})}
-					</FieldLabel>
-
-					<ReactSelect
-						inputId="page"
-						name="page"
-						value={page}
-						menuPosition="absolute"
-						menuPlacement="auto"
-						components={{ Option }}
-						options={pageOptionsIsFetching ? [] : pageOptions}
-						isLoading={pageOptionsIsLoading}
-						isDisabled={!contentType || pageOptionsIsLoading}
-						onChange={onPageChange}
-						placeholder={
-							pageOptionsIsLoading
-								? formatMessage({
-										id: getTrad('internal-link.loading')
-								  })
-								: formatMessage({
-										id: getTrad('internal-link.form.page.placeholder')
-								  })
-						}
-						loadingMessage={getLoadingMessage}
-						noOptionsMessage={getNoOptionsMessage}
-						isSearchable
-						isClear
-					/>
-				</Field>
+				<PageSearch
+					selectedId={pageId}
+					uid={contentType?.uid}
+					platformTitle={pageBuilderEnabled ? platform?.label : undefined}
+					onChange={(value) => onPageChange(value?.id, value?.path, value?.platform?.domain)}
+					pageBuilderConfig={pluginConfig?.pageBuilder}
+				/>
 			)}
 
 			<div style={!checked ? { display: 'none' } : undefined}>

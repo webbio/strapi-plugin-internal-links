@@ -8,7 +8,7 @@ import PluginIcon from './components/plugin-icon';
 const name = pluginPkg.strapi.name;
 
 export default {
-	register(app) {
+	register(app: any) {
 		app.registerPlugin({
 			id: pluginId,
 			initializer: Initializer,
@@ -69,6 +69,19 @@ export default {
 								},
 								type: 'text',
 								defaultValue: 'slug'
+							},
+							{
+								intlLabel: {
+									id: getTrad('internal-link.options.base.noTitle'),
+									defaultMessage: 'Disable link text'
+								},
+								name: 'options.noTitle',
+								description: {
+									id: getTrad('internal-link.options.base.noTitle.description'),
+									defaultMessage: 'Enable this to hide the link text field'
+								},
+								type: 'checkbox',
+								defaultValue: false
 							}
 						]
 					}
@@ -116,9 +129,9 @@ export default {
 		});
 	},
 
-	bootstrap(app) {},
+	bootstrap(app: any) {},
 
-	async registerTrads(app) {
+	async registerTrads(app: any) {
 		const { locales } = app;
 
 		const importedTrads = await Promise.all(

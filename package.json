@@ -1,5 +1,5 @@
 {
-	"name": "strapi-plugin-page-builder",
+	"name": "strapi-plugin-internal-links",
 	"private": true,
 	"version": "0.1.0",
 	"description": "A Strapi application",
@@ -17,19 +17,20 @@
 		"db:start": "docker-compose up -d",
 		"db:stop": "docker-compose down",
 		"postinstall": "node ./scripts/postinstall.js",
-		"spu": "yarn upgrade-interactive --latest"
+		"spu": "yarn upgrade-interactive --latest",
+		"publish-plugin": "cd src/plugins/strapi-plugin-internal-links && yarn publish"
 	},
 	"dependencies": {
-		"@strapi/plugin-graphql": "4.14.3",
-		"@strapi/plugin-i18n": "4.14.3",
-		"@strapi/plugin-users-permissions": "4.14.3",
-		"@strapi/strapi": "4.14.3",
+		"@strapi/plugin-graphql": "<4.15.0",
+		"@strapi/plugin-i18n": "<4.15.0",
+		"@strapi/plugin-users-permissions": "<4.15.0",
+		"@strapi/strapi": "<4.15.0",
 		"@webbio/strapi-plugin-tiptap": "^0.0.8",
 		"better-sqlite3": "9.0.0",
 		"mysql": "^2.18.1"
 	},
 	"devDependencies": {
-		"@babel/preset-react": "^7.22.15",
+		"@babel/preset-react": "^7.23.3",
 		"@webbio/eslint-config-strapi": "^1.1.7",
 		"@webbio/prettier-config": "^0.0.8",
 		"husky": "^8.0.3",
