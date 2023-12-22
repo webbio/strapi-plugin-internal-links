@@ -29,7 +29,7 @@
 		"mysql": "^2.18.1"
 	},
 	"devDependencies": {
-		"@babel/preset-react": "^7.22.15",
+		"@babel/preset-react": "^7.23.3",
 		"@webbio/eslint-config-strapi": "^1.1.7",
 		"@webbio/prettier-config": "^0.0.8",
 		"husky": "^8.0.3",

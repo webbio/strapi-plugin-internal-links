@@ -16,3 +16,4 @@ Dockerfile
 dist
 .env
 .env.example
+*.md
