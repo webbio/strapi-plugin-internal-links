@@ -195,7 +195,6 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 	};
 
 	const onPlatformChange = (value?: Platform) => {
-		// Why is the platform still wrong?
 		setPlatformId(value?.id);
 		onPageChange();
 	};
