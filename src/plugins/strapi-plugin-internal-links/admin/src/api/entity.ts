@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useFetchClient } from '@strapi/helper-plugin';
 import { SearchFilteredEntitiesResult } from './search-filtered-entity';
 import { GlobalPluginConfig } from '../../../utils/config.types';
-import { DEFAULT_PAGEBUILDER_PATH_FIELD } from '../../../server/utils/constants';
+import { DEFAULT_PAGEBUILDER_PATH_FIELD } from '../utils/constants';
 
 export type Entity = {} & SearchFilteredEntitiesResult['results'][number];
 

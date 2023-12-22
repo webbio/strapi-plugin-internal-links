@@ -16,9 +16,10 @@ export interface IInternalLinkAttribute {
 	pluginOptions?: { slug?: { targetField?: string; field?: string } };
 	options?: {
 		required?: boolean;
-		tite?: string;
+		title?: string;
 		slug?: string;
 		'link-regex'?: string;
+		noTitle?: boolean;
 	};
 }
 

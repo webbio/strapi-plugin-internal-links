@@ -11,6 +11,8 @@
 	"internal-link.options.base.slug": "Slug field name",
 	"internal-link.options.base.slug.description": "Fill in the name of the slug field within this content type",
 	"internal-link.errors.remaining-links": "There are still pages that link to this page",
+	"internal-link.options.base.noTitle": "Disable link text",
+	"internal-link.options.base.noTitle.description": "Enable this to hide the link text field",
 
 	"internal-link.modal.title": "Add link",
 	"internal-link.modal.buttons.cancel": "Cancel",

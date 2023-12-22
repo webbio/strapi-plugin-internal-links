@@ -10,7 +10,7 @@ export const useReactSelectCustomStyles = (): StylesConfig<IReactSelectValue, fa
 		control: (provided, { isFocused, isDisabled }) => ({
 			...provided,
 			color: theme.colors.neutral800,
-			backgroundColor: theme.colors.neutral0,
+			backgroundColor: isDisabled ? theme.colors.neutral100 : theme.colors.neutral0,
 			minHeight: '40px',
 			lineHeight: 1.4,
 			borderRadius: theme.borderRadius,

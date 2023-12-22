@@ -50,7 +50,7 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 	});
 
 	const selectedPageFromId = mapSelectItem(entityFromId);
-	console.log('WHAT', selectedId);
+
 	const isPagePageType = !uid;
 	const searchEntitiesIsEnabled = !isPagePageType;
 
@@ -111,6 +111,7 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 				id: getTrad('internal-link.form.page.placeholder')
 			})}
 			required
+			isDisabled={!uid}
 		/>
 	);
 };

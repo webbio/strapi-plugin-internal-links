@@ -1,4 +1,4 @@
-// We know, this file is also present on the admin. But because of the -p tsconfig.admin.json (see package.json, it is needed to build the admin for use in other packages like tiptap)
+// We know, this file is also present on the server. But because of the -p tsconfig.admin.json (see package.json, it is needed to build the admin for use in other packages like tiptap)
 // we need to duplicate this file here. Otherwise this ts file will be copied inside the dist folder of a .js file.
 // This will break the running of the admin in the browser.
 const DEFAULT_PAGEBUILDER_COLLECTION = 'api::page.page';

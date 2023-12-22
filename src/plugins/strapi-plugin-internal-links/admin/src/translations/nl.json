@@ -11,6 +11,8 @@
 	"internal-link.options.base.slug": "Naam van URL veld",
 	"internal-link.options.base.slug.description": "Vul de naam in van het URL veld binnen deze content type",
 	"internal-link.errors.remaining-links": "Er zijn nog gekoppelde pagina's",
+	"internal-link.options.base.noTitle": "Schakel de link tekst uit",
+	"internal-link.options.base.noTitle.description": "Zet deze optie aan om de link tekst uit te schakelen",
 
 	"internal-link.modal.title": "Link toevoegen",
 	"internal-link.modal.buttons.cancel": "Annuleren",

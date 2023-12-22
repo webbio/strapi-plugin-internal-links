@@ -64,7 +64,7 @@ const InternalLinkModal = ({
 						setLink={setLink}
 						errors={errors}
 						setErrors={setErrors}
-						attribute={attribute?.options}
+						attributeOptions={attribute?.options}
 					/>
 				</Typography>
 			</ModalBody>

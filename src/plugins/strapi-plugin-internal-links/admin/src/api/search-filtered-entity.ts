@@ -3,7 +3,7 @@ import orderBy from 'lodash/orderBy';
 
 import { useFetchClient } from '@strapi/helper-plugin';
 import { GlobalPluginConfig } from '../../../utils/config.types';
-import { DEFAULT_PAGEBUILDER_PATH_FIELD } from '../../../server/utils/constants';
+import { DEFAULT_PAGEBUILDER_PATH_FIELD } from '../utils/constants';
 
 export type SearchFilteredEntitiesResult = {
 	pagination: {

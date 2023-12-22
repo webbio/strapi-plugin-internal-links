@@ -69,6 +69,19 @@ export default {
 								},
 								type: 'text',
 								defaultValue: 'slug'
+							},
+							{
+								intlLabel: {
+									id: getTrad('internal-link.options.base.noTitle'),
+									defaultMessage: 'Disable link text'
+								},
+								name: 'options.noTitle',
+								description: {
+									id: getTrad('internal-link.options.base.noTitle.description'),
+									defaultMessage: 'Enable this to hide the link text field'
+								},
+								type: 'checkbox',
+								defaultValue: false
 							}
 						]
 					}

@@ -12,6 +12,7 @@ export interface IPlatformOption {
 
 interface IUsePlatformOptions {
 	page?: IPageOption;
+	pageOptionsIsLoading?: boolean;
 }
 
 const mapPageData = (data: Platform[]): IPlatformOption[] => {
@@ -24,7 +25,7 @@ const mapPageData = (data: Platform[]): IPlatformOption[] => {
 	return options;
 };
 
-export const usePlatformOptions = ({ page }: IUsePlatformOptions) => {
+export const usePlatformOptions = ({ page, pageOptionsIsLoading }: IUsePlatformOptions) => {
 	const { layout, initialData } = useCMEditViewDataManager() as any;
 	const { isLoading: relatedPlatformIsLoading, data: relatedPlatform } = useGetPlatformRelation({
 		id: initialData?.id,
@@ -39,12 +40,14 @@ export const usePlatformOptions = ({ page }: IUsePlatformOptions) => {
 
 	const [platformId, setPlatformId] = useState<number | undefined>(page?.platform?.id);
 	const platform = allPlatforms?.find((x) => x.id === Number(platformId));
-	console.log('platform', page, platform);
+
 	useEffect(() => {
-		if (!relatedPlatformIsLoading && relatedPlatform?.id && !page?.platform?.id) {
+		if (!relatedPlatformIsLoading && relatedPlatform?.id && !page?.platform?.id && !pageOptionsIsLoading) {
 			setPlatformId(relatedPlatform.id);
+		} else if (page?.platform?.id) {
+			setPlatformId(page.platform.id);
 		}
-	}, [relatedPlatform, relatedPlatformIsLoading]);
+	}, [relatedPlatform, relatedPlatformIsLoading, page, pageOptionsIsLoading]);
 
 	return {
 		platform: mapPageData(platform ? [platform] : [])[0],
