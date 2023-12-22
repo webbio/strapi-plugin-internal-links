@@ -26,9 +26,9 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 	const useSinglePageType = !!pluginConfig?.useSinglePageType || pluginConfig?.pageBuilder?.enabled;
 	const pageBuilderEnabled = pluginConfig?.pageBuilder?.enabled;
 
-	// More information including tests: https://regexr.com/7b2ai
+	// More information including tests: https://regexr.com/7p9qh
 	const defaultUrlRegex = new RegExp(
-		/(^https?:\/\/(www.)?[a-zA-Z0-9]{1,}.[^s]{2,}((\/[a-zA-Z0-9\-\_\=\?\%\&\#]{1,}){1,})?)$|^mailto:[\w-\. +]+@([\w-]+\.)+[\w-]{2,4}$|^tel:((\+|00(\s|\s?\-\s?)?)[0-9]{2}(\s|\s?\-\s?)?(\(0\)[\-\s]?)?|0)[0-9](((\s|\s?\-\s?)?[0-9]){1,})$/
+		/(^https?:\/\/(www.)?[a-zA-Z0-9]{1,}.[^s]{2,}((\/[a-zA-Z0-9\-\_\=\?\%\&\#]{1,}){1,})?)\/?$|^mailto:[\w-\. +]+@([\w-]+\.)+[\w-]{2,4}$|^tel:((\+|00(\s|\s?\-\s?)?)[0-9]{2}(\s|\s?\-\s?)?(\(0\)[\-\s]?)?|0)[0-9](((\s|\s?\-\s?)?[0-9]){1,})|^#[a-zA-Z0-9\,\[\]\-\_\=\?\%\&\#]{1,}$/
 	);
 
 	const {
