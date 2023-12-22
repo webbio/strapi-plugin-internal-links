@@ -1,17 +1,17 @@
 {
-  "collectionName": "components_modules_links",
-  "info": {
-    "displayName": "Link"
-  },
-  "options": {},
-  "attributes": {
-    "link": {
-      "type": "customField",
-      "options": {
-        "title": "title",
-        "slug": "slug"
-      },
-      "customField": "plugin::internal-links.internal-link"
-    }
-  }
+	"collectionName": "components_modules_links",
+	"info": {
+		"displayName": "Link"
+	},
+	"options": {},
+	"attributes": {
+		"link": {
+			"type": "customField",
+			"options": {
+				"title": "title",
+				"slug": "slug"
+			},
+			"customField": "plugin::internal-links.internal-link"
+		}
+	}
 }

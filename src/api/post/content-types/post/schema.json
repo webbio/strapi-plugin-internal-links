@@ -1,27 +1,40 @@
 {
-  "kind": "collectionType",
-  "collectionName": "posts",
-  "info": {
-    "singularName": "post",
-    "pluralName": "posts",
-    "displayName": "Post"
-  },
-  "options": {
-    "draftAndPublish": true
-  },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
-  "attributes": {
-    "title": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "string"
-    }
-  }
+	"kind": "collectionType",
+	"collectionName": "posts",
+	"info": {
+		"singularName": "post",
+		"pluralName": "posts",
+		"displayName": "Post"
+	},
+	"options": {
+		"draftAndPublish": true
+	},
+	"pluginOptions": {
+		"i18n": {
+			"localized": true
+		},
+		"internal-links": {
+			"title": "title",
+			"slug": "path"
+		}
+	},
+	"attributes": {
+		"title": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"type": "string"
+		},
+		"path": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"type": "string",
+			"required": false
+		}
+	}
 }

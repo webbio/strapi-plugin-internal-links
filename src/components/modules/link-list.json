@@ -1,16 +1,16 @@
 {
-  "collectionName": "components_modules_link_lists",
-  "info": {
-    "displayName": "Link list",
-    "description": ""
-  },
-  "options": {},
-  "attributes": {
-    "link": {
-      "displayName": "Link",
-      "type": "component",
-      "repeatable": true,
-      "component": "modules.link"
-    }
-  }
+	"collectionName": "components_modules_link_lists",
+	"info": {
+		"displayName": "Link list",
+		"description": ""
+	},
+	"options": {},
+	"attributes": {
+		"link": {
+			"displayName": "Link",
+			"type": "component",
+			"repeatable": true,
+			"component": "modules.link"
+		}
+	}
 }
