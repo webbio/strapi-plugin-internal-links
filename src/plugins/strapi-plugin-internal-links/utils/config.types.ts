@@ -7,5 +7,6 @@ export interface GlobalPluginConfig {
 		pathField?: string;
 		platformUid?: string;
 	};
+	defaultNoTitle?: boolean;
 	domains?: Record<string, any>;
 }

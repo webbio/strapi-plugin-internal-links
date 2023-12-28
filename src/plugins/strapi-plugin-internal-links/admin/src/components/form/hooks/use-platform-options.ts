@@ -42,10 +42,12 @@ export const usePlatformOptions = ({ page, pageOptionsIsLoading }: IUsePlatformO
 	const platform = allPlatforms?.find((x) => x.id === Number(platformId));
 
 	useEffect(() => {
-		if (!relatedPlatformIsLoading && relatedPlatform?.id && !page?.platform?.id && !pageOptionsIsLoading) {
-			setPlatformId(relatedPlatform.id);
-		} else if (page?.platform?.id) {
-			setPlatformId(page.platform.id);
+		if (!platformId) {
+			if (!relatedPlatformIsLoading && relatedPlatform?.id && !page?.platform?.id && !pageOptionsIsLoading) {
+				setPlatformId(relatedPlatform.id);
+			} else if (page?.platform?.id) {
+				setPlatformId(page.platform.id);
+			}
 		}
 	}, [relatedPlatform, relatedPlatformIsLoading, page, pageOptionsIsLoading]);
 
