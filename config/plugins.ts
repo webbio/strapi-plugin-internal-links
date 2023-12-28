@@ -6,6 +6,7 @@ export default ({ env }) => {
 			config: {
 				environment: 'test',
 				useSinglePageType: 'api::page.page',
+				defaultNoTitle: true,
 				pageBuilder: {
 					enabled: true
 				},

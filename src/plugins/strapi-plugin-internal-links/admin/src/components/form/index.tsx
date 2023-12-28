@@ -10,11 +10,11 @@ import usePageOptions from './hooks/use-page-options';
 import getTrad from '../../utils/get-trad';
 import { INTERNAL_LINK_TYPE } from '../factory';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
-import { useGetPluginConfig } from '../../utils/use-get-plugin-config';
 import usePlatformOptions from './hooks/use-platform-options';
 import { PageSearch } from './page-select';
 import { Platform } from '../../api/platform';
 import { IInternalLinkAttribute } from '..';
+import { useGetConfig } from '../../api/config';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
 	attributeOptions?: IInternalLinkAttribute['options'];
@@ -22,7 +22,7 @@ interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isIn
 
 const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
-	const { config: pluginConfig, isLoading: isLoadingConfig } = useGetPluginConfig();
+	const { data: pluginConfig, isLoading: isLoadingConfig } = useGetConfig({});
 	const useSinglePageType = !!pluginConfig?.useSinglePageType || pluginConfig?.pageBuilder?.enabled;
 	const pageBuilderEnabled = pluginConfig?.pageBuilder?.enabled;
 
@@ -39,15 +39,14 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 		contentTypeOptionsIsFetching
 	} = useContentTypeOptions(link.targetContentTypeUid);
 
-	const { page, pageId, setPageId, pageOptions, pageOptionsIsLoading, pageOptionsIsFetching } = usePageOptions(
-		contentType,
-		link.targetContentTypeId
-	);
+	const { page, pageId, setPageId, pageOptionsIsLoading } = usePageOptions(contentType, link.targetContentTypeId);
 	const { platform, setPlatformId, platformOptions, platformOptionsIsLoading, platformOptionsIsFetching } =
 		usePlatformOptions({ page, pageOptionsIsLoading });
 
 	const [checked, setChecked] = useState<boolean>(link.type === 'external');
 	const translationLinkKey = !checked ? 'generated-link' : 'link';
+	const shouldShowTitle =
+		typeof attributeOptions?.noTitle === 'boolean' ? !attributeOptions?.noTitle : !pluginConfig?.defaultNoTitle;
 
 	const onToggleCheckbox = (): void => {
 		setChecked((prev) => !prev);
@@ -233,7 +232,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 				})}
 			</ToggleCheckbox>
 
-			{!attributeOptions?.noTitle && (
+			{shouldShowTitle && (
 				<Field name="text" id="text" error={errors.text} required>
 					<FieldLabel>
 						{formatMessage({

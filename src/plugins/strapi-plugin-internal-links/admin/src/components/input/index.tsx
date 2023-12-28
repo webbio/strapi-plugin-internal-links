@@ -2,13 +2,25 @@ import React, { useLayoutEffect, useState, lazy, Suspense } from 'react';
 import { useIntl, MessageDescriptor, IntlFormatters } from 'react-intl';
 
 import { useCMEditViewDataManager } from '@strapi/helper-plugin';
-import { Stack, IconButton, Field, FieldHint, FieldError, FieldLabel, FieldInput } from '@strapi/design-system';
+import {
+	Stack,
+	IconButton,
+	Field,
+	FieldHint,
+	TextInput,
+	FieldError,
+	FieldLabel,
+	FieldInput
+} from '@strapi/design-system';
 import { Pencil, Link, Trash } from '@strapi/icons';
 
 import getTrad from '../../utils/get-trad';
 import createInternalLink from '../factory';
 import useInternalLinkInput from './use-internal-link-input';
 import { InputGroup, Actions } from './styles';
+import { useGetConfig } from '../../api/config';
+import { useGetPlatforms } from '../../api/platform';
+import { useGetPlatformRelation } from '../../api/platform-relation';
 
 export interface IInternalLinkAttribute {
 	customField: string;
@@ -53,6 +65,15 @@ const InternalLinkInput = ({
 }: IInternalLinkInputProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 	const { layout, initialData } = useCMEditViewDataManager() as any;
+	// The next three hooks are used to fetch the platforms and their relations before the modal is opened
+	useGetConfig({});
+	useGetPlatforms({});
+	useGetPlatformRelation({
+		id: initialData?.id,
+		uid: layout.uid,
+		targetModel: layout?.attributes?.platform?.target,
+		hasPlatformField: Object(layout?.attributes || {}).hasOwnProperty('platform')
+	});
 
 	const { link, setLink, initialLink, isInitialData, errors, setErrors, resetInternalLink } = useInternalLinkInput(
 		value || '',
@@ -157,7 +178,29 @@ const InternalLinkInput = ({
 	}, [initialLink.current]);
 
 	return (
-		<Suspense fallback={<></>}>
+		<Suspense
+			fallback={
+				<Field
+					name={name}
+					id={name}
+					error={errors?.url}
+					hint={description && formatMessage(description)}
+					required={required}
+				>
+					<TextInput
+						id="internal-link-suspense"
+						label={intlLabel ? formatMessage(intlLabel) : ''}
+						aria-label={formatMessage({
+							id: getTrad('internal-link.input.aria-label')
+						})}
+						value={link.url}
+						required={required}
+						labelAction={labelAction}
+						disabled
+					/>
+				</Field>
+			}
+		>
 			<Field
 				name={name}
 				id={name}
