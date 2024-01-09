@@ -38,6 +38,9 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 				return;
 			}
 
+			// This is added to prevent revalidation of internal links when the path isn't changed. The updatedPath state comes from the slug plugin
+			const state = { ...event.state, preventInternalLinksUpdate: !event?.params?.data?.state?.updatedPath };
+
 			const uid = event.model.uid as Common.UID.ContentType;
 
 			// @ts-ignore
@@ -45,10 +48,12 @@ export default async ({ strapi }: { strapi: Strapi }) => {
 			const entity: any = await getPopulatedEntity(uid, id);
 			const sanitizedEntity: Record<string, any> = (await sanitizeEntity(entity, uid)) as any;
 
-			await strapi.service('plugin::internal-links.internal-link').updateSourceEntities(uid, id, sanitizedEntity);
 			await strapi
 				.service('plugin::internal-links.internal-link')
-				.updateInternalLinksFromTargetContentType(uid, id, sanitizedEntity);
+				.updateSourceEntities(uid, id, sanitizedEntity, state);
+			await strapi
+				.service('plugin::internal-links.internal-link')
+				.updateInternalLinksFromTargetContentType(uid, id, sanitizedEntity, state);
 		},
 		async beforeDelete(event) {
 			// TODO

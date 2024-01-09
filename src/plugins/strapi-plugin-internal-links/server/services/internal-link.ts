@@ -242,7 +242,12 @@ const updateAllLinkedDomains = async (platformId: number, locale: string) => {
 	});
 };
 
-const updateSourceEntities = async (uid: Common.UID.ContentType, id: any, sanitizedEntity: any) => {
+const updateSourceEntities = async (
+	uid: Common.UID.ContentType,
+	id: any,
+	sanitizedEntity: any,
+	state?: Record<string, any>
+) => {
 	// Update internal links for wysiwyg internal links
 	const internalLinksFromWysiwyg = await getInternalLinksFromWysiwygFields(sanitizedEntity, uid, id);
 
@@ -273,7 +278,8 @@ const updateSourceEntities = async (uid: Common.UID.ContentType, id: any, saniti
 				...updatedEntity,
 				lifecycleState: {
 					exit: true
-				}
+				},
+				state
 			}
 		});
 	} catch (error) {
@@ -284,7 +290,8 @@ const updateSourceEntities = async (uid: Common.UID.ContentType, id: any, saniti
 const updateInternalLinksFromTargetContentType = async (
 	targetContentTypeUid: Common.UID.ContentType,
 	targetContentTypeId: string,
-	sanitizedEntity: any
+	sanitizedEntity: any,
+	state?: Record<string, any>
 ) => {
 	// Update links with new URL
 	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity, true);
@@ -320,7 +327,8 @@ const updateInternalLinksFromTargetContentType = async (
 							...updatedEntity,
 							lifecycleState: {
 								exit: true
-							}
+							},
+							state
 						}
 					});
 				} catch (error) {
@@ -344,7 +352,8 @@ const updateInternalLinksFromTargetContentType = async (
 						...updatedEntity,
 						lifecycleState: {
 							exit: true
-						}
+						},
+						state
 					}
 				});
 			}
