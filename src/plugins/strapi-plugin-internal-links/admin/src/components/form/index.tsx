@@ -368,22 +368,24 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 				/>
 			)}
 
-			<Field name="urlAddition" id="urlAddition">
-				<FieldLabel>
-					{formatMessage({
-						id: getTrad('internal-link.form.urlAddition')
-					})}
-				</FieldLabel>
+			{pluginConfig?.enableUrlAddition && (
+				<Field name="urlAddition" id="urlAddition">
+					<FieldLabel>
+						{formatMessage({
+							id: getTrad('internal-link.form.urlAddition')
+						})}
+					</FieldLabel>
 
-				<FieldInput
-					type="text"
-					value={link?.urlAddition}
-					onChange={onUrlAdditionChange}
-					disabled={pageOptionsIsLoading || !link?.domain}
-				/>
+					<FieldInput
+						type="text"
+						value={link?.urlAddition}
+						onChange={onUrlAdditionChange}
+						disabled={pageOptionsIsLoading || !link?.domain}
+					/>
 
-				<FieldError />
-			</Field>
+					<FieldError />
+				</Field>
+			)}
 
 			<div style={!isExternalTab ? { display: 'none' } : undefined}>
 				<Field name="link" id="link" error={errors.url} required>
