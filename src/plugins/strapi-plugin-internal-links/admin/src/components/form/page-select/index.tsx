@@ -7,7 +7,6 @@ import { useCMEditViewDataManager, useFetchClient } from '@strapi/helper-plugin'
 import { Combobox, IReactSelectValue } from '../../Combobox';
 import { getSearchFilteredEntities } from '../../../api/search-filtered-entity';
 import { useGetLocaleFromUrl } from '../../../utils/use-get-locale-from-url';
-import { useGetDefaultStrapiLocale } from '../../../utils/use-get-default-locale';
 
 import S from './styles';
 import getTrad from '../../../utils/get-trad';
@@ -41,8 +40,8 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 	const form = useCMEditViewDataManager() as any;
 
 	const urlLocale = useGetLocaleFromUrl();
-	const { defaultLocale } = useGetDefaultStrapiLocale();
-	const selectedLocale = form.initialData?.locale ?? urlLocale ?? defaultLocale;
+	const selectedLocale = form.initialData?.locale || urlLocale;
+
 	const { data: entityFromId } = useGetEntity({
 		uid,
 		id: selectedId,
