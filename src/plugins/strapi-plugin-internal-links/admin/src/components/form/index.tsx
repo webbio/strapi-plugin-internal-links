@@ -215,8 +215,6 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 		}
 	}, [contentType?.domain, page]);
 
-	console.log(platformOptions, platformOptionsIsLoading, platform);
-
 	return (
 		<Stack spacing={6}>
 			<ToggleCheckbox
