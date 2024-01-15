@@ -43,7 +43,9 @@ export const usePlatformOptions = ({ page, pageOptionsIsLoading }: IUsePlatformO
 
 	useEffect(() => {
 		if (!platformId) {
-			if (!relatedPlatformIsLoading && relatedPlatform?.id && !page?.platform?.id && !pageOptionsIsLoading) {
+			if (layout.uid === 'api::platform.platform') {
+				setPlatformId(initialData?.id);
+			} else if (!relatedPlatformIsLoading && relatedPlatform?.id && !page?.platform?.id && !pageOptionsIsLoading) {
 				setPlatformId(relatedPlatform.id);
 			} else if (page?.platform?.id) {
 				setPlatformId(page.platform.id);

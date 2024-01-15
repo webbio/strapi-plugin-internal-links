@@ -215,6 +215,8 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 		}
 	}, [contentType?.domain, page]);
 
+	console.log(platformOptions, platformOptionsIsLoading, platform);
+
 	return (
 		<Stack spacing={6}>
 			<ToggleCheckbox
@@ -303,7 +305,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 						components={{ Option }}
 						options={platformOptionsIsFetching ? [] : platformOptions}
 						isLoading={platformOptionsIsLoading}
-						isDisabled={!contentType || platformOptionsIsLoading || !platform}
+						isDisabled={!contentType || platformOptionsIsLoading}
 						// @ts-ignore onChange is of correct type
 						onChange={onPlatformChange}
 						placeholder={

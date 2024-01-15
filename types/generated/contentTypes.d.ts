@@ -697,6 +697,18 @@ export interface ApiPlatformPlatform extends Schema.CollectionType {
 				};
 			}>;
 		domain: Attribute.String;
+		link: Attribute.JSON &
+			Attribute.CustomField<
+				'plugin::internal-links.internal-link',
+				{
+					noTitle: true;
+				}
+			> &
+			Attribute.SetPluginOptions<{
+				i18n: {
+					localized: true;
+				};
+			}>;
 		createdAt: Attribute.DateTime;
 		updatedAt: Attribute.DateTime;
 		publishedAt: Attribute.DateTime;
