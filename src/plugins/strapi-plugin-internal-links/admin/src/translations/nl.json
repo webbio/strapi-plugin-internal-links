@@ -25,6 +25,7 @@
 	"internal-link.form.type.external": "Externe pagina",
 	"internal-link.form.type.internal": "Interne pagina",
 	"internal-link.form.text": "Linktekst",
+	"internal-link.form.urlAddition": "Url Toevoeging",
 	"internal-link.form.collection": "Selecteer collectie type",
 	"internal-link.form.collection.placeholder": "Bijvoorbeeld nieuws, subsidies of wegwerkzaamheden",
 	"internal-link.form.collection.clear": "Reset collectie type keuze",

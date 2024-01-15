@@ -14,6 +14,8 @@ export interface IInternalLink {
 	text: string;
 	type: (typeof INTERNAL_LINK_TYPE)[keyof typeof INTERNAL_LINK_TYPE];
 	domain?: string;
+	urlAddition?: string;
+	initialUrlAddition?: string;
 }
 
 export const createInternalLink = (
@@ -32,7 +34,8 @@ export const createInternalLink = (
 	url: initialLink || '',
 	text: initialText || '',
 	type: INTERNAL_LINK_TYPE.INTERNAL,
-	domain: ''
+	domain: '',
+	urlAddition: ''
 });
 
 export default createInternalLink;

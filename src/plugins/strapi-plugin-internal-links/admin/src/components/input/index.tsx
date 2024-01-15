@@ -92,6 +92,7 @@ const InternalLinkInput = ({
 
 	const saveModal = (): void => {
 		setShowModal(false);
+		// console.log('SAVID', link);
 		initialLink.current = link;
 		handleChange();
 	};
