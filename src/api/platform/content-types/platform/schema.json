@@ -27,6 +27,18 @@
 		},
 		"domain": {
 			"type": "string"
+		},
+		"link": {
+			"pluginOptions": {
+				"i18n": {
+					"localized": true
+				}
+			},
+			"options": {
+				"noTitle": true
+			},
+			"type": "customField",
+			"customField": "plugin::internal-links.internal-link"
 		}
 	}
 }
