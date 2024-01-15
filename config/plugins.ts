@@ -7,6 +7,7 @@ export default ({ env }) => {
 				environment: 'test',
 				useSinglePageType: 'api::page.page',
 				defaultNoTitle: true,
+				enableUrlAddition: true,
 				pageBuilder: {
 					enabled: true
 				},

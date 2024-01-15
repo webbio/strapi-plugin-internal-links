@@ -9,6 +9,7 @@ import getTrad from '../../utils/get-trad';
 import InternalLinkForm from '../form';
 import { IInternalLinkAttribute } from '../input';
 import { IUseInternalLinkInputReturn } from '../input/use-internal-link-input';
+import { useGetConfig } from '../../api/config';
 
 interface IInternalLinkModalProps
 	extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
@@ -31,10 +32,15 @@ const InternalLinkModal = ({
 	}
 }: IInternalLinkModalProps): JSX.Element => {
 	const { formatMessage } = useIntl();
+	const { data: pluginConfig, isLoading: isLoadingConfig } = useGetConfig({});
+
+	const shouldShowTitle =
+		!isLoadingConfig &&
+		(typeof attribute?.options?.noTitle === 'boolean' ? !attribute?.options?.noTitle : !pluginConfig?.defaultNoTitle);
 
 	const hasErrors = Object.values(errors).some((item) => !!item);
 	const isFilled =
-		(link.type === 'external' && !!link.text && !!link.url) ||
+		(link.type === 'external' && shouldShowTitle ? !!link.text : true && !!link.url) ||
 		(link.type === 'internal' && !!link.targetContentTypeUid && !!link.targetContentTypeId);
 
 	const spacing = 4;

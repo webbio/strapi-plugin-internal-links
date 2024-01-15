@@ -31,6 +31,7 @@ export default ({ env }) => {
 			environment: 'test' // current environment which will affect the chosen domain,
 			useSinglePageType: 'api::page.page', // Optional option to use a single page type like the page builder (without page builder options)
 			defaultNoTitle: "undefined | boolean" // When enabled this will hide titles by default for the field
+			enableUrlAddition: "undefined | boolean" // When enabled this will show an extra input for url additions. This text will be put at the end of the url. This can by used for url params.
 			pageBuilder: {
 				enabled: true, // When enabled, pageBuilder plugin logic is applied.
 				pageUid: 'undefined | string',

@@ -63,8 +63,10 @@ export const usePageOptions = (contentType?: IContentTypeOption, initialId?: str
 	const { defaultLocale } = useGetDefaultStrapiLocale();
 	const fetchClient = useFetchClient();
 
-	const { data, status, isLoading, isFetching, isError } = useQuery(['page-options', contentType, defaultLocale], () =>
-		fetchPageOptions(defaultLocale, fetchClient, contentType)
+	const { data, status, isLoading, isFetching, isError } = useQuery(
+		['page-options', contentType, defaultLocale],
+		() => fetchPageOptions(defaultLocale, fetchClient, contentType),
+		{ enabled: Boolean(defaultLocale) }
 	);
 
 	const [pageId, setPageId] = useState<number | undefined>(Number(initialId));

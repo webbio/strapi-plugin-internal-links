@@ -25,6 +25,7 @@
 	"internal-link.form.type.external": "External page",
 	"internal-link.form.type.internal": "Internal page",
 	"internal-link.form.text": "Link text",
+	"internal-link.form.urlAddition": "Url Addition",
 	"internal-link.form.collection": "Select collection type",
 	"internal-link.form.collection.placeholder": "E.g.: news, subsidies or road maintenance",
 	"internal-link.form.collection.clear": "Reset collection type selection",
