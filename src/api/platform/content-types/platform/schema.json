@@ -7,13 +7,9 @@
 		"displayName": "Platform"
 	},
 	"options": {
-		"draftAndPublish": true
+		"draftAndPublish": false
 	},
-	"pluginOptions": {
-		"i18n": {
-			"localized": true
-		}
-	},
+	"pluginOptions": {},
 	"attributes": {
 		"title": {
 			"pluginOptions": {

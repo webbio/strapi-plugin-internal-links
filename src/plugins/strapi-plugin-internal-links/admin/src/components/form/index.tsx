@@ -43,13 +43,13 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 	const { platform, setPlatformId, platformOptions, platformOptionsIsLoading, platformOptionsIsFetching } =
 		usePlatformOptions({ page, pageOptionsIsLoading });
 
-	const [checked, setChecked] = useState<boolean>(link.type === 'external');
-	const translationLinkKey = !checked ? 'generated-link' : 'link';
+	const [isExternalTab, setIsExternalTab] = useState<boolean>(link.type === 'external');
+	const translationLinkKey = !isExternalTab ? 'generated-link' : 'link';
 	const shouldShowTitle =
 		typeof attributeOptions?.noTitle === 'boolean' ? !attributeOptions?.noTitle : !pluginConfig?.defaultNoTitle;
 
 	const onToggleCheckbox = (): void => {
-		setChecked((prev) => !prev);
+		setIsExternalTab((prev) => !prev);
 		setErrors((previousValue) => ({
 			...previousValue,
 			link: undefined,
@@ -203,7 +203,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 	};
 
 	useLayoutEffect(() => {
-		setChecked(link.type === 'external');
+		setIsExternalTab(link.type === 'external');
 	}, []);
 
 	useEffect(() => {
@@ -218,7 +218,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 	return (
 		<Stack spacing={6}>
 			<ToggleCheckbox
-				checked={checked}
+				checked={isExternalTab}
 				onChange={onToggleCheckbox}
 				onLabel={formatMessage({
 					id: getTrad('internal-link.form.type.external')
@@ -246,7 +246,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 				</Field>
 			)}
 
-			{!checked && !isLoadingConfig && !useSinglePageType && (
+			{!isExternalTab && !isLoadingConfig && !useSinglePageType && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({
@@ -285,7 +285,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 				</Field>
 			)}
 
-			{!checked && pageBuilderEnabled && platformOptions.length > 1 && (
+			{!isExternalTab && pageBuilderEnabled && platformOptions.length > 1 && (
 				<Field required>
 					<FieldLabel>
 						{formatMessage({
@@ -324,7 +324,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 				</Field>
 			)}
 
-			{!checked && (
+			{!isExternalTab && (
 				<PageSearch
 					selectedId={pageId}
 					uid={contentType?.uid}
@@ -334,7 +334,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 				/>
 			)}
 
-			<div style={!checked ? { display: 'none' } : undefined}>
+			<div style={!isExternalTab ? { display: 'none' } : undefined}>
 				<Field name="link" id="link" error={errors.url} required>
 					<FieldLabel>
 						{formatMessage({
@@ -348,7 +348,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 						onChange={onLinkChange}
 						onBlur={onLinkBlur}
 						required
-						disabled={!checked}
+						disabled={!isExternalTab}
 						placeholder={formatMessage({
 							id: getTrad(`internal-link.form.${translationLinkKey}.placeholder`)
 						})}

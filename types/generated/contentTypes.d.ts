@@ -680,12 +680,7 @@ export interface ApiPlatformPlatform extends Schema.CollectionType {
 		displayName: 'Platform';
 	};
 	options: {
-		draftAndPublish: true;
-	};
-	pluginOptions: {
-		i18n: {
-			localized: true;
-		};
+		draftAndPublish: false;
 	};
 	attributes: {
 		title: Attribute.String &
@@ -711,11 +706,8 @@ export interface ApiPlatformPlatform extends Schema.CollectionType {
 			}>;
 		createdAt: Attribute.DateTime;
 		updatedAt: Attribute.DateTime;
-		publishedAt: Attribute.DateTime;
 		createdBy: Attribute.Relation<'api::platform.platform', 'oneToOne', 'admin::user'> & Attribute.Private;
 		updatedBy: Attribute.Relation<'api::platform.platform', 'oneToOne', 'admin::user'> & Attribute.Private;
-		localizations: Attribute.Relation<'api::platform.platform', 'oneToMany', 'api::platform.platform'>;
-		locale: Attribute.String;
 	};
 }
 

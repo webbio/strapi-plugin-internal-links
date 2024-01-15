@@ -56,7 +56,10 @@ export const getSearchFilteredEntities = async ({
 		const searchParams = new URLSearchParams();
 		searchParams.append('page', String(page));
 		searchParams.append('pageSize', '999');
-		searchParams.append('locale', locale);
+
+		if (locale) {
+			searchParams.append('locale', locale);
+		}
 
 		if (searchQuery) {
 			searchParams.delete('sort');
