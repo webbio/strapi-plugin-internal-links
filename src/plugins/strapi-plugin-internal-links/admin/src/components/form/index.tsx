@@ -26,6 +26,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 	const { formatMessage } = useIntl();
 	const { data: pluginConfig, isLoading: isLoadingConfig } = useGetConfig({});
 	const useSinglePageType = !!pluginConfig?.useSinglePageType || pluginConfig?.pageBuilder?.enabled;
+	const noUrlValidation = pluginConfig?.noUrlValidation;
 	const pageBuilderEnabled = pluginConfig?.pageBuilder?.enabled;
 
 	// More information including tests: https://regexr.com/7p9qh
@@ -126,6 +127,10 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 		const regexObject = linkRegex ? new RegExp(linkRegex) : defaultUrlRegex;
 		const newValue = event.target.value;
 		const urlSchema = yup.string().required().matches(regexObject);
+
+		if (noUrlValidation) {
+			return;
+		}
 
 		if (newValue) {
 			try {
