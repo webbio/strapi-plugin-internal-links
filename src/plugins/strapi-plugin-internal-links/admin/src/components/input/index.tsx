@@ -21,6 +21,7 @@ import { InputGroup, Actions } from './styles';
 import { useGetConfig } from '../../api/config';
 import { useGetPlatforms } from '../../api/platform';
 import { useGetPlatformRelation } from '../../api/platform-relation';
+import { getLinkWithAddition } from '../../utils/url-addition';
 
 export interface IInternalLinkAttribute {
 	customField: string;
@@ -32,7 +33,6 @@ export interface IInternalLinkAttribute {
 		slug?: string;
 		'link-regex'?: string;
 		noTitle?: boolean;
-		noLinkCheck?: boolean;
 	};
 }
 
@@ -194,7 +194,7 @@ const InternalLinkInput = ({
 						aria-label={formatMessage({
 							id: getTrad('internal-link.input.aria-label')
 						})}
-						value={link.url}
+						value={getLinkWithAddition(link.url, link.urlAddition)}
 						required={required}
 						labelAction={labelAction}
 						disabled
@@ -220,7 +220,7 @@ const InternalLinkInput = ({
 							aria-label={formatMessage({
 								id: getTrad('internal-link.input.aria-label')
 							})}
-							value={link.url}
+							value={getLinkWithAddition(link.url, link.urlAddition)}
 							onClick={() => setShowModal(true)}
 							required={required}
 							disabled

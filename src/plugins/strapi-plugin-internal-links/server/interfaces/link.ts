@@ -12,4 +12,5 @@ export interface InternalLink {
 	type?: string | null;
 	createdAt?: Date | null;
 	updatedAt?: Date | null;
+	urlAddition?: string | null;
 }

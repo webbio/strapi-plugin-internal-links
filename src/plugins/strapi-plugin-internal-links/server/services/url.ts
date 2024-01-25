@@ -22,7 +22,7 @@ const getDomain = (uid: string, entity?: Record<string, any>) => {
 	return pluginConfig.domains.default[environment];
 };
 
-const constructURL = async (uid: string, entity: Record<string, any>) => {
+const constructURL = (uid: string, entity: Record<string, any>): string => {
 	const domain = getDomain(uid, entity);
 	const slug = getSlug(uid, entity);
 

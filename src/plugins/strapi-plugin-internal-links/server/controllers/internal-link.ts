@@ -12,7 +12,8 @@ const updateInternalLinkSchema = object({
 		targetContentTypeId: number(),
 		url: string(),
 		text: string(),
-		type: string()
+		type: string(),
+		urlAddition: string()
 	})
 });
 
@@ -25,7 +26,8 @@ const createInternalLinkSchema = object({
 		targetContentTypeId: number(),
 		url: string(),
 		text: string(),
-		type: string()
+		type: string(),
+		urlAddition: string()
 	})
 });
 
