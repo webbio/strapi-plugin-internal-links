@@ -214,7 +214,10 @@ const updateManyInternalLinksByTarget = async (
 			]
 		},
 		data: {
-			url: updatedUrl
+			url: updatedUrl,
+			lifecycleState: {
+				exit: true
+			}
 		}
 	});
 };
@@ -291,10 +294,10 @@ const updateSourceEntities = async (
 const updateInternalLinksFromTargetContentType = async (
 	targetContentTypeUid: Common.UID.ContentType,
 	targetContentTypeId: string,
-	sanitizedEntity: any,
+	sanitizedEntity: Record<string, any>,
 	state?: Record<string, any>
 ) => {
-	if (!state?.updatedPath) {
+	if (state?.preventInternalLinksUpdate) {
 		return;
 	}
 
