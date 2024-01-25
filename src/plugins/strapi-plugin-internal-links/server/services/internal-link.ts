@@ -298,7 +298,6 @@ const updateInternalLinksFromTargetContentType = async (
 		return;
 	}
 
-	console.log('UPDATE', sanitizedEntity);
 	// Update links with new URL
 	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity, true);
 	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity, false);
