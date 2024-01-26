@@ -1,5 +1,4 @@
 import React, { useState, useLayoutEffect, useEffect, ChangeEvent } from 'react';
-import escapeRegExp from 'lodash/escapeRegExp';
 import * as yup from 'yup';
 import { useIntl } from 'react-intl';
 import { ReactSelect } from '@strapi/helper-plugin';
@@ -16,7 +15,6 @@ import { PageSearch } from './page-select';
 import { Platform } from '../../api/platform';
 import { IInternalLinkAttribute } from '..';
 import { useGetConfig } from '../../api/config';
-import { useDebounce } from '../../utils/use-debounce';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
 	attributeOptions?: IInternalLinkAttribute['options'];
@@ -45,7 +43,6 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 	const { page, pageId, setPageId, pageOptionsIsLoading } = usePageOptions(contentType, link.targetContentTypeId);
 	const { platform, setPlatformId, platformOptions, platformOptionsIsLoading, platformOptionsIsFetching } =
 		usePlatformOptions({ page, pageOptionsIsLoading });
-	const debouncedUrlAddition = useDebounce(link?.urlAddition, 300);
 	const [isExternalTab, setIsExternalTab] = useState<boolean>(link.type === 'external');
 	const translationLinkKey = !isExternalTab ? 'generated-link' : 'link';
 	const shouldShowTitle =
@@ -65,20 +62,6 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 				previousValue.type === INTERNAL_LINK_TYPE.INTERNAL ? INTERNAL_LINK_TYPE.EXTERNAL : INTERNAL_LINK_TYPE.INTERNAL
 		}));
 	};
-
-	useEffect(() => {
-		if (debouncedUrlAddition !== link?.initialUrlAddition) {
-			const linkWithoutAddition = getLinkWithoutAddition(link?.url, link?.initialUrlAddition);
-
-			if (linkWithoutAddition) {
-				setLink({
-					...link,
-					initialUrlAddition: debouncedUrlAddition,
-					url: `${linkWithoutAddition}${debouncedUrlAddition || ''}`
-				});
-			}
-		}
-	}, [debouncedUrlAddition]);
 
 	useEffect(() => {
 		if (pluginConfig && useSinglePageType) {
@@ -225,9 +208,10 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 	};
 
 	const onUrlAdditionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const linkValue = (event.target satisfies HTMLInputElement).value;
+		const value = (event.target satisfies HTMLInputElement).value;
+
 		if (link.url) {
-			setLink((value) => ({ ...value, urlAddition: linkValue }));
+			setLink((v) => ({ ...v, urlAddition: value }));
 		}
 	};
 
@@ -243,16 +227,6 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 			}));
 		}
 	}, [contentType?.domain, page]);
-
-	useEffect(() => {
-		if (!link?.urlAddition && !pageOptionsIsLoading && link?.domain) {
-			setLink((previousValue) => ({
-				...previousValue,
-				urlAddition: getInitialUrlAddition(pageOptionsIsLoading, link?.domain, link?.url, page?.slugLabel),
-				initialUrlAddition: getInitialUrlAddition(pageOptionsIsLoading, link?.domain, link?.url, page?.slugLabel)
-			}));
-		}
-	}, [pageOptionsIsLoading, link?.domain, link?.url, page?.slugLabel]);
 
 	return (
 		<Stack spacing={6}>
@@ -373,7 +347,7 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 				/>
 			)}
 
-			{pluginConfig?.enableUrlAddition && (
+			{pluginConfig?.enableUrlAddition && !isExternalTab && (
 				<Field name="urlAddition" id="urlAddition">
 					<FieldLabel>
 						{formatMessage({
@@ -449,26 +423,3 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 };
 
 export default InternalLinkForm;
-
-export const getInitialUrlAddition = (
-	isLoading?: boolean,
-	domain?: string,
-	url?: string,
-	pageSlug?: string
-): string => {
-	if (!url || !pageSlug || !domain || isLoading) return '';
-
-	let formedUrl = [domain, pageSlug].filter(Boolean).join('/');
-	const reg = new RegExp(`^${escapeRegExp(formedUrl)}`, 'g');
-
-	return url.replace(reg, '');
-};
-
-export const getLinkWithoutAddition = (url?: string, initialUrlAddition?: string): string => {
-	if (!url) return '';
-
-	const reg = new RegExp(`${escapeRegExp(initialUrlAddition)}$`, 'g');
-	const linkWithoutAddition = initialUrlAddition ? url.replace(reg, '') : url;
-
-	return linkWithoutAddition;
-};

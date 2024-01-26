@@ -21,7 +21,8 @@ const mapInternalLinks = (
 		targetContentTypeId: internalLink?.targetContentTypeId ?? null,
 		url: internalLink?.url ?? null,
 		text: internalLink?.text ?? null,
-		type: internalLink?.type ?? null
+		type: internalLink?.type ?? null,
+		urlAddition: internalLink?.urlAddition ?? null
 	}));
 };
 
@@ -186,7 +187,7 @@ const getInternalLinksFromCustomFields = async (
 const updateManyInternalLinksByTarget = async (
 	targetContentTypeUid: string,
 	targetContentTypeId: string,
-	sanitizedEntity: any,
+	sanitizedEntity: Record<string, any>,
 	wysiwyg: boolean
 ) => {
 	const internalLinkContentType = wysiwyg
@@ -213,7 +214,10 @@ const updateManyInternalLinksByTarget = async (
 			]
 		},
 		data: {
-			url: updatedUrl
+			url: updatedUrl,
+			lifecycleState: {
+				exit: true
+			}
 		}
 	});
 };
@@ -290,9 +294,13 @@ const updateSourceEntities = async (
 const updateInternalLinksFromTargetContentType = async (
 	targetContentTypeUid: Common.UID.ContentType,
 	targetContentTypeId: string,
-	sanitizedEntity: any,
+	sanitizedEntity: Record<string, any>,
 	state?: Record<string, any>
 ) => {
+	if (state?.preventInternalLinksUpdate) {
+		return;
+	}
+
 	// Update links with new URL
 	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity, true);
 	await updateManyInternalLinksByTarget(targetContentTypeUid, targetContentTypeId, sanitizedEntity, false);
@@ -347,6 +355,7 @@ const updateInternalLinksFromTargetContentType = async (
 				const entity: any = await getPopulatedEntity(uid, id);
 				const sanitizedEntity = await sanitizeEntity(entity, uid);
 				const updatedEntity = mapInternalLinksToEntity(sanitizedEntity, internalLinks);
+
 				await strapi.entityService.update(uid, id, {
 					data: {
 						...updatedEntity,
