@@ -56,7 +56,7 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 	const [selectedLocale, setSelectedLocale] = React.useState<string | undefined>();
 
 	useEffect(() => {
-		if (!selectedLocale && !isLoadingEntity && dataUpdatedAt) {
+		if (!selectedLocale && !isLoadingEntity && (dataUpdatedAt || !selectedId)) {
 			setSelectedLocale(entityFromId?.locale || form.initialData?.locale || urlLocale);
 		}
 	}, [entityFromId]);
