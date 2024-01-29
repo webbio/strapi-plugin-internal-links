@@ -6,7 +6,7 @@ import { useFetchClient } from '@strapi/helper-plugin';
 
 import { IContentTypeOption } from './use-content-type-options';
 import pluginId from '../../../plugin-id';
-import { useGetDefaultStrapiLocale } from '../../../utils/use-get-default-locale';
+import { useGetStrapiLocales } from '../../../utils/use-get-strapi-locales';
 
 export interface IPageOption {
 	id: number;
@@ -60,7 +60,7 @@ const fetchPageOptions = async (
 };
 
 export const usePageOptions = (contentType?: IContentTypeOption, initialId?: string | number | null) => {
-	const { defaultLocale } = useGetDefaultStrapiLocale();
+	const { defaultLocale } = useGetStrapiLocales();
 	const fetchClient = useFetchClient();
 
 	const { data, status, isLoading, isFetching, isError } = useQuery(

@@ -7,6 +7,7 @@ import { FieldLabel } from '@strapi/design-system';
 
 import S from './styles';
 import { useReactSelectCustomStyles } from './react-select-custom-styles';
+import { Label } from '../label';
 
 export interface IComboboxProps extends AsyncProps<IReactSelectValue, false, GroupBase<IReactSelectValue>> {
 	customOption?: typeof components.Option<IReactSelectValue, false, GroupBase<IReactSelectValue>>;
@@ -35,12 +36,12 @@ const Combobox = (props: IComboboxProps) => {
 	return (
 		<S.Wrapper>
 			{props.label && (
-				<S.LabelWrapper>
+				<Label>
 					<FieldLabel action={labelAction} required={required}>
 						{props.label}
 					</FieldLabel>
 					{extraLabelElement}
-				</S.LabelWrapper>
+				</Label>
 			)}
 			<AsyncSelect
 				{...selectProps}

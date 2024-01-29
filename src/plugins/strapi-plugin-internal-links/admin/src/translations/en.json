@@ -30,7 +30,7 @@
 	"internal-link.form.collection.placeholder": "E.g.: news, subsidies or road maintenance",
 	"internal-link.form.collection.clear": "Reset collection type selection",
 	"internal-link.form.page": "Select page/language",
-	"internal-link.form.page.placeholder": "Select a page or language",
+	"internal-link.form.page.placeholder": "Select a page",
 	"internal-link.form.page.clear": "Reset page selection",
 	"internal-link.form.platform": "Select platform",
 	"internal-link.form.platform.placeholder": "Select a platform",
