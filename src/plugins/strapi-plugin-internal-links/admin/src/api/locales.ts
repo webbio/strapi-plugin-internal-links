@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-
+import orderBy from 'lodash/orderBy';
 import { useFetchClient } from '@strapi/helper-plugin';
 
 const QUERY_KEY = 'locales';
@@ -18,7 +18,7 @@ export const fetchLocales = async ({ fetchClient }: Record<string, any>): Promis
 		const { get } = fetchClient;
 		const { data } = await get('i18n/locales');
 
-		return data;
+		return orderBy(data || [], ['isDefault', 'code'], ['desc', 'asc']);
 	} catch {
 		return undefined;
 	}
