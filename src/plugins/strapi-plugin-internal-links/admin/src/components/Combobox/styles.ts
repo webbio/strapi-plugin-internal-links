@@ -14,21 +14,9 @@ const Option = styled.span`
 	flex-direction: column;
 `;
 
-const LabelWrapper = styled.div`
-	${({ theme }) => css`
-		width: 100%;
-		display: flex;
-		gap: 4px;
-		justify-content: space-between;
-		color: ${theme.colors.neutral800};
-		font-size: ${theme.fontSizes[1]};
-	`}
-`;
-
 const ComboboxStyles = {
 	Wrapper,
-	Option,
-	LabelWrapper
+	Option
 };
 
 export default ComboboxStyles;

@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import debounce from 'lodash/debounce';
 import { OptionProps, SingleValue, components } from 'react-select';
 import { useCMEditViewDataManager, useFetchClient } from '@strapi/helper-plugin';
+import { Flex, FieldLabel } from '@strapi/design-system';
 
 import { Combobox, IReactSelectValue } from '../../Combobox';
 import { getSearchFilteredEntities } from '../../../api/search-filtered-entity';
 import { useGetLocaleFromUrl } from '../../../utils/use-get-locale-from-url';
-
-import S from './styles';
 import getTrad from '../../../utils/get-trad';
 import { GlobalPluginConfig } from '../../../../../utils/config.types';
 import { useGetEntity } from '../../../api/entity';
+import { LocaleSelect } from './locale-select';
+
+import S from './styles';
+import { Label } from '../../label';
 
 const SEARCH_DEBOUNCE_MS = 150;
 const PAGE = 1;
@@ -39,21 +42,34 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 	const fetchClient = useFetchClient();
 	const form = useCMEditViewDataManager() as any;
 
-	const urlLocale = useGetLocaleFromUrl();
-	const selectedLocale = form.initialData?.locale || urlLocale;
-
-	const { data: entityFromId } = useGetEntity({
+	const {
+		data: entityFromId,
+		isLoading: isLoadingEntity,
+		dataUpdatedAt
+	} = useGetEntity({
 		uid,
 		id: selectedId,
 		pageBuilderConfig
 	});
 
+	const urlLocale = useGetLocaleFromUrl();
+	const [selectedLocale, setSelectedLocale] = React.useState<string | undefined>();
+
+	useEffect(() => {
+		if (!selectedLocale && !isLoadingEntity && dataUpdatedAt) {
+			setSelectedLocale(entityFromId?.locale || form.initialData?.locale || urlLocale);
+		}
+	}, [entityFromId]);
+
 	const selectedPageFromId = mapSelectItem(entityFromId);
 
 	const isPagePageType = !uid;
-	const searchEntitiesIsEnabled = !isPagePageType;
 
 	const getItems = async (inputValue?: string, platformTitle?: string): Promise<PageReactSelectValue[]> => {
+		if (!selectedLocale) {
+			return [];
+		}
+
 		const searchEntities = await getSearchFilteredEntities({
 			fetchClient,
 			page: PAGE,
@@ -78,6 +94,10 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 	};
 
 	const handleChange = (item?: SingleValue<PageReactSelectValue>) => onChange(item);
+	const handleLocaleChange = (locale?: string) => {
+		onChange();
+		setSelectedLocale(locale);
+	};
 
 	const debouncedFetch = debounce((searchTerm, callback, selectedPlatformTitle?: string) => {
 		promiseOptions(searchTerm, selectedPlatformTitle).then((result) => {
@@ -91,27 +111,42 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 		});
 
 	return (
-		<Combobox
-			key={`rerenderOnUidOrPlatformChange-${uid}-${platformTitle}`}
-			id="collectionTypeSearch"
-			label={formatMessage({
-				id: getTrad('internal-link.form.page')
-			})}
-			loadOptions={(i, c) => debouncedFetch(i, c, platformTitle)}
-			cacheOptions
-			// @ts-ignore onChange is correct
-			onChange={handleChange}
-			// @ts-ignore customOption is correct
-			customOption={CustomOption}
-			// @ts-ignore customOption is correct
-			value={selectedPageFromId}
-			defaultOptions={searchEntitiesIsEnabled}
-			placeholder={formatMessage({
-				id: getTrad('internal-link.form.page.placeholder')
-			})}
-			required
-			isDisabled={!uid}
-		/>
+		<Flex direction="column" width="100%">
+			<Label>
+				<FieldLabel required>
+					{formatMessage({
+						id: getTrad('internal-link.form.page')
+					})}
+				</FieldLabel>
+			</Label>
+			<Flex width="100%" gap={2}>
+				<LocaleSelect
+					onChange={handleLocaleChange}
+					isDisabled={isPagePageType}
+					value={selectedLocale}
+					isLoadingValue={isLoadingEntity || !dataUpdatedAt}
+				/>
+
+				<Combobox
+					key={`rerenderOnUidOrPlatformChange-${uid}-${platformTitle}-${selectedLocale}`}
+					id="collectionTypeSearch"
+					loadOptions={(i, c) => debouncedFetch(i, c, platformTitle)}
+					cacheOptions
+					// @ts-ignore onChange is correct
+					onChange={handleChange}
+					// @ts-ignore customOption is correct
+					customOption={CustomOption}
+					// @ts-ignore customOption is correct
+					value={selectedPageFromId}
+					defaultOptions={!isPagePageType}
+					placeholder={formatMessage({
+						id: getTrad('internal-link.form.page.placeholder')
+					})}
+					required
+					isDisabled={isPagePageType}
+				/>
+			</Flex>
+		</Flex>
 	);
 };
 
@@ -126,8 +161,8 @@ const CustomOption = (props: OptionProps<PageReactSelectValue, false>) => {
 	);
 };
 
-const mapSelectItem = (initialValue?: Record<string, any>): SingleValue<PageReactSelectValue | null> =>
-	initialValue?.id
+function mapSelectItem(initialValue?: Record<string, any>): SingleValue<PageReactSelectValue | null> {
+	return initialValue?.id
 		? {
 				id: initialValue.id,
 				value: String(initialValue?.id),
@@ -140,3 +175,4 @@ const mapSelectItem = (initialValue?: Record<string, any>): SingleValue<PageReac
 				locale: initialValue.locale || ''
 		  }
 		: null;
+}

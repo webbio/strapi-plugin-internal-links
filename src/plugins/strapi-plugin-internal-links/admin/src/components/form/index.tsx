@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useEffect, ChangeEvent } from 'react'
 import * as yup from 'yup';
 import { useIntl } from 'react-intl';
 import { ReactSelect } from '@strapi/helper-plugin';
-import { Alert, ToggleCheckbox, Stack, Button, FieldLabel, Field, FieldError, FieldInput } from '@strapi/design-system';
+import { Alert, ToggleCheckbox, Stack, Button, Field, FieldError, FieldInput } from '@strapi/design-system';
 
 import Option from './option';
 import useContentTypeOptions, { IContentTypeOption } from './hooks/use-content-type-options';
@@ -15,6 +15,7 @@ import { PageSearch } from './page-select';
 import { Platform } from '../../api/platform';
 import { IInternalLinkAttribute } from '..';
 import { useGetConfig } from '../../api/config';
+import { Label } from '../label';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
 	attributeOptions?: IInternalLinkAttribute['options'];
@@ -247,11 +248,11 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 
 			{shouldShowTitle && (
 				<Field name="text" id="text" error={errors.text} required>
-					<FieldLabel>
+					<Label>
 						{formatMessage({
 							id: getTrad('internal-link.form.text')
 						})}
-					</FieldLabel>
+					</Label>
 
 					<FieldInput type="text" value={link.text} onChange={onTextChange} onBlur={onTextBlur} required />
 
@@ -261,11 +262,11 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 
 			{!isExternalTab && !isLoadingConfig && !useSinglePageType && (
 				<Field required>
-					<FieldLabel>
+					<Label>
 						{formatMessage({
 							id: getTrad('internal-link.form.collection')
 						})}
-					</FieldLabel>
+					</Label>
 
 					<ReactSelect
 						inputId="collection"
@@ -300,11 +301,11 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 
 			{!isExternalTab && pageBuilderEnabled && platformOptions.length > 1 && (
 				<Field required>
-					<FieldLabel>
+					<Label>
 						{formatMessage({
 							id: getTrad('internal-link.form.platform')
 						})}
-					</FieldLabel>
+					</Label>
 
 					<ReactSelect
 						inputId="platform"
@@ -349,11 +350,11 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 
 			{pluginConfig?.enableUrlAddition && !isExternalTab && (
 				<Field name="urlAddition" id="urlAddition">
-					<FieldLabel>
+					<Label>
 						{formatMessage({
 							id: getTrad('internal-link.form.urlAddition')
 						})}
-					</FieldLabel>
+					</Label>
 
 					<FieldInput
 						type="text"
@@ -368,11 +369,11 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 
 			<div style={!isExternalTab ? { display: 'none' } : undefined}>
 				<Field name="link" id="link" error={errors.url} required>
-					<FieldLabel>
+					<Label>
 						{formatMessage({
 							id: getTrad(`internal-link.form.${translationLinkKey}`)
 						})}
-					</FieldLabel>
+					</Label>
 
 					<FieldInput
 						type="text"

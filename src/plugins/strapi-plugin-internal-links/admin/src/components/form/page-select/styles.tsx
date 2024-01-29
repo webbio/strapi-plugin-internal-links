@@ -15,7 +15,12 @@ const CustomOptionStatus = styled(Box)`
 	border-radius: 100px;
 `;
 
+const LocaleSelectWrapper = styled.div`
+	max-width: 64px;
+`;
+
 export default {
 	CustomOptionStatus,
-	CustomOption
+	CustomOption,
+	LocaleSelectWrapper
 };
