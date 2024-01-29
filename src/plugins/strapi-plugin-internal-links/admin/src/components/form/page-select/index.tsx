@@ -124,7 +124,7 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 					onChange={handleLocaleChange}
 					isDisabled={isPagePageType}
 					value={selectedLocale}
-					isLoadingValue={isLoadingEntity || !dataUpdatedAt}
+					isLoadingValue={isLoadingEntity || (!dataUpdatedAt && Boolean(selectedId))}
 				/>
 
 				<Combobox
