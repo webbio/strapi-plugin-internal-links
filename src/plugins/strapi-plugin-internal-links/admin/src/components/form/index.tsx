@@ -19,9 +19,17 @@ import { Label } from '../label';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
 	attributeOptions?: IInternalLinkAttribute['options'];
+	shouldShowTitle?: boolean;
 }
 
-const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }: IProps): JSX.Element => {
+const InternalLinkForm = ({
+	link,
+	setLink,
+	errors,
+	setErrors,
+	attributeOptions,
+	shouldShowTitle
+}: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
 	const { data: pluginConfig, isLoading: isLoadingConfig } = useGetConfig({});
 	const useSinglePageType = !!pluginConfig?.useSinglePageType || pluginConfig?.pageBuilder?.enabled;
@@ -46,9 +54,6 @@ const InternalLinkForm = ({ link, setLink, errors, setErrors, attributeOptions }
 		usePlatformOptions({ page, pageOptionsIsLoading });
 	const [isExternalTab, setIsExternalTab] = useState<boolean>(link.type === 'external');
 	const translationLinkKey = !isExternalTab ? 'generated-link' : 'link';
-	const shouldShowTitle =
-		!isLoadingConfig &&
-		(typeof attributeOptions?.noTitle === 'boolean' ? !attributeOptions?.noTitle : !pluginConfig?.defaultNoTitle);
 
 	const onToggleCheckbox = (): void => {
 		setIsExternalTab((prev) => !prev);
