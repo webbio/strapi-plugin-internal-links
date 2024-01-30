@@ -76,6 +76,7 @@ const InternalLinkModal = ({
 						errors={errors}
 						setErrors={setErrors}
 						attributeOptions={attribute?.options}
+						shouldShowTitle={shouldShowTitle}
 					/>
 				</Typography>
 			</ModalBody>
