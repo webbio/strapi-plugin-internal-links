@@ -33,8 +33,8 @@ export const LocaleSelect = ({ onChange, isDisabled, value, isLoadingValue }: Pr
 				value={value}
 				onChange={handleChange}
 			>
-				{(allLocales || []).map((l, index) => (
-					<SingleSelectOption value={l.code} key={index}>
+				{(allLocales || []).map((l) => (
+					<SingleSelectOption value={l.code} key={l.code}>
 						{l.code.toLocaleUpperCase()}
 					</SingleSelectOption>
 				))}
