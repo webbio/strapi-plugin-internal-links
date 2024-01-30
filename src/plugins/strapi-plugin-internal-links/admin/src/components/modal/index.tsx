@@ -16,6 +16,7 @@ interface IInternalLinkModalProps
 	attribute?: IInternalLinkAttribute;
 	toggleModal: () => void;
 	closeModal: () => void;
+	alwaysUseTitle?: boolean;
 }
 
 const InternalLinkModal = ({
@@ -24,6 +25,7 @@ const InternalLinkModal = ({
 	errors,
 	setErrors,
 	attribute,
+	alwaysUseTitle,
 	toggleModal = () => {
 		console.warn('Modal toggle function not set');
 	},
@@ -35,8 +37,11 @@ const InternalLinkModal = ({
 	const { data: pluginConfig, isLoading: isLoadingConfig } = useGetConfig({});
 
 	const shouldShowTitle =
-		!isLoadingConfig &&
-		(typeof attribute?.options?.noTitle === 'boolean' ? !attribute?.options?.noTitle : !pluginConfig?.defaultNoTitle);
+		alwaysUseTitle ??
+		(!isLoadingConfig &&
+			(typeof attribute?.options?.noTitle === 'boolean'
+				? !attribute?.options?.noTitle
+				: !pluginConfig?.defaultNoTitle));
 
 	const hasErrors = Object.values(errors).some((item) => !!item);
 	const isFilled =
