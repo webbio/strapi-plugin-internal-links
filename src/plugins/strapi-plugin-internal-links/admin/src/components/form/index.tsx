@@ -98,7 +98,7 @@ const InternalLinkForm = ({
 			setErrors((previousValue) => ({
 				...previousValue,
 				link: formatMessage({
-					id: getTrad(`internal-link.form.link.placeholder`)
+					id: getTrad('internal-link.form.link.placeholder')
 				})
 			}));
 		} else {
@@ -190,7 +190,7 @@ const InternalLinkForm = ({
 				setErrors((previousValue) => ({
 					...previousValue,
 					text: formatMessage({
-						id: getTrad(`internal-link.form.text.error`)
+						id: getTrad('internal-link.form.text.error')
 					})
 				}));
 			}
@@ -201,6 +201,32 @@ const InternalLinkForm = ({
 					id: getTrad('internal-link.form.text.required')
 				})
 			}));
+		}
+	};
+
+	const onUrlAdditionBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
+		const newValue = event.target.value;
+
+		if (newValue) {
+			try {
+				// If the text doesn't parse as JSON we cannot save the link.
+				JSON.parse(JSON.stringify({ text: newValue }));
+
+				const allowedStart = newValue.startsWith('?') || newValue.startsWith('#');
+
+				setErrors((previousValue) => ({
+					...previousValue,
+					urlAddition: allowedStart ? undefined : formatMessage({ id: getTrad('internal-link.form.urlAddition.error') })
+				}));
+			} catch {
+				setErrors((previousValue) => ({
+					...previousValue,
+
+					urlAddition: formatMessage({
+						id: getTrad('internal-link.form.urlAddition.error')
+					})
+				}));
+			}
 		}
 	};
 
@@ -354,7 +380,7 @@ const InternalLinkForm = ({
 			)}
 
 			{pluginConfig?.enableUrlAddition && !isExternalTab && (
-				<Field name="urlAddition" id="urlAddition">
+				<Field name="urlAddition" id="urlAddition" error={errors.urlAddition}>
 					<Label>
 						{formatMessage({
 							id: getTrad('internal-link.form.urlAddition')
@@ -366,6 +392,7 @@ const InternalLinkForm = ({
 						value={link?.urlAddition}
 						onChange={onUrlAdditionChange}
 						disabled={pageOptionsIsLoading || !link?.domain}
+						onBlur={onUrlAdditionBlur}
 					/>
 
 					<FieldError />

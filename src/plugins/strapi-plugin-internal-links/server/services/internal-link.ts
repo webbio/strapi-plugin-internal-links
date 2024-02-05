@@ -428,28 +428,40 @@ const updateInternalLinksInHtml = (html, internalLinks) => {
 	return $.html();
 };
 
-const hasSlugChanged = async (event: Record<string, any>) => {
-	const uid = event.model.uid as Common.UID.ContentType;
-	const id = event.params.data?.id;
+const hasSlugChanged = async (event: Record<string, any>): Promise<boolean> => {
+	const { data, where } = event.params;
+	const contentTypeUID = event.model.uid as Common.UID.ContentType;
+	const pageBuilderEnabled = strapi.service('plugin::internal-links.config').getGlobalConfig(contentTypeUID)
+		?.pageBuilder?.enabled;
 
-	if (id == null) {
+	if (strapi.services?.['plugin::slug.slug']) {
+		// The slug plugin already checks if the slug has changed, so we can forward that state.
+		return event?.params?.data?.state?.updatedPath;
+	}
+
+	if (!pageBuilderEnabled) {
 		return false;
 	}
 
-	const contentTypeConfig = strapi.service('plugin::internal-links.config').getContentTypeConfig(uid);
-	const slugField = contentTypeConfig?.slugField ?? 'path';
+	const originalEntity = await strapi.entityService?.findOne(contentTypeUID, data.id || where.id, {
+		populate: { parent: true }
+	} as Record<string, any>);
 
-	const oldEntity = await strapi.entityService?.findOne(uid, id, {
-		fields: [slugField]
-	});
-	const oldSlug = oldEntity?.path;
-	const newSlug = event.params.data?.[slugField];
-
-	if (newSlug == null) {
-		return false;
+	// If slug or parent has changed
+	if (
+		(data.slug && originalEntity?.slug !== data.slug) ||
+		data.parent?.connect?.[0]?.id ||
+		data.parent?.disconnect?.[0]?.id
+	) {
+		return true;
 	}
 
-	return oldSlug !== newSlug;
+	// If path has changed
+	if (!data.slug && data.path && originalEntity?.path !== data.path) {
+		return true;
+	}
+
+	return false;
 };
 
 export default {
