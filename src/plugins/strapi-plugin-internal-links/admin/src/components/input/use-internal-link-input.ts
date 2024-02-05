@@ -8,6 +8,7 @@ export interface IInternalLinkErrors {
 	text?: string;
 	url?: string;
 	link?: string;
+	urlAddition?: string;
 }
 
 export interface IUseInternalLinkInputReturn {

@@ -13,11 +13,9 @@
 	"internal-link.errors.remaining-links": "There are still pages that link to this page",
 	"internal-link.options.base.noTitle": "Disable link text",
 	"internal-link.options.base.noTitle.description": "Enable this to hide the link text field",
-
 	"internal-link.modal.title": "Add link",
 	"internal-link.modal.buttons.cancel": "Cancel",
 	"internal-link.modal.buttons.submit": "Add link",
-
 	"internal-link.loading": "Loading",
 	"internal-link.empty": "No items found",
 	"internal-link.form.caret": "Toggle options",
@@ -26,6 +24,7 @@
 	"internal-link.form.type.internal": "Internal page",
 	"internal-link.form.text": "Link text",
 	"internal-link.form.urlAddition": "Url Addition",
+	"internal-link.form.urlAddition.error": "Addition must start with '?' or '#'",
 	"internal-link.form.collection": "Select collection type",
 	"internal-link.form.collection.placeholder": "E.g.: news, subsidies or road maintenance",
 	"internal-link.form.collection.clear": "Reset collection type selection",

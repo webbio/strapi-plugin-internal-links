@@ -13,11 +13,9 @@
 	"internal-link.errors.remaining-links": "Er zijn nog gekoppelde pagina's",
 	"internal-link.options.base.noTitle": "Schakel de link tekst uit",
 	"internal-link.options.base.noTitle.description": "Zet deze optie aan om de link tekst uit te schakelen",
-
 	"internal-link.modal.title": "Link toevoegen",
 	"internal-link.modal.buttons.cancel": "Annuleren",
 	"internal-link.modal.buttons.submit": "Opslaan",
-
 	"internal-link.loading": "Aan het laden",
 	"internal-link.empty": "Geen items gevonden",
 	"internal-link.form.caret": "Schakel opties",
@@ -26,6 +24,7 @@
 	"internal-link.form.type.internal": "Interne pagina",
 	"internal-link.form.text": "Linktekst",
 	"internal-link.form.urlAddition": "Url Toevoeging",
+	"internal-link.form.urlAddition.error": "Toevoeging aan url moet beginnen met '?' of '#'",
 	"internal-link.form.collection": "Selecteer collectie type",
 	"internal-link.form.collection.placeholder": "Bijvoorbeeld nieuws, subsidies of wegwerkzaamheden",
 	"internal-link.form.collection.clear": "Reset collectie type keuze",
