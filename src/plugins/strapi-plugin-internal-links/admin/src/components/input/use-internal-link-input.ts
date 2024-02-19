@@ -36,7 +36,6 @@ export const isInternalLink = (object: any): object is IInternalLink => {
 	return (
 		'id' in object &&
 		'sourceContentTypeUid' in object &&
-		'sourceContentTypeId' in object &&
 		'sourceFieldName' in object &&
 		'url' in object &&
 		'text' in object &&
@@ -63,7 +62,7 @@ const useInternalLinkInput = (
 
 		if (!isInternalLink(data)) return newInternalLink;
 
-		if (data.sourceContentTypeUid && data.sourceContentTypeId && data.sourceFieldName) {
+		if (data.sourceContentTypeUid && data.sourceFieldName) {
 			return data;
 		}
 
