@@ -5,7 +5,7 @@ import cheerio from 'cheerio';
 
 import { deserializeLink, getCustomFields, getPopulatedEntity, sanitizeEntity, serializeLink } from '../utils/strapi';
 import { InternalLink } from '../interfaces/link';
-import { DEFAULT_PAGEBUILDER_COLLECTION } from '../utils/constants';
+import { DEFAULT_PAGEBUILDER_COLLECTION, DEFAULT_RICH_TEXT_FIELD } from '../utils/constants';
 
 const mapInternalLinks = (
 	sourceContentTypeUid: Common.UID.ContentType,
@@ -140,8 +140,11 @@ const mapInternalLinksWysiwygToEntity = (sanitizedEntity, internalLinks) => {
 };
 
 const getInternalLinksFromWysiwygFields = async (sanitizedEntity, uid, id) => {
+	const customFieldConfig =
+		strapi.service('plugin::internal-links.config').getGlobalConfig()?.richTextEditorField || DEFAULT_RICH_TEXT_FIELD;
+
 	// Get all wysiwyg fields
-	const wysiwygFields = getCustomFields(sanitizedEntity, uid, 'plugin::tiptap.tiptap');
+	const wysiwygFields = getCustomFields(sanitizedEntity, uid, customFieldConfig);
 
 	// Get all internal links from wysiwyg fields
 	const internalLinks = wysiwygFields.flatMap((field) => getInternalLinksFromHtml(field));
