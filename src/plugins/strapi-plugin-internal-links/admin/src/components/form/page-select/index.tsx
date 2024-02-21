@@ -12,9 +12,10 @@ import getTrad from '../../../utils/get-trad';
 import { GlobalPluginConfig } from '../../../../../utils/config.types';
 import { useGetEntity } from '../../../api/entity';
 import { LocaleSelect } from './locale-select';
+import { Label } from '../../label';
+import { useGetStrapiLocales } from '../../../utils/use-get-strapi-locales';
 
 import S from './styles';
-import { Label } from '../../label';
 
 const SEARCH_DEBOUNCE_MS = 150;
 const PAGE = 1;
@@ -52,14 +53,15 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pageBuilderConfig, 
 		pageBuilderConfig
 	});
 
+	const { defaultLocale } = useGetStrapiLocales();
 	const urlLocale = useGetLocaleFromUrl();
 	const [selectedLocale, setSelectedLocale] = React.useState<string | undefined>();
 
 	useEffect(() => {
 		if (!selectedLocale && !isLoadingEntity && (dataUpdatedAt || !selectedId)) {
-			setSelectedLocale(entityFromId?.locale || form.initialData?.locale || urlLocale);
+			setSelectedLocale(entityFromId?.locale || form.initialData?.locale || urlLocale || defaultLocale);
 		}
-	}, [entityFromId]);
+	}, [entityFromId, defaultLocale]);
 
 	const selectedPageFromId = mapSelectItem(entityFromId);
 
