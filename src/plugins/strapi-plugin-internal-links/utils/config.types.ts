@@ -15,4 +15,7 @@ export interface GlobalPluginConfig {
 		searchableFields?: string[];
 		subTitlePath?: string;
 	};
+	externalApi?: {
+		apiUrl?: string;
+	};
 }

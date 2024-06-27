@@ -19,6 +19,7 @@ interface Props {
 	onLinkChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onLinkBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 	onSourceChange: (props: IReactSelectValue) => void;
+	configApiUrl?: string;
 }
 
 export const SourceTab = ({
@@ -28,10 +29,10 @@ export const SourceTab = ({
 	onTextBlur,
 	onTextChange,
 	attributeOptions,
-	onSourceChange
+	onSourceChange,
+	configApiUrl
 }: Props) => {
 	const { formatMessage } = useIntl();
-
 	return (
 		<TabPanel>
 			<Box color="neutral800" padding={4} background="neutral0">
@@ -49,7 +50,7 @@ export const SourceTab = ({
 					</Field>
 				)}
 				<Box paddingTop={4}>
-					{!attributeOptions?.externalApi?.apiUrl && (
+					{!attributeOptions?.externalApi?.apiUrl && !configApiUrl && (
 						<Box color="danger500">
 							{formatMessage({
 								id: getTrad('internal-link.options.source.apiUrl.error')
@@ -57,11 +58,11 @@ export const SourceTab = ({
 						</Box>
 					)}
 
-					{attributeOptions?.externalApi?.apiUrl && (
+					{(attributeOptions?.externalApi?.apiUrl || configApiUrl) && (
 						<ExternalApiSearch
 							externalApiValuePath={attributeOptions?.externalApi?.valuePath}
 							externalApiLabelPath={attributeOptions?.externalApi?.labelPath}
-							externalApiUrl={attributeOptions?.externalApi?.apiUrl}
+							externalApiUrl={attributeOptions?.externalApi?.apiUrl || configApiUrl!}
 							externalApiLabelAdditionPath={attributeOptions?.externalApi?.labelAdditionPath}
 							selectedValue={link}
 							onChange={(value) => onSourceChange({ value: value?.value, label: value?.label })}

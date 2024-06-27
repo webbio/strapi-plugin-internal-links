@@ -20,6 +20,9 @@ export default ({ env }) => {
 						test: 'https://webbio.nl',
 						production: 'https://webbio.nl'
 					}
+				},
+				externalApi: {
+					apiUrl: env('EXTERNAL_API_URL')
 				}
 			}
 		},
