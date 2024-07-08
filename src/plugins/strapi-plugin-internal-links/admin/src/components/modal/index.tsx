@@ -47,7 +47,8 @@ const InternalLinkModal = ({
 	const isFilled =
 		(link.type === 'external' && shouldShowTitle ? !!link.text : true && !!link.url) ||
 		(link.type === 'internal' && !!link.targetContentTypeUid && !!link.targetContentTypeId) ||
-		(link.type === 'source' && !!link.externalApiValue);
+		(link.type === 'source' && !!link.externalApiValue) ||
+		!!link.decisionTreeId;
 
 	const spacing = 4;
 	const colors = {

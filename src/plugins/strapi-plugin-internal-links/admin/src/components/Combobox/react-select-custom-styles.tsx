@@ -12,6 +12,7 @@ export const useReactSelectCustomStyles = (): StylesConfig<IReactSelectValue, fa
 			color: theme.colors.neutral800,
 			backgroundColor: isDisabled ? theme.colors.neutral100 : theme.colors.neutral0,
 			minHeight: '40px',
+			width: '100%',
 			lineHeight: 1.4,
 			borderRadius: theme.borderRadius,
 			fontSize: theme.fontSizes[2],

@@ -22,7 +22,8 @@ export default ({ env }) => {
 					}
 				},
 				externalApi: {
-					apiUrl: env('EXTERNAL_API_URL')
+					apiUrl: env('EXTERNAL_API_URL'),
+					questionaireUrl: env('STRAPI_ADVIESBOOM_WIDGET_EXTERNAL_QUESTIONAIRE_API_URL')
 				}
 			}
 		},

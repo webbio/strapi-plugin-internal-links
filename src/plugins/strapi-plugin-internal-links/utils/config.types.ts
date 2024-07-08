@@ -17,5 +17,6 @@ export interface GlobalPluginConfig {
 	};
 	externalApi?: {
 		apiUrl?: string;
+		questionaireUrl?: string;
 	};
 }

@@ -12,6 +12,8 @@ export interface IInternalLink {
 	targetContentTypeUid?: string;
 	targetContentTypeId: string | number | null;
 	externalApiLabel?: string;
+	startPointReference?: string;
+	decisionTreeId?: number;
 	url: string;
 	text: string;
 	type: (typeof INTERNAL_LINK_TYPE)[keyof typeof INTERNAL_LINK_TYPE];

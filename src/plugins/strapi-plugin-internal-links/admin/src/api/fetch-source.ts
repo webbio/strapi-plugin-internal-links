@@ -4,6 +4,12 @@ type FetchSourceParams = {
 	fetchClient: any;
 	externalApiUrl: string;
 	inputValue: string;
+	questionaireId: number;
+};
+
+type FetchQuestionairesParams = {
+	fetchClient: any;
+	questionaireUrl: string;
 };
 
 export type ExternalApiResult = {
@@ -13,7 +19,8 @@ export type ExternalApiResult = {
 export const fetchSource = async ({
 	fetchClient,
 	externalApiUrl,
-	inputValue
+	inputValue,
+	questionaireId
 }: FetchSourceParams): Promise<ExternalApiResult | undefined> => {
 	try {
 		if (!externalApiUrl) {
@@ -23,7 +30,28 @@ export const fetchSource = async ({
 		const result = await post(getRequestUrl('source'), {
 			data: {
 				url: externalApiUrl,
-				searchQuery: inputValue
+				searchQuery: inputValue,
+				questionaireId: questionaireId
+			}
+		});
+
+		return result;
+	} catch {
+		return undefined;
+	}
+};
+export const fetchQuestionaires = async ({
+	fetchClient,
+	questionaireUrl
+}: FetchQuestionairesParams): Promise<ExternalApiResult | undefined> => {
+	try {
+		if (!questionaireUrl) {
+			throw new Error('No URL field set in settings');
+		}
+		const { post } = fetchClient;
+		const result = await post(getRequestUrl('source'), {
+			data: {
+				url: questionaireUrl
 			}
 		});
 

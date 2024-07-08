@@ -103,7 +103,8 @@ export const PageSearch = ({ uid, selectedId, platformTitle, pluginConfig, onCha
 			path: x.path,
 			platform: x.platform,
 			locale: x.locale || '',
-			subTitle: x.subTitle
+			subTitle: x.subTitle,
+			startPointReference: x.startPointReference || ''
 		}));
 	};
 
@@ -194,7 +195,8 @@ function mapSelectItem(
 				platform: initialValue.platform,
 				path: initialValue.path || '',
 				locale: initialValue.locale || '',
-				subTitle: subTitlePath ? objGet(initialValue, subTitlePath) : ''
+				subTitle: subTitlePath ? objGet(initialValue, subTitlePath) : '',
+				startPointReference: initialValue.startPointReference
 		  }
 		: null;
 }
