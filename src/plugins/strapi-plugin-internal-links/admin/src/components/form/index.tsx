@@ -94,6 +94,14 @@ const InternalLinkForm = ({
 		}));
 	};
 
+	const onDecisionTreeChange = (id: number | undefined, label?: string) => {
+		setLink((previousValue) => ({
+			...previousValue,
+			decisionTreeId: id,
+			url: label || ''
+		}));
+	};
+
 	const onLinkChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (link.targetContentTypeUid) {
 			event.preventDefault;
@@ -329,6 +337,7 @@ const InternalLinkForm = ({
 						onLinkBlur={onLinkBlur}
 						onLinkChange={onLinkChange}
 						onSourceChange={onSourceChange}
+						onDecisionTreeChange={onDecisionTreeChange}
 						onTextBlur={onTextBlur}
 						onTextChange={onTextChange}
 						configApiUrl={globalExternalApiUrl}

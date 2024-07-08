@@ -643,7 +643,20 @@ export interface ApiPagePage extends Schema.CollectionType {
 				};
 			}>;
 		link: Attribute.JSON &
-			Attribute.CustomField<'plugin::internal-links.internal-link', {}> &
+			Attribute.CustomField<
+				'plugin::internal-links.internal-link',
+				{
+					noTitle: true;
+					externalApi: {
+						tabName: 'Adviestree';
+						enabled: true;
+						apiUrl: 'https://adviesboom.test.juridischloket-dev.nl/api/steps?filter.isStartPoint=1&searchBy=question&searchBy=answer&search=';
+						labelPath: 'question';
+						valuePath: 'question';
+						labelAdditionPath: 'questionaire.title';
+					};
+				}
+			> &
 			Attribute.SetPluginOptions<{
 				i18n: {
 					localized: true;

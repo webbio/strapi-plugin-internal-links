@@ -40,6 +40,7 @@ export interface IInternalLinkAttribute {
 			labelAdditionPath?: string;
 			apiUrl?: string;
 			tabName?: string;
+			decisionTreeId?: number;
 		};
 		pageSearchOptions?: {
 			searchableFields?: string[];

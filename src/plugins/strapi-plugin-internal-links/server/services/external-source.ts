@@ -1,6 +1,7 @@
 type ExternalApiData = {
 	url: string;
 	searchQuery: string;
+	questionaireId: number;
 };
 
 const getexternalApiData = async (data: ExternalApiData) => {
@@ -11,7 +12,8 @@ const getexternalApiData = async (data: ExternalApiData) => {
 };
 
 const createUrl = (data: ExternalApiData) => {
-	return `${data.url}${data.searchQuery}`;
+	console.log('CREATE URL', `${data.url}${data.searchQuery}&filter.questionaire=${data.questionaireId}`);
+	return `${data.url}${data.searchQuery}&filter.questionaire=${data.questionaireId}`;
 };
 
 export default {

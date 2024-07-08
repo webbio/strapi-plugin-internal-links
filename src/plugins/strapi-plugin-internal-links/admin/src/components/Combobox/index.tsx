@@ -21,6 +21,7 @@ export interface IComboboxProps extends AsyncProps<IReactSelectValue, false, Gro
 export interface IReactSelectValue {
 	value: string;
 	label: string;
+	startPointReference: string;
 	initialSelected?: boolean;
 }
 

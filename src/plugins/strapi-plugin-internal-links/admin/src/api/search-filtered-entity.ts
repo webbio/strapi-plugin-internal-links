@@ -24,6 +24,7 @@ export type SearchFilteredEntitiesResult = {
 		platform?: { domain?: string };
 		locale?: string;
 		subTitle?: string;
+		startPointReference?: string;
 	}[];
 };
 

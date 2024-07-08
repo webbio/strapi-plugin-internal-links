@@ -11,6 +11,7 @@ import { IReactSelectValue } from '../../Combobox';
 
 interface Props {
 	link: IInternalLink;
+	decisionTreeValue?: number;
 	shouldShowTitle?: boolean;
 	errors: IInternalLinkErrors;
 	attributeOptions?: IInternalLinkAttribute['options'];
@@ -19,6 +20,7 @@ interface Props {
 	onLinkChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onLinkBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 	onSourceChange: (props: IReactSelectValue) => void;
+	onDecisionTreeChange: (id: number, label?: string) => void;
 	configApiUrl?: string;
 }
 
@@ -30,6 +32,7 @@ export const SourceTab = ({
 	onTextChange,
 	attributeOptions,
 	onSourceChange,
+	onDecisionTreeChange,
 	configApiUrl
 }: Props) => {
 	const { formatMessage } = useIntl();
@@ -65,7 +68,14 @@ export const SourceTab = ({
 							externalApiUrl={attributeOptions?.externalApi?.apiUrl || configApiUrl!}
 							externalApiLabelAdditionPath={attributeOptions?.externalApi?.labelAdditionPath}
 							selectedValue={link}
-							onChange={(value) => onSourceChange({ value: value?.value, label: value?.label })}
+							onChange={(value) =>
+								onSourceChange({
+									value: value?.value,
+									label: value?.label,
+									startPointReference: value?.startPointReference
+								})
+							}
+							onDecisionTreeChange={onDecisionTreeChange}
 						/>
 					)}
 				</Box>
