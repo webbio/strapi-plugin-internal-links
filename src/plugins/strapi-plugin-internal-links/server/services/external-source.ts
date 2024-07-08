@@ -12,7 +12,6 @@ const getexternalApiData = async (data: ExternalApiData) => {
 };
 
 const createUrl = (data: ExternalApiData) => {
-	console.log('CREATE URL', `${data.url}${data.searchQuery}&filter.questionaire=${data.questionaireId}`);
 	return `${data.url}${data.searchQuery}&filter.questionaire=${data.questionaireId}`;
 };
 
