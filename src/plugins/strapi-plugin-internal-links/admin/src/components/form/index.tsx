@@ -91,7 +91,7 @@ const InternalLinkForm = ({
 			externalApiValue: props ? props.value : '',
 			externalApiLabel: props ? props.label : '',
 			startPointReference: props.startPointReference || '',
-			url: `/?startpunt=${props.startPointReference}`
+			url: `?startpunt=${props.startPointReference}`
 		}));
 	};
 
@@ -99,7 +99,7 @@ const InternalLinkForm = ({
 		setLink((previousValue) => ({
 			...previousValue,
 			decisionTreeId: id,
-			url: `/?startpunt=${startPointReference}` // ?startpunt=$2b$10$8cNm4eyO1AquoLmlDacnRO
+			url: `?startpunt=${startPointReference}` // ?startpunt=$2b$10$8cNm4eyO1AquoLmlDacnRO
 		}));
 	};
 
