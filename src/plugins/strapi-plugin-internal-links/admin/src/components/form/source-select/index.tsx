@@ -20,7 +20,7 @@ interface Props {
 	externalApiValuePath?: string;
 	externalApiLabelAdditionPath?: string;
 	onChange: (item?: Record<string, any>) => void;
-	onDecisionTreeChange: (id: number, label?: string) => void;
+	onDecisionTreeChange: (id: number, label: string, startPointReference?: string) => void;
 }
 
 export interface PageReactSelectValue extends Omit<IReactSelectValue, 'initialSelected'> {
@@ -139,8 +139,9 @@ export const ExternalApiSearch = ({
 						} else {
 							label = decisionTrees.find((item) => item.id == value)?.title || '';
 						}
-
-						onDecisionTreeChange(value, label);
+						const startPointReference = (label =
+							decisionTrees.find((item) => item.id == value)?.startPointReference || '');
+						onDecisionTreeChange(value, label, startPointReference);
 					}}
 					key={'DecisionTreeSelect'}
 					value={selectedValue?.decisionTreeId}

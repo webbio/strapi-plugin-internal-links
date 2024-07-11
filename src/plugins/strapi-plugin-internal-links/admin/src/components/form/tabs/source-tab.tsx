@@ -20,7 +20,7 @@ interface Props {
 	onLinkChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onLinkBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 	onSourceChange: (props: IReactSelectValue) => void;
-	onDecisionTreeChange: (id: number, label?: string) => void;
+	onDecisionTreeChange: (id: number, label: string, startPointReference?: string) => void;
 	configApiUrl?: string;
 }
 
