@@ -90,15 +90,16 @@ const InternalLinkForm = ({
 			...previousValue,
 			externalApiValue: props ? props.value : '',
 			externalApiLabel: props ? props.label : '',
-			url: props.value
+			startPointReference: props.startPointReference || '',
+			url: `/?startpunt=${props.startPointReference}`
 		}));
 	};
 
-	const onDecisionTreeChange = (id: number | undefined, label?: string) => {
+	const onDecisionTreeChange = (id: number | undefined, label: string, startPointReference?: string) => {
 		setLink((previousValue) => ({
 			...previousValue,
 			decisionTreeId: id,
-			url: label || ''
+			url: `/?startpunt=${startPointReference}` // ?startpunt=$2b$10$8cNm4eyO1AquoLmlDacnRO
 		}));
 	};
 
