@@ -42,7 +42,7 @@
 	"internal-link.form.source.start": "Selecteer een startpunt",
 	"internal-link.form.page": "Selecteer de pagina/taal",
 	"internal-link.form.page.placeholder": "Kies een pagina",
-	"internal-link.form.source.placeholder": "Zoek om de juiste keuze te kunnen maken",
+	"internal-link.form.source.placeholder": "Typ om te zoeken naar een startpunt",
 	"internal-link.form.decisionTree.placeholder": "Kies de adviesboom",
 	"internal-link.form.decisionTree.showAll": "Begin van adviesboom",
 	"internal-link.form.page.clear": "Reset pagina keuze",

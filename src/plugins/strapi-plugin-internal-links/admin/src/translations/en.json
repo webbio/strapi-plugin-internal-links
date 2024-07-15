@@ -44,7 +44,7 @@
 	"internal-link.form.source.start": "Select a startpoint",
 	"internal-link.form.page": "Select page/language",
 	"internal-link.form.page.placeholder": "Select a page",
-	"internal-link.form.source.placeholder": "Search for the right item",
+	"internal-link.form.source.placeholder": "Type to search for the right item",
 	"internal-link.form.page.clear": "Reset page selection",
 	"internal-link.form.platform": "Select platform",
 	"internal-link.form.platform.placeholder": "Select a platform",
