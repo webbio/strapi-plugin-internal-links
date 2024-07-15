@@ -734,7 +734,7 @@ export interface ApiPagePage extends Schema.CollectionType {
 				{
 					noTitle: true;
 					externalApi: {
-						tabName: 'Adviestree';
+						tabName: 'Adviesboom';
 						enabled: true;
 						apiUrl: 'https://adviesboom.test.juridischloket-dev.nl/api/steps?filter.isStartPoint=1&searchBy=question&searchBy=answer&search=';
 						labelPath: 'question';

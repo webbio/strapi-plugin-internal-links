@@ -66,5 +66,7 @@
 	"internal-link.form.alert.close": "Close",
 	"internal-link.tab.internal.label": "Internal",
 	"internal-link.tab.external.label": "External",
-	"internal-link.tab.source.label": "External API"
+	"internal-link.tab.source.label": "External API",
+	"internal-link.form.decisionTree.placeholder": "Choose adviesboom",
+	"internal-link.form.decisionTree.showAll": "Start of adviesboom"
 }
