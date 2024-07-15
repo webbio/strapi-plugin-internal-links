@@ -1,13 +1,26 @@
 import type { Schema, Attribute } from '@strapi/strapi';
 
-export interface ModulesLinkList extends Schema.Component {
-	collectionName: 'components_modules_link_lists';
+export interface ModulesText extends Schema.Component {
+	collectionName: 'components_modules_texts';
 	info: {
-		displayName: 'Link list';
+		displayName: 'text';
+		icon: 'arrowLeft';
 		description: '';
 	};
 	attributes: {
-		link: Attribute.Component<'modules.link', true>;
+		text: Attribute.String;
+		textInText: Attribute.Component<'modules.text-in-text', true>;
+	};
+}
+
+export interface ModulesTextInText extends Schema.Component {
+	collectionName: 'components_modules_text_in_texts';
+	info: {
+		displayName: 'text in text';
+		icon: 'bell';
+	};
+	attributes: {
+		text: Attribute.String;
 	};
 }
 
@@ -28,37 +41,24 @@ export interface ModulesLink extends Schema.Component {
 	};
 }
 
-export interface ModulesTextInText extends Schema.Component {
-	collectionName: 'components_modules_text_in_texts';
+export interface ModulesLinkList extends Schema.Component {
+	collectionName: 'components_modules_link_lists';
 	info: {
-		displayName: 'text in text';
-		icon: 'bell';
-	};
-	attributes: {
-		text: Attribute.String;
-	};
-}
-
-export interface ModulesText extends Schema.Component {
-	collectionName: 'components_modules_texts';
-	info: {
-		displayName: 'text';
-		icon: 'arrowLeft';
+		displayName: 'Link list';
 		description: '';
 	};
 	attributes: {
-		text: Attribute.String;
-		textInText: Attribute.Component<'modules.text-in-text', true>;
+		link: Attribute.Component<'modules.link', true>;
 	};
 }
 
 declare module '@strapi/types' {
 	export module Shared {
 		export interface Components {
-			'modules.link-list': ModulesLinkList;
-			'modules.link': ModulesLink;
-			'modules.text-in-text': ModulesTextInText;
 			'modules.text': ModulesText;
+			'modules.text-in-text': ModulesTextInText;
+			'modules.link': ModulesLink;
+			'modules.link-list': ModulesLinkList;
 		}
 	}
 }

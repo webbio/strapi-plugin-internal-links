@@ -21,13 +21,17 @@
 		"publish-plugin": "cd src/plugins/strapi-plugin-internal-links && yarn publish"
 	},
 	"dependencies": {
-		"@strapi/plugin-graphql": "<4.15.0",
-		"@strapi/plugin-i18n": "<4.15.0",
-		"@strapi/plugin-users-permissions": "<4.15.0",
-		"@strapi/strapi": "<4.15.0",
-		"@webbio/strapi-plugin-tiptap": "^0.0.8",
+		"@strapi/plugin-graphql": "4.25.3",
+		"@strapi/plugin-i18n": "4.25.3",
+		"@strapi/plugin-users-permissions": "4.25.3",
+		"@strapi/strapi": "4.25.3",
+		"@webbio/strapi-plugin-tiptap": "^0.0.32",
 		"better-sqlite3": "9.0.0",
-		"mysql": "^2.18.1"
+		"mysql": "^2.18.1",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0",
+		"react-router-dom": "^5.2.0",
+		"styled-components": "^5.2.1"
 	},
 	"devDependencies": {
 		"@babel/preset-react": "^7.23.3",

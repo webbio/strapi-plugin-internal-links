@@ -67,7 +67,7 @@ const Combobox = (props: IComboboxProps) => {
 
 export { Combobox };
 
-const ClearIndicator = (props: ClearIndicatorProps<IReactSelectValue, false>) => {
+export const ClearIndicator = (props: ClearIndicatorProps<IReactSelectValue, false>) => {
 	return (
 		<components.ClearIndicator {...props}>
 			<Cross />
@@ -75,7 +75,7 @@ const ClearIndicator = (props: ClearIndicatorProps<IReactSelectValue, false>) =>
 	);
 };
 
-const DropdownIndicator = (props: DropdownIndicatorProps<IReactSelectValue, false>) => {
+export const DropdownIndicator = (props: DropdownIndicatorProps<IReactSelectValue, false>) => {
 	return (
 		<components.DropdownIndicator {...props}>
 			<CarretDown />
