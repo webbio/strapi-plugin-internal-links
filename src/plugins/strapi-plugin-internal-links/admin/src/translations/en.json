@@ -44,7 +44,7 @@
 	"internal-link.form.source.start": "Select a startpoint",
 	"internal-link.form.page": "Select page/language",
 	"internal-link.form.page.placeholder": "Select a page",
-	"internal-link.form.source.placeholder": "Search for the right item",
+	"internal-link.form.source.placeholder": "Start typing to search for a starting point",
 	"internal-link.form.page.clear": "Reset page selection",
 	"internal-link.form.platform": "Select platform",
 	"internal-link.form.platform.placeholder": "Select a platform",
@@ -66,5 +66,7 @@
 	"internal-link.form.alert.close": "Close",
 	"internal-link.tab.internal.label": "Internal",
 	"internal-link.tab.external.label": "External",
-	"internal-link.tab.source.label": "External API"
+	"internal-link.tab.source.label": "External API",
+	"internal-link.form.decisionTree.placeholder": "Choose decision tree",
+	"internal-link.form.decisionTree.showAll": "Start of decision tree"
 }

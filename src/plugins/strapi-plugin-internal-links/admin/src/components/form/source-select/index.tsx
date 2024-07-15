@@ -63,7 +63,9 @@ export const ExternalApiSearch = ({
 		setDecisionTreeItems(
 			<>
 				<SingleSelectOption key="none" value={1}>
-					Toon alle adviesbomen
+					{formatMessage({
+						id: getTrad('internal-link.form.decisionTree.showAll')
+					})}
 				</SingleSelectOption>
 				{result?.data.data.map((item: Record<string, any>) => (
 					<SingleSelectOption key={item.id} value={item.id}>

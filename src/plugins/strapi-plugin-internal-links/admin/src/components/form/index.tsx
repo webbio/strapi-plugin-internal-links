@@ -99,7 +99,7 @@ const InternalLinkForm = ({
 		setLink((previousValue) => ({
 			...previousValue,
 			decisionTreeId: id,
-			url: `?startpunt=${startPointReference}` // ?startpunt=$2b$10$8cNm4eyO1AquoLmlDacnRO
+			url: `?adviesboom=${startPointReference}`
 		}));
 	};
 
