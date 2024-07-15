@@ -180,7 +180,7 @@ function mapSelectItem(value?: IInternalLink): IReactSelectValue | null {
 				value: value.externalApiValue,
 				label: value.externalApiLabel,
 				startPointReference: value.startPointReference || ''
-		  }
+			}
 		: null;
 }
 

@@ -97,7 +97,7 @@ const useInternalLinkInput = (
 			url: initialError
 				? formatMessage({
 						id: getTrad(`internal-link.form.link.error`)
-				  })
+					})
 				: undefined
 		}));
 	}, [initialError]);

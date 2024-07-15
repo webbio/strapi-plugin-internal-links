@@ -13,6 +13,9 @@ import { IInternalLinkAttribute } from '../..';
 import { Platform } from '../../../api/platform';
 import { useGetConfig } from '../../../api/config';
 import usePageOptions from '../hooks/use-page-options';
+import Option from '../option';
+import { useReactSelectCustomStyles } from '../../Combobox/react-select-custom-styles';
+import { ClearIndicator, DropdownIndicator } from '../../Combobox';
 
 interface Props {
 	link: IInternalLink;
@@ -47,6 +50,7 @@ export const InternalTab = ({
 	onPlatformChange
 }: Props) => {
 	const { formatMessage } = useIntl();
+	const styles = useReactSelectCustomStyles();
 	const { contentTypeOptions, contentTypeOptionsIsLoading, contentTypeOptionsIsFetching } = useContentTypeOptions(
 		link.targetContentTypeUid
 	);
@@ -103,8 +107,10 @@ export const InternalTab = ({
 								value={platform}
 								menuPosition="absolute"
 								menuPlacement="auto"
+								// @ts-ignore
+								styles={styles}
 								// @ts-ignore Option is of correct type
-								components={{ Option }}
+								components={{ Option, IndicatorSeparator: null, ClearIndicator, DropdownIndicator }}
 								options={platformOptionsIsFetching ? [] : platformOptions}
 								isLoading={platformOptionsIsLoading}
 								isDisabled={!contentType || platformOptionsIsLoading}
@@ -114,10 +120,10 @@ export const InternalTab = ({
 									platformOptionsIsLoading
 										? formatMessage({
 												id: getTrad('internal-link.loading')
-										  })
+											})
 										: formatMessage({
 												id: getTrad('internal-link.form.platform.placeholder')
-										  })
+											})
 								}
 								loadingMessage={getLoadingMessage}
 								noOptionsMessage={getNoOptionsMessage}
@@ -144,8 +150,10 @@ export const InternalTab = ({
 								value={contentType}
 								menuPosition="absolute"
 								menuPlacement="auto"
+								// @ts-ignore
+								styles={styles}
 								// @ts-ignore Option is of correct type
-								components={{ Option }}
+								components={{ Option, IndicatorSeparator: null, ClearIndicator, DropdownIndicator }}
 								options={contentTypeOptionsIsFetching ? [] : contentTypeOptions}
 								isLoading={contentTypeOptionsIsLoading}
 								isDisabled={contentTypeOptionsIsLoading}
@@ -155,10 +163,10 @@ export const InternalTab = ({
 									contentTypeOptionsIsLoading
 										? formatMessage({
 												id: getTrad('internal-link.loading')
-										  })
+											})
 										: formatMessage({
 												id: getTrad('internal-link.form.collection.placeholder')
-										  })
+											})
 								}
 								loadingMessage={getLoadingMessage}
 								noOptionsMessage={getNoOptionsMessage}

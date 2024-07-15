@@ -1,6 +1,6 @@
 {
 	"name": "@webbio/strapi-plugin-internal-links",
-	"version": "1.8.3",
+	"version": "2.0.0",
 	"description": "A custom field for Strapi that can create internal links",
 	"scripts": {
 		"develop": "tsc -p tsconfig.server.json -w",
@@ -20,11 +20,11 @@
 		"url": "https://github.com/webbio/strapi-plugin-internal-links.git"
 	},
 	"dependencies": {
-		"@strapi/design-system": "^1.13.2",
-		"@strapi/helper-plugin": "^4.15.0",
-		"@strapi/icons": "^1.13.2",
-		"@strapi/typescript-utils": "^4.15.0",
-		"@strapi/utils": "^4.15.0",
+		"@strapi/design-system": "1.19.0",
+		"@strapi/helper-plugin": "4.25.3",
+		"@strapi/icons": "1.19.0",
+		"@strapi/typescript-utils": "4.25.3",
+		"@strapi/utils": "4.25.3",
 		"cheerio": "^1.0.0-rc.12",
 		"fuse.js": "^7.0.0",
 		"react-select": "^5.7.4"
@@ -42,7 +42,7 @@
 		"typescript": "^5.2.2"
 	},
 	"peerDependencies": {
-		"@strapi/strapi": "^4.15.0",
+		"@strapi/strapi": "4.25.3",
 		"react": "^17.0.0 || ^18.0.0",
 		"react-dom": "^17.0.0 || ^18.0.0",
 		"react-router-dom": "^5.3.4",
