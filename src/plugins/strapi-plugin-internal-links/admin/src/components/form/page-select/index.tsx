@@ -197,6 +197,6 @@ function mapSelectItem(
 				locale: initialValue.locale || '',
 				subTitle: subTitlePath ? objGet(initialValue, subTitlePath) : '',
 				startPointReference: initialValue.startPointReference
-		  }
+			}
 		: null;
 }
