@@ -1,7 +1,7 @@
 import { groupBy, update, get, merge } from 'lodash';
 import { Common } from '@strapi/strapi';
 
-import cheerio from 'cheerio';
+import { load } from 'cheerio';
 
 import { deserializeLink, getCustomFields, getPopulatedEntity, sanitizeEntity, serializeLink } from '../utils/strapi';
 import { InternalLink } from '../interfaces/link';
@@ -378,7 +378,7 @@ const getInternalLinksFromHtml = ({ key, value }) => {
 		return [];
 	}
 	const wysiwygFieldValue = value;
-	const $ = cheerio.load(wysiwygFieldValue, null, false);
+	const $ = load(wysiwygFieldValue, null, false);
 
 	// Get all links that have the data-internal-link attribute
 	const serializedLinks = $('[data-internal-link]')
@@ -404,7 +404,7 @@ const getInternalLinksFromHtml = ({ key, value }) => {
 
 const updateInternalLinksInHtml = (html, internalLinks) => {
 	const wysiwygFieldValue = html;
-	const $ = cheerio.load(wysiwygFieldValue, null, false);
+	const $ = load(wysiwygFieldValue, null, false);
 	let internalLinkIdx = 0;
 
 	// @ts-ignore
