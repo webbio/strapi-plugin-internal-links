@@ -21,10 +21,10 @@
 		"publish-plugin": "cd src/plugins/strapi-plugin-internal-links && yarn publish"
 	},
 	"dependencies": {
-		"@strapi/plugin-graphql": "4.25.3",
-		"@strapi/plugin-i18n": "4.25.3",
-		"@strapi/plugin-users-permissions": "4.25.3",
-		"@strapi/strapi": "4.25.3",
+		"@strapi/plugin-graphql": "4.25.20",
+		"@strapi/plugin-i18n": "4.25.20",
+		"@strapi/plugin-users-permissions": "4.25.20",
+		"@strapi/strapi": "4.25.20",
 		"@webbio/strapi-plugin-tiptap": "^0.0.32",
 		"better-sqlite3": "9.0.0",
 		"mysql": "^2.18.1",
