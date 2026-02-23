@@ -119,7 +119,7 @@ export const getSearchFilteredEntities = async ({
 				publicationState: getPublicationState(),
 				publishedAt: result?.publishedAt,
 				href: `/content-manager/collectionType/${uid}/${result.id}`,
-				path: result?.[pathField] === '/' ? '' : result?.[pathField] || '',
+				path: result?.[pathField] || '',
 				platform: result?.platform,
 				locale: result?.locale,
 				subTitle: typeof subTitle === 'string' || typeof subTitle === 'number' ? String(subTitle) : ''
