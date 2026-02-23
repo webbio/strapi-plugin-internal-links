@@ -15,11 +15,27 @@ import { IReactSelectValue } from '../Combobox';
 import { InternalTab } from './tabs/internal-tab';
 import { ExternalTab } from './tabs/external-tab';
 import { SourceTab } from './tabs/source-tab';
+import { useGetStrapiLocales } from '../../utils/use-get-strapi-locales';
 
 interface IProps extends Omit<IUseInternalLinkInputReturn, 'initialLink' | 'isInitialData' | 'resetInternalLink'> {
 	attributeOptions?: IInternalLinkAttribute['options'];
 	shouldShowTitle?: boolean;
 }
+
+const createInternalUrl = (path?: string, locale?: string, defaultLocale?: string, domain?: string): string => {
+	const normalizedPath = path?.trim() || '';
+	const localePrefix = locale && locale !== defaultLocale ? `/${locale}` : '';
+	const normalizedDomain = domain?.trim().replace(/\/+$/, '') || '';
+
+	const localePath = normalizedPath === '/' ? localePrefix || '/' : normalizedPath;
+
+	if (normalizedDomain) {
+		const joinedPath = localePath === '/' ? '' : localePath.replace(/^\/+/, '');
+		return joinedPath ? `${normalizedDomain}/${joinedPath}` : normalizedDomain;
+	}
+
+	return localePath || '/';
+};
 
 const InternalLinkForm = ({
 	link,
@@ -30,6 +46,7 @@ const InternalLinkForm = ({
 	shouldShowTitle
 }: IProps): JSX.Element => {
 	const { formatMessage } = useIntl();
+	const { defaultLocale } = useGetStrapiLocales();
 	const { data: pluginConfig } = useGetConfig({});
 	const useSinglePageType = !!pluginConfig?.useSinglePageType || pluginConfig?.pageBuilder?.enabled;
 	const noUrlValidation = pluginConfig?.noUrlValidation;
@@ -65,15 +82,17 @@ const InternalLinkForm = ({
 		setContentTypeUid(value.uid);
 	};
 
-	const onPageChange = (id?: number, path?: string, domain?: string) => {
+	const onPageChange = (id?: number, path?: string, domain?: string, locale?: string) => {
 		if (!contentType) return;
+
+		const computedUrl = createInternalUrl(path, locale, defaultLocale, domain);
 
 		setPageId(id);
 		setLink((previousValue) => ({
 			...previousValue,
 			targetContentTypeUid: id ? contentType.uid : '',
 			targetContentTypeId: id || null,
-			url: [domain, path].filter(Boolean).join('/')
+			url: computedUrl
 		}));
 	};
 

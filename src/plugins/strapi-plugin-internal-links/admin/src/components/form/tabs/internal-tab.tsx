@@ -27,7 +27,7 @@ interface Props {
 	pageId?: number;
 	onTextChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onTextBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-	onPageChange: (id?: number, path?: string, domain?: string) => void;
+	onPageChange: (id?: number, path?: string, domain?: string, locale?: string) => void;
 	onUrlAdditionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onUrlAdditionBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 	onContentTypeChange: (value: IContentTypeOption) => void;
@@ -183,7 +183,7 @@ export const InternalTab = ({
 						selectedId={pageId}
 						uid={contentType?.uid}
 						platformTitle={pageBuilderEnabled ? platform?.label : undefined}
-						onChange={(value) => onPageChange(value?.id, value?.path, value?.platform?.domain)}
+						onChange={(value) => onPageChange(value?.id, value?.path, value?.platform?.domain, value?.locale)}
 						pluginConfig={pluginConfig}
 						attributeOptions={attributeOptions}
 					/>
