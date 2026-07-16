@@ -1,4 +1,4 @@
 module.exports = {
-	'**/*.(ts|js)': () => `yarn lint`,
+	'**/*.(ts|js)': () => `pnpm lint`,
 	'*.{js,css,md,ts,tsx,scss}': 'prettier --write'
 };

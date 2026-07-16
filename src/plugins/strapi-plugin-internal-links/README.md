@@ -89,7 +89,7 @@ Then, you'll need to build your admin panel:
 
 ```sh
 # Using Yarn
-yarn build
+pnpm build
 
 # Or using NPM
 npm run build

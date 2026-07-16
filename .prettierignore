@@ -11,7 +11,7 @@ public
 .prettierignore
 .strapi-updater.json
 favicon.ico
-yarn.lock
+pnpm-lock.yaml
 Dockerfile
 dist
 .env
