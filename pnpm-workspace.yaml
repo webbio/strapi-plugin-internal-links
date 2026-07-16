@@ -1,0 +1,32 @@
+packages:
+  - src/plugins/strapi-plugin-internal-links
+
+# --- Supply-chain hardening (pnpm 11) ---
+# nosemgrep-note: keep >= 10080 (7 days) per Semgrep rule pnpm-minimum-release-age
+minimumReleaseAge: 10080
+blockExoticSubdeps: true
+strictDepBuilds: true
+trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 525600
+trustPolicyExclude:
+  # official vitebot security backport (2025-10-20); provenance false positive
+  - 'vite@5.4.21'
+pmOnFail: download
+allowBuilds:
+  '@apollo/protobufjs': false # postinstall only patches its own package.json; not needed
+  '@strapi/strapi': false # postinstall is anonymous telemetry, not required to function
+  '@swc/core': true # native compiler binary
+  better-sqlite3: true # native sqlite build
+  core-js-pure: false # postinstall only prints a funding banner
+  esbuild: true # downloads its platform binary; required to function
+  sharp: true # native libvips build/download; required to function
+overrides:
+  elliptic: ^6.6.1 # GHSA-vjh7-7g9h-fjfh
+  'sha.js': ^2.4.12 # GHSA-95m3-7q98-8xr5
+  '@casl/ability@^6.0.0': ^6.7.5 # GHSA-x9vf-53q3-cvx6
+  handlebars: ^4.7.9 # GHSA-2w6w-674q-4c4q
+  shell-quote: ^1.8.4 # GHSA-w7jw-789q-3m8p
+auditConfig:
+  ignoreGhsas:
+    # Strapi core advisory; only patched in Strapi >= 5.37.0, not fixable on v4
+    - GHSA-rjg2-95x7-8qmx

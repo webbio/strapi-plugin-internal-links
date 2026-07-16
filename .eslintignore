@@ -16,6 +16,6 @@ docker-compose.yml
 favicon.ico
 lint-staged.config.js
 README.md
-yarn.lock
+pnpm-lock.yaml
 dist
 *.md
