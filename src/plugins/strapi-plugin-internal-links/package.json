@@ -5,9 +5,9 @@
 	"scripts": {
 		"develop": "tsc -p tsconfig.server.json -w",
 		"build": "tsc -p tsconfig.server.json && tsc -p tsconfig.admin.json",
-		"prepublish": "yarn build",
+		"prepublish": "pnpm build",
 		"format": "prettier --write .",
-		"spu": "yarn upgrade-interactive --latest"
+		"spu": "pnpm up -i --latest"
 	},
 	"strapi": {
 		"name": "internal-links",
@@ -21,16 +21,22 @@
 	},
 	"dependencies": {
 		"@strapi/design-system": "1.19.0",
-		"@strapi/helper-plugin": "4.25.3",
+		"@strapi/helper-plugin": "4.26.2",
 		"@strapi/icons": "1.19.0",
-		"@strapi/typescript-utils": "4.25.3",
-		"@strapi/utils": "4.25.3",
+		"@strapi/typescript-utils": "4.26.2",
+		"@strapi/utils": "4.26.2",
 		"cheerio": "^1.0.0-rc.12",
 		"fuse.js": "^7.0.0",
-		"react-select": "^5.7.4"
+		"lodash": "^4.17.21",
+		"qs": "6.11.1",
+		"react-intl": "6.4.1",
+		"react-query": "3.39.3",
+		"react-select": "^5.7.4",
+		"yup": "0.32.9"
 	},
 	"devDependencies": {
 		"@babel/preset-react": "^7.22.15",
+		"@types/lodash": "^4.14.165",
 		"@types/react": "^18.2.21",
 		"@types/react-dom": "^18.2.7",
 		"@types/react-router-dom": "^5.3.3",
@@ -42,7 +48,7 @@
 		"typescript": "^5.2.2"
 	},
 	"peerDependencies": {
-		"@strapi/strapi": "4.25.20",
+		"@strapi/strapi": "^4.26.2",
 		"react": "^17.0.0 || ^18.0.0",
 		"react-dom": "^17.0.0 || ^18.0.0",
 		"react-router-dom": "^5.3.4",
@@ -61,8 +67,7 @@
 		}
 	],
 	"engines": {
-		"node": ">=14.19.1 <=20.x.x",
-		"npm": ">=6.0.0"
+		"node": ">=18.0.0"
 	},
 	"license": "MIT",
 	"publishConfig": {

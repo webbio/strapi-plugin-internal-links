@@ -3,11 +3,12 @@
 	"private": true,
 	"version": "0.1.0",
 	"description": "A Strapi application",
+	"packageManager": "pnpm@11.13.0",
 	"scripts": {
 		"dev": "strapi develop",
 		"start": "strapi start",
-		"build": "yarn build-internal-links && strapi build",
-		"build-internal-links": "cd src/plugins/strapi-plugin-internal-links && yarn && yarn build",
+		"build": "pnpm build-internal-links && strapi build",
+		"build-internal-links": "pnpm --filter @webbio/strapi-plugin-internal-links build",
 		"watch": "strapi develop --watch-admin",
 		"strapi": "strapi",
 		"debug": "node --inspect ./node_modules/@strapi/strapi/bin/strapi develop",
@@ -17,16 +18,16 @@
 		"db:start": "docker-compose up -d",
 		"db:stop": "docker-compose down",
 		"postinstall": "node ./scripts/postinstall.js",
-		"spu": "yarn upgrade-interactive --latest",
-		"publish-plugin": "cd src/plugins/strapi-plugin-internal-links && yarn publish"
+		"spu": "pnpm up -i --latest",
+		"publish-plugin": "pnpm --filter @webbio/strapi-plugin-internal-links publish"
 	},
 	"dependencies": {
-		"@strapi/plugin-graphql": "4.25.20",
-		"@strapi/plugin-i18n": "4.25.20",
-		"@strapi/plugin-users-permissions": "4.25.20",
-		"@strapi/strapi": "4.25.20",
+		"@strapi/plugin-graphql": "4.26.2",
+		"@strapi/plugin-i18n": "4.26.2",
+		"@strapi/plugin-users-permissions": "4.26.2",
+		"@strapi/strapi": "4.26.2",
 		"@webbio/strapi-plugin-tiptap": "^0.0.32",
-		"better-sqlite3": "9.0.0",
+		"better-sqlite3": "11.10.0",
 		"mysql": "^2.18.1",
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
@@ -35,8 +36,10 @@
 	},
 	"devDependencies": {
 		"@babel/preset-react": "^7.23.3",
+		"@strapi/typescript-utils": "4.26.2",
 		"@webbio/eslint-config-strapi": "^1.1.7",
 		"@webbio/prettier-config": "^0.0.8",
+		"eslint": "^8.33.0",
 		"husky": "^8.0.3",
 		"jest": "^29.7.0",
 		"lint-staged": "^14.0.1",
@@ -51,8 +54,7 @@
 		"uuid": "6df721a2-7b9d-45a7-b40a-3e0753bb4644"
 	},
 	"engines": {
-		"node": ">=16.0.0 <=20.x.x",
-		"npm": ">=6.0.0"
+		"node": ">=22.0.0"
 	},
 	"license": "MIT"
 }
